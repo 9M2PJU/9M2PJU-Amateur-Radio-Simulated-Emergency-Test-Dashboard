@@ -1,11 +1,12 @@
 # 📡 9M2PJU SET Dashboard
 > **Official Dashboard for Amateur Radio Simulated Emergency Tests (SET)**
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=github)
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Leaflet](https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=Leaflet&logoColor=white)
-![Status](https://img.shields.io/badge/status-LIVE_EXERCISE-red?style=for-the-badge&animate=pulse)
+![Amateur Radio](https://img.shields.io/badge/Amateur--Radio-OJ05--Grid-blueviolet?style=for-the-badge&logo=adafruit)
+![Status](https://img.shields.io/badge/status-LIVE_EXERCISE-red?style=for-the-badge&logo=statuspage)
 
 ---
 
@@ -19,6 +20,7 @@ The **9M2PJU SET Dashboard** is a premium, real-time command center designed for
 - **📱 Native Mobile Experience**: PWA-ready with touch-optimized controls.
 - **🔄 Import/Export Scenarios**: Share exercise setups via JSON configuration files.
 - **⚡ Real-time Widgets**: Live UTC/Local clock and simulated weather telemetry.
+- **📍 Precise Positioning**: Live Latitude/Longitude and **Maidenhead Grid Square** (OJ05) display.
 - **📰 News Ticker**: Integrated real-time emergency news and updates ticker.
 - **❤️ Donation Support**: Built-in contribution system with Malaysian National QR.
 

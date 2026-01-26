@@ -1,5 +1,4 @@
-import React from 'react';
-import { Settings, Menu, Heart } from 'lucide-react';
+import { Settings, Menu, Heart, LocateFixed } from 'lucide-react';
 import Clock from './Widgets/Clock';
 import NewsTicker from './Widgets/NewsTicker';
 
@@ -8,14 +7,14 @@ interface HeaderProps {
     onToggleSidebar: () => void;
     onOpenDonation: () => void;
     adminMode: boolean;
-    weather?: {
-        temp: number;
-        condition: string;
-        code: number;
-    } | null;
+    coords?: {
+        latitude: number;
+        longitude: number;
+    };
+    gridSquare?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, onOpenDonation, adminMode, weather }) => {
+const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, onOpenDonation, adminMode, coords, gridSquare }) => {
     return (
         <header className="absolute top-0 left-0 right-0 z-[1000] p-4 pointer-events-none">
             <div className="glass rounded-2xl p-4 flex items-center justify-between pointer-events-auto">
@@ -51,18 +50,25 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, onOpenD
 
                 {/* Right: Widgets & Settings */}
                 <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-                    {weather && (
+                    {coords && (
                         <div className="hidden lg:flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/5">
-                            <div className="text-yellow-400">
-                                {weather.temp > 30 ? (
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-sun"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>
-                                ) : (
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-cloud-sun"><path d="M12 2v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="M20 12h2" /><path d="m19.07 4.93-1.41 1.41" /><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128" /><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z" /></svg>
-                                )}
+                            <div className="text-cyan-400">
+                                <LocateFixed className="h-5 w-5" />
                             </div>
-                            <div className="text-sm">
-                                <div className="font-semibold text-white">{weather.temp}°C</div>
-                                <div className="text-[10px] text-white/50 uppercase tracking-tighter">{weather.condition}</div>
+                            <div className="text-[10px] leading-tight font-mono">
+                                <div className="flex items-center gap-1.5 whitespace-nowrap">
+                                    <span className="text-white/40 font-bold">LAT:</span>
+                                    <span className="text-cyan-300/90">{coords.latitude.toFixed(4)}°</span>
+                                </div>
+                                <div className="flex items-center gap-1.5 whitespace-nowrap">
+                                    <span className="text-white/40 font-bold">LNG:</span>
+                                    <span className="text-cyan-300/90">{coords.longitude.toFixed(4)}°</span>
+                                </div>
+                            </div>
+                            <div className="h-8 w-px bg-white/10 mx-1" />
+                            <div className="flex flex-col">
+                                <span className="text-[9px] text-white/40 font-bold uppercase tracking-wider">Grid Square</span>
+                                <span className="text-sm font-bold text-white tracking-widest">{gridSquare}</span>
                             </div>
                         </div>
                     )}

@@ -11,6 +11,7 @@ import StationList from './components/Lists/StationList';
 import Header from './components/Header';
 import Weather from './components/Widgets/Weather';
 import DonationModal from './components/Widgets/DonationModal';
+import { getMaidenheadLocator } from './utils/maidenhead';
 
 // Component to bridge Map context available inside SimulatorMap to outside UI
 // Note: StationList needs to be INSIDE MapContainer to use useMap(), but our layout separates them.
@@ -76,7 +77,8 @@ function App() {
         onToggleAdmin={() => setIsSettingsOpen(true)}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         onOpenDonation={() => setIsDonationOpen(true)}
-        weather={weatherState.data?.current}
+        coords={weatherState.data?.coords}
+        gridSquare={weatherState.data?.coords ? getMaidenheadLocator(weatherState.data.coords.latitude, weatherState.data.coords.longitude, 6) : undefined}
       />
 
       <main className="flex-1 relative z-0">

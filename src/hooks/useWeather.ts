@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 
 export interface WeatherData {
     city: string;
+    coords?: {
+        latitude: number;
+        longitude: number;
+    };
     current: {
         temp: number;
         condition: string;
@@ -72,6 +76,7 @@ export const useWeather = () => {
 
             setData({
                 city,
+                coords: { latitude, longitude },
                 current: {
                     temp: Math.round(current.temperature),
                     condition: weatherCodes[current.weathercode] || 'Clear',
