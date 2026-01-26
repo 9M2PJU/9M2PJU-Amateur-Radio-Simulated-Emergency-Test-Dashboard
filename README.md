@@ -1,73 +1,92 @@
-# React + TypeScript + Vite
+# 📡 9M2PJU SET Dashboard
+> **Official Dashboard for Amateur Radio Simulated Emergency Tests (SET)**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Leaflet](https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=Leaflet&logoColor=white)
+![Status](https://img.shields.io/badge/status-LIVE_EXERCISE-red?style=for-the-badge&animate=pulse)
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌟 Overview
 
-## React Compiler
+The **9M2PJU SET Dashboard** is a premium, real-time command center designed for coordinating Amateur Radio emergency communication exercises. Built with modern web technologies, it offers a glassmorphic interface, offline-first data persistence, and interactive mapping capabilities.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🚀 Key Features
+- **🗺️ Interactive Tactical Map**: Dark-mode tactical map powered by Leaflet.
+- **💾 LocalStorage Persistence**: Data lives in your browser—no backend required.
+- **📱 Native Mobile Experience**: PWA-ready with touch-optimized controls.
+- **🔄 Import/Export Scenarios**: Share exercise setups via JSON configuration files.
+- **⚡ Real-time Widgets**: Live UTC/Local clock and simulated weather telemetry.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Architecture
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```mermaid
+graph TD
+    A[User] -->|Opens App| B(Single Page Application)
+    B --> C{Data Source}
+    C -->|No Data| D[Initialize Empty Store]
+    C -->|Found Data| E[Load from LocalStorage]
+    
+    subgraph UI Components
+        F[Glass Header]
+        G[Tactical Map]
+        H[Station List Sidebar]
+        I[Admin Modals]
+    end
+    
+    B --> F
+    B --> G
+    B --> H
+    
+    I -->|Add/Edit| E
+    I -->|Import/Export| J[JSON File]
+    
+    style B fill:#1e293b,stroke:#3b82f6,color:#fff
+    style G fill:#0f172a,stroke:#3b82f6,color:#fff
+    style E fill:#10b981,stroke:#059669,color:#fff
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🖥️ Usage Guide
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Admin Mode
+1. Click the **Settings (⚙️)** icon in the header.
+2. Use **Export** to save your current station layout.
+3. Use **Import** to load a pre-configured scenario.
+4. Use **Clear Data** to reset the dashboard.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Managing Stations
+- **Add**: Click the floating **(+)** button.
+- **Locate**: Click any station in the sidebar to fly to its location.
+- **Status**: Visual indicators for `Active`, `Inactive`, and `EMERGENCY`.
+
+---
+
+## 📦 Tech Stack
+
+| Component | Technology | Description |
+|-----------|------------|-------------|
+| **Core** | React 19 + TypeScript | Lightning fast UI rendering |
+| **Build** | Vite | Next-gen frontend tooling |
+| **Style** | TailwindCSS | Utility-first CSS framework |
+| **Map** | React Leaflet | Open-source mobile-friendly maps |
+| **Icons** | Lucide React | Beautiful consistent icons |
+
+---
+
+## 🚀 Deployment
+
+This project is configured for **GitHub Pages**.
+
+1. **Build**: `npm run build`
+2. **Commit**: Push changes to `main`.
+3. **Verify**: GitHub Actions will deploy to `set.hamradio.my`.
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ by 9M2PJU Team</sub>
+</div>
