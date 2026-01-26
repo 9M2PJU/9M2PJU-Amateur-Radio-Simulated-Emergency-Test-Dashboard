@@ -19,6 +19,8 @@ The **9M2PJU SET Dashboard** is a premium, real-time command center designed for
 - **📱 Native Mobile Experience**: PWA-ready with touch-optimized controls.
 - **🔄 Import/Export Scenarios**: Share exercise setups via JSON configuration files.
 - **⚡ Real-time Widgets**: Live UTC/Local clock and simulated weather telemetry.
+- **📰 News Ticker**: Integrated real-time emergency news and updates ticker.
+- **❤️ Donation Support**: Built-in contribution system with Malaysian National QR.
 
 ---
 
@@ -36,11 +38,13 @@ graph TD
         G[Tactical Map]
         H[Station List Sidebar]
         I[Admin Modals]
+        K[Donation Popup]
     end
     
     B --> F
     B --> G
     B --> H
+    B --> K
     
     I -->|Add/Edit| E
     I -->|Import/Export| J[JSON File]
@@ -58,8 +62,13 @@ graph TD
 3. Use **Import** to load a pre-configured scenario.
 4. Use **Clear Data** to reset the dashboard.
 
+### Support the Project
+- Click the **Heart (❤️)** icon in the header to view donation options.
+- The dashboard supports **Malaysian National QR** (DuitNow) for seamless contributions to keep the service running.
+
 ### Managing Stations
 - **Add**: Click the floating **(+)** button.
+- **Edit/Delete**: Use the controls within the station list or map popups.
 - **Locate**: Click any station in the sidebar to fly to its location.
 - **Status**: Visual indicators for `Active`, `Inactive`, and `EMERGENCY`.
 
