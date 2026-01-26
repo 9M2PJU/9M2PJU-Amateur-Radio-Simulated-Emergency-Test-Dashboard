@@ -197,7 +197,7 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                             value={formData.mode}
                             onChange={e => setFormData({ ...formData, mode: e.target.value })}
                             className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-                            placeholder="e.g. FM, SSB, FT8"
+                            placeholder="e.g. FM, CW, SSB, Digital"
                         />
                     </div>
                     <div className="space-y-2">
