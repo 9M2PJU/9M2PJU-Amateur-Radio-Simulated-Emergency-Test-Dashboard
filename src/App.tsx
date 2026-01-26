@@ -76,7 +76,7 @@ function App() {
           isPickingLocation={isPickingLocation}
         >
           {/* Mobile/Desktop Sidebar injected into Map Context */}
-          <div className={`absolute top-24 left-4 z-[999] h-[calc(100%-7rem)] transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-[120%]'
+          <div className={`absolute top-28 left-4 z-[999] h-[calc(100%-8rem)] transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-[120%]'
             }`}>
             <StationList
               stations={stations}
@@ -90,7 +90,7 @@ function App() {
           </div>
 
           {/* Weather Widget */}
-          <div className="absolute top-24 right-4 z-[400] hidden lg:block w-64">
+          <div className="absolute top-28 right-4 z-[400] hidden lg:block w-72">
             <Weather />
           </div>
 
