@@ -67,7 +67,7 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                 {/* Removed Cyber Grid for Light Mode */}
 
                 {stations.map(station => {
-                    const statusColor = station.status === 'active' ? '#4ade80' :
+                    const statusColor = station.status === 'active' ? '#06b6d4' :
                         station.status === 'emergency' ? '#f87171' : '#94a3b8';
 
                     const customIcon = L.divIcon({
@@ -96,10 +96,10 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                                 <div className="p-2 min-w-[200px]">
                                     <h3 className="font-bold text-lg text-white mb-1 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">{station.callsign}</h3>
                                     <div className="text-sm text-cyan-100/90 mb-2 flex items-center gap-2">
-                                        <span className={`inline-block w-2 h-2 rounded-full ${station.status === 'active' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]' :
+                                        <span className={`inline-block w-2 h-2 rounded-full ${station.status === 'active' ? 'bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.5)]' :
                                             station.status === 'emergency' ? 'bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-gray-400'
                                             }`} />
-                                        <span className="font-semibold tracking-wider">{station.status.toUpperCase()}</span>
+                                        <span className="font-semibold tracking-wider text-cyan-50/90">{station.status.toUpperCase()}</span>
                                     </div>
                                     {station.operator && (
                                         <div className="text-xs text-slate-300 font-medium">
