@@ -36,7 +36,7 @@ const StationList: React.FC<StationListProps> = ({
     };
 
     return (
-        <div className={`flex flex-col glass border-r border-white/10 w-80 bg-slate-900/80 backdrop-blur-xl h-full ${className}`}>
+        <div className={`flex flex-col glass border-r border-white/10 w-80 bg-[#0a0a14] backdrop-blur-xl h-full ${className}`}>
             <div className="p-4 border-b border-white/10">
                 <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                     <Radio className="text-blue-400" /> Stations ({stations.length})
