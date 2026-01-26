@@ -6,6 +6,9 @@ export interface Station {
     operator?: string;
     equipment?: string;
     status: 'active' | 'inactive' | 'emergency';
+    powerSource?: 'battery' | 'main';
+    frequency?: string;
+    customColor?: string;
     notes?: string;
     updatedAt: number;
 }

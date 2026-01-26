@@ -17,8 +17,21 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
         operator: initialData?.operator || '',
         equipment: initialData?.equipment || '',
         status: initialData?.status || 'active',
+        powerSource: initialData?.powerSource || 'main',
+        frequency: initialData?.frequency || '',
+        customColor: initialData?.customColor || '',
         notes: initialData?.notes || '',
     });
+
+    const colors = [
+        { name: 'Default', value: '' },
+        { name: 'Cyan', value: '#06b6d4' },
+        { name: 'Emerald', value: '#10b981' },
+        { name: 'Amber', value: '#f59e0b' },
+        { name: 'Rose', value: '#f43f5e' },
+        { name: 'Violet', value: '#8b5cf6' },
+        { name: 'Orange', value: '#f97316' },
+    ];
 
     // Sync formData with initialData changes (e.g. returning from map pick)
     React.useEffect(() => {
@@ -32,6 +45,9 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                 operator: initialData.operator || prev.operator,
                 equipment: initialData.equipment || prev.equipment,
                 status: initialData.status || prev.status,
+                powerSource: initialData.powerSource || prev.powerSource,
+                frequency: initialData.frequency || prev.frequency,
+                customColor: initialData.customColor || prev.customColor,
                 notes: initialData.notes || prev.notes,
             }));
         }
@@ -43,7 +59,7 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
     };
 
     return (
-        <div className="glass-card p-6 rounded-2xl shadow-2xl border border-white/10 bg-slate-900/90 text-white">
+        <div className="glass-card p-6 rounded-2xl shadow-2xl border border-white/10 bg-slate-900/90 text-white max-h-[90vh] overflow-y-auto custom-scrollbar">
             <div className="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
                 <h2 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
                     {initialData?.callsign ? 'Edit Station' : 'Add New Station'}
@@ -77,6 +93,22 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                             <option value="inactive">Inactive</option>
                             <option value="emergency">EMERGENCY</option>
                         </select>
+                    </div>
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Label Color</label>
+                    <div className="flex flex-wrap gap-2">
+                        {colors.map(c => (
+                            <button
+                                key={c.name}
+                                type="button"
+                                onClick={() => setFormData({ ...formData, customColor: c.value })}
+                                className={`w-8 h-8 rounded-lg border-2 transition-all ${formData.customColor === c.value ? 'border-white scale-110' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                                style={{ backgroundColor: c.value || '#06b6d4' }}
+                                title={c.name}
+                            />
+                        ))}
                     </div>
                 </div>
 
@@ -115,15 +147,27 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                     </div>
                 </div>
 
-                <div className="space-y-2">
-                    <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Operator Info</label>
-                    <input
-                        type="text"
-                        value={formData.operator}
-                        onChange={e => setFormData({ ...formData, operator: e.target.value })}
-                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-                        placeholder="Name / Handle"
-                    />
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Operator Info</label>
+                        <input
+                            type="text"
+                            value={formData.operator}
+                            onChange={e => setFormData({ ...formData, operator: e.target.value })}
+                            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="Name / Handle"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Operating Freq</label>
+                        <input
+                            type="text"
+                            value={formData.frequency}
+                            onChange={e => setFormData({ ...formData, frequency: e.target.value })}
+                            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono"
+                            placeholder="e.g. 145.500MHz"
+                        />
+                    </div>
                 </div>
 
                 <div className="space-y-2">
@@ -135,6 +179,40 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                         className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
                         placeholder="Radio, Antenna type..."
                     />
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Power Source</label>
+                    <div className="flex gap-4">
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                            <input
+                                type="radio"
+                                name="powerSource"
+                                value="main"
+                                checked={formData.powerSource === 'main'}
+                                onChange={e => setFormData({ ...formData, powerSource: e.target.value as any })}
+                                className="hidden"
+                            />
+                            <div className={`w-4 h-4 rounded-full border border-cyan-500/50 flex items-center justify-center transition-all ${formData.powerSource === 'main' ? 'bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.5)]' : 'bg-transparent'}`}>
+                                {formData.powerSource === 'main' && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                            </div>
+                            <span className={`text-sm ${formData.powerSource === 'main' ? 'text-white font-bold' : 'text-slate-400'}`}>Main Power</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                            <input
+                                type="radio"
+                                name="powerSource"
+                                value="battery"
+                                checked={formData.powerSource === 'battery'}
+                                onChange={e => setFormData({ ...formData, powerSource: e.target.value as any })}
+                                className="hidden"
+                            />
+                            <div className={`w-4 h-4 rounded-full border border-amber-500/50 flex items-center justify-center transition-all ${formData.powerSource === 'battery' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'bg-transparent'}`}>
+                                {formData.powerSource === 'battery' && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                            </div>
+                            <span className={`text-sm ${formData.powerSource === 'battery' ? 'text-white font-bold' : 'text-slate-400'}`}>Battery / Solar</span>
+                        </label>
+                    </div>
                 </div>
 
                 <button

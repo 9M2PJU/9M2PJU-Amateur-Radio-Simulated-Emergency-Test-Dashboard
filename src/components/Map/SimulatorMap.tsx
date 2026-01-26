@@ -67,19 +67,19 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                 {/* Removed Cyber Grid for Light Mode */}
 
                 {stations.map(station => {
-                    const statusColor = station.status === 'active' ? '#06b6d4' :
-                        station.status === 'emergency' ? '#f87171' : '#94a3b8';
+                    const statusColor = station.customColor || (station.status === 'active' ? '#06b6d4' :
+                        station.status === 'emergency' ? '#f87171' : '#94a3b8');
 
                     const customIcon = L.divIcon({
                         className: 'custom-div-icon',
                         html: `
                             <div class="flex flex-col items-center group">
-                                <div class="px-2 py-0.5 rounded shadow-lg border border-white/20 text-[10px] font-bold text-white whitespace-nowrap transition-all group-hover:scale-110" 
-                                     style="background-color: ${statusColor}cc; box-shadow: 0 0 10px ${statusColor}44;">
+                                <div class="px-2 py-1 rounded shadow-lg border border-white/20 text-[11px] font-bold text-white whitespace-nowrap transition-all group-hover:scale-110 group-hover:z-[1000] cursor-pointer" 
+                                     style="background-color: ${statusColor}cc; box-shadow: 0 0 10px ${statusColor}44, inset 0 0 5px rgba(255,255,255,0.2);">
                                     ${station.callsign}
                                 </div>
-                                <div class="w-1.5 h-1.5 rounded-full mt-0.5 blur-[1px] ${station.status === 'emergency' ? 'animate-pulse' : ''}" 
-                                     style="background-color: ${statusColor}"></div>
+                                <div class="w-2 h-2 rounded-full mt-0.5 blur-[1px] ${station.status === 'emergency' ? 'animate-pulse' : ''}" 
+                                     style="background-color: ${statusColor}; box-shadow: 0 0 8px ${statusColor};"></div>
                             </div>
                         `,
                         iconSize: [0, 0],
@@ -93,38 +93,74 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                             icon={customIcon}
                         >
                             <Popup className="glass-popup">
-                                <div className="p-2 min-w-[200px]">
-                                    <h3 className="font-bold text-lg text-white mb-1 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">{station.callsign}</h3>
-                                    <div className="text-sm text-cyan-100/90 mb-2 flex items-center gap-2">
-                                        <span className={`inline-block w-2 h-2 rounded-full ${station.status === 'active' ? 'bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.5)]' :
-                                            station.status === 'emergency' ? 'bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-gray-400'
-                                            }`} />
-                                        <span className="font-semibold tracking-wider text-cyan-50/90">{station.status.toUpperCase()}</span>
+                                <div className="p-3 min-w-[240px] bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl">
+                                    <div className="flex justify-between items-start mb-3 border-b border-white/10 pb-2">
+                                        <h3 className="font-bold text-xl text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">{station.callsign}</h3>
+                                        <div className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter ${station.status === 'active' ? 'bg-cyan-500/20 text-cyan-400' :
+                                            station.status === 'emergency' ? 'bg-red-500/20 text-red-400 animate-pulse' : 'bg-gray-500/20 text-gray-400'
+                                            }`}>
+                                            {station.status}
+                                        </div>
                                     </div>
-                                    {station.operator && (
-                                        <div className="text-xs text-slate-300 font-medium">
-                                            <strong className="text-cyan-400/80 mr-1">Op:</strong> {station.operator}
-                                        </div>
-                                    )}
-                                    {station.equipment && (
-                                        <div className="text-xs text-slate-300 font-medium">
-                                            <strong className="text-cyan-400/80 mr-1">Eq:</strong> {station.equipment}
-                                        </div>
-                                    )}
-                                    <div className="mt-3 text-[10px] text-slate-400 border-t border-white/10 pt-2 flex justify-between items-center">
-                                        <span>Last Update: {new Date(station.updatedAt).toLocaleTimeString()}</span>
-                                        <div className="flex gap-2">
+
+                                    <div className="grid grid-cols-1 gap-2.5">
+                                        {station.operator && (
+                                            <div className="flex items-start gap-2">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 mt-1.5 shrink-0" />
+                                                <div className="text-xs">
+                                                    <span className="text-white/40 font-bold uppercase text-[9px] block tracking-widest">Operator</span>
+                                                    <span className="text-cyan-50 font-medium">{station.operator}</span>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {station.frequency && (
+                                            <div className="flex items-start gap-2">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 shrink-0" />
+                                                <div className="text-xs">
+                                                    <span className="text-white/40 font-bold uppercase text-[9px] block tracking-widest">Frequency</span>
+                                                    <span className="text-purple-300 font-mono font-bold tracking-tight">{station.frequency}</span>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {station.equipment && (
+                                            <div className="flex items-start gap-2">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0" />
+                                                <div className="text-xs">
+                                                    <span className="text-white/40 font-bold uppercase text-[9px] block tracking-widest">Equipment</span>
+                                                    <span className="text-blue-100 font-medium">{station.equipment}</span>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {station.powerSource && (
+                                            <div className="flex items-start gap-2">
+                                                <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${station.powerSource === 'battery' ? 'bg-amber-500 shadow-[0_0_5px_rgba(245,158,11,0.5)]' : 'bg-cyan-500'}`} />
+                                                <div className="text-xs">
+                                                    <span className="text-white/40 font-bold uppercase text-[9px] block tracking-widest">Power Source</span>
+                                                    <span className={station.powerSource === 'battery' ? 'text-amber-400 font-bold' : 'text-cyan-300 font-bold'}>
+                                                        {station.powerSource === 'battery' ? '🔋 Battery / Solar' : '🔌 Main Power'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="mt-4 text-[9px] text-slate-500 border-t border-white/10 pt-3 flex justify-between items-center bg-black/20 -mx-3 -mb-3 px-3 py-2">
+                                        <span className="font-mono">UPDATED: {new Date(station.updatedAt).toLocaleTimeString()}</span>
+                                        <div className="flex gap-1.5">
                                             <button
                                                 onClick={() => onEditStation?.(station)}
-                                                className="p-1.5 hover:bg-cyan-500/20 bg-cyan-500/10 rounded text-cyan-400 transition-colors border border-cyan-500/20"
-                                                title="Edit Station"
+                                                className="p-1.5 hover:bg-white/10 rounded text-cyan-400 transition-colors"
+                                                title="Edit"
                                             >
                                                 <Edit2 className="h-3.5 w-3.5" />
                                             </button>
                                             <button
                                                 onClick={() => onDeleteStation?.(station.id)}
-                                                className="p-1.5 hover:bg-rose-500/20 bg-rose-500/10 rounded text-rose-400 transition-colors border border-rose-500/20"
-                                                title="Delete Station"
+                                                className="p-1.5 hover:bg-rose-500/20 rounded text-rose-400 transition-colors"
+                                                title="Delete"
                                             >
                                                 <Trash2 className="h-3.5 w-3.5" />
                                             </button>
