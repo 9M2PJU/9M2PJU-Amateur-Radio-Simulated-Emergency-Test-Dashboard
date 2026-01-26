@@ -113,13 +113,12 @@ const Weather: React.FC<WeatherProps> = ({ data, loading, error }) => {
                 </div>
                 <div className="relative group">
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-                    <div className="relative bg-black/40 rounded-lg p-1 border border-white/10 overflow-hidden">
-                        <img
-                            src="https://prop.kc2g.com/render/muf_3000km_global_v.png"
-                            alt="MUF Worldwide Map"
-                            className="w-full h-auto grayscale transition-all duration-500 hover:grayscale-0 contrast-125 brightness-90 saturate-[1.2]"
-                            onLoad={(e) => (e.currentTarget.style.opacity = '1')}
-                            style={{ opacity: 0.1, minHeight: '120px' }}
+                    <div className="relative bg-black/40 rounded-lg border border-white/10 overflow-hidden">
+                        <iframe
+                            src="https://prop.kc2g.com/renders/current/mufd-normal-now.svg"
+                            title="MUF Worldwide Map"
+                            className="w-full h-48 grayscale transition-all duration-500 hover:grayscale-0 contrast-125 brightness-95 saturate-[1.4] border-none"
+                            loading="lazy"
                         />
                     </div>
                 </div>
