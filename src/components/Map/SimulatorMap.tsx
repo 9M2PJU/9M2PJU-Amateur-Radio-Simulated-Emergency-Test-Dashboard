@@ -1,5 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
+import { Edit2, Trash2 } from 'lucide-react';
 import type { Station } from '../../types';
 
 // Fix Leaflet's default icon path issues in Vite
@@ -18,6 +19,8 @@ interface SimulatorMapProps {
     stations: Station[];
     children?: React.ReactNode;
     onMapClick?: (lat: number, lng: number) => void;
+    onEditStation?: (station: Station) => void;
+    onDeleteStation?: (id: string) => void;
     isPickingLocation?: boolean;
 }
 
@@ -32,7 +35,14 @@ const MapEvents: React.FC<{ onMapClick?: (lat: number, lng: number) => void, isP
     return null;
 };
 
-const SimulatorMap: React.FC<SimulatorMapProps> = ({ stations, children, onMapClick, isPickingLocation }) => {
+const SimulatorMap: React.FC<SimulatorMapProps> = ({
+    stations,
+    children,
+    onMapClick,
+    onEditStation,
+    onDeleteStation,
+    isPickingLocation
+}) => {
     // Center on Malaysia as default (User appears to be 9M2 - Malaysia)
     const defaultCenter: [number, number] = [4.2105, 101.9758];
     const defaultZoom = 6;
@@ -77,8 +87,22 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({ stations, children, onMapCl
                                         <strong>Eq:</strong> {station.equipment}
                                     </div>
                                 )}
-                                <div className="mt-2 text-[10px] text-slate-400">
-                                    Last Update: {new Date(station.updatedAt).toLocaleTimeString()}
+                                <div className="mt-2 text-[10px] text-slate-400 border-t border-slate-100 pt-1 flex justify-between items-center">
+                                    <span>Last Update: {new Date(station.updatedAt).toLocaleTimeString()}</span>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => onEditStation?.(station)}
+                                            className="p-1 hover:bg-blue-50 bg-blue-50/50 rounded text-blue-600 transition-colors"
+                                        >
+                                            <Edit2 className="h-3 w-3" />
+                                        </button>
+                                        <button
+                                            onClick={() => onDeleteStation?.(station.id)}
+                                            className="p-1 hover:bg-rose-50 bg-rose-50/50 rounded text-rose-600 transition-colors"
+                                        >
+                                            <Trash2 className="h-3 w-3" />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </Popup>

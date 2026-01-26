@@ -13,6 +13,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, adminMo
     return (
         <header className="absolute top-0 left-0 right-0 z-[1000] p-4 pointer-events-none">
             <div className="glass rounded-2xl p-4 flex items-center justify-between pointer-events-auto">
+                {/* Left: Branding */}
                 <div className="flex items-center gap-4">
                     <button
                         onClick={onToggleSidebar}
@@ -24,11 +25,11 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, adminMo
                     <div className="h-12 w-12 rounded-xl bg-black/50 border border-cyan-500/30 flex items-center justify-center p-1 overflow-hidden shadow-[0_0_15px_rgba(0,255,255,0.2)]">
                         <img src="/logo.png" alt="9M2PJU Logo" className="h-full w-full object-contain" />
                     </div>
-                    <div>
+                    <div className="flex flex-col justify-center min-w-fit">
                         <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70 hidden sm:block">
                             9M2PJU SET Dashboard
                         </h1>
-                        <h1 className="text-lg font-bold text-white sm:hidden">
+                        <h1 className="text-lg font-bold text-white sm:hidden whitespace-nowrap">
                             SET Dashboard
                         </h1>
                         <div className="flex items-center gap-2 text-xs text-blue-200/80 font-medium tracking-wide">
@@ -37,6 +38,12 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, adminMo
                     </div>
                 </div>
 
+                {/* Center: News Ticker Area (Free Space as requested) */}
+                <div className="hidden md:flex flex-1 mx-8 max-w-2xl h-10 rounded-xl overflow-hidden border border-white/5 bg-black/20 shadow-inner">
+                    <NewsTicker />
+                </div>
+
+                {/* Right: Widgets & Settings */}
                 <div className="flex items-center gap-2 sm:gap-6">
                     <div className="hidden lg:flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/5">
                         <CloudSun className="text-yellow-400 h-5 w-5" />
@@ -60,12 +67,6 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, adminMo
                         <Settings className="h-5 w-5" />
                     </button>
                 </div>
-            </div>
-
-
-            {/* News Ticker Section - perfectly integrated */}
-            <div className="mt-3 -mx-2 mb-[-8px] rounded-b-xl overflow-hidden border-t border-cyan-500/20 shadow-inner bg-black/20">
-                <NewsTicker />
             </div>
         </header>
     );

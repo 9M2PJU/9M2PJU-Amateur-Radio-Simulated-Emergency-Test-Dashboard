@@ -18,13 +18,26 @@ import Weather from './components/Widgets/Weather';
 // Solution: We will inject StationList as a child of SimulatorMap.
 
 function App() {
-  const { stations, addStation, exportData, importData, clearStations } = useStations();
+  const { stations, addStation, updateStation, removeStation, exportData, importData, clearStations } = useStations();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isPickingLocation, setIsPickingLocation] = useState(false);
   const [draftStationData, setDraftStationData] = useState<any>({});
+  const [editingStationId, setEditingStationId] = useState<string | null>(null);
+
+  const handleEdit = (station: any) => {
+    setDraftStationData(station);
+    setEditingStationId(station.id);
+    setIsFormOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+    if (confirm('Are you sure you want to delete this station?')) {
+      removeStation(id);
+    }
+  };
 
   // Responsive Sidebar Check
   useEffect(() => {
@@ -58,6 +71,8 @@ function App() {
               setIsFormOpen(true);
             }
           }}
+          onEditStation={handleEdit}
+          onDeleteStation={handleDelete}
           isPickingLocation={isPickingLocation}
         >
           {/* Mobile/Desktop Sidebar injected into Map Context */}
@@ -68,6 +83,8 @@ function App() {
               onSelectStation={() => {
                 if (window.innerWidth < 768) setIsSidebarOpen(false);
               }}
+              onEditStation={handleEdit}
+              onDeleteStation={handleDelete}
               className="rounded-2xl shadow-xl shadow-black/50 overflow-hidden"
             />
           </div>
@@ -92,6 +109,7 @@ function App() {
           <button
             onClick={() => {
               setDraftStationData({});
+              setEditingStationId(null);
               setIsFormOpen(true);
             }}
             className="h-14 w-14 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95"
@@ -107,15 +125,24 @@ function App() {
           <div className="w-full max-w-lg">
             <StationForm
               initialData={draftStationData as any}
-              onClose={() => setIsFormOpen(false)}
+              onClose={() => {
+                setIsFormOpen(false);
+                setEditingStationId(null);
+                setDraftStationData({});
+              }}
               onPickLocation={(data) => {
                 setDraftStationData(data);
                 setIsFormOpen(false);
                 setIsPickingLocation(true);
               }}
               onSubmit={(data) => {
-                addStation(data);
+                if (editingStationId) {
+                  updateStation(editingStationId, data);
+                } else {
+                  addStation(data);
+                }
                 setIsFormOpen(false);
+                setEditingStationId(null);
                 setDraftStationData({});
               }}
             />

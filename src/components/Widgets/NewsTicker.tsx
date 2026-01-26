@@ -32,6 +32,8 @@ const NewsTicker: React.FC = () => {
                         { title: 'Relief centers open as river levels rise in Pahang', link: '#' }
                     ]);
                 }
+            } catch (error) {
+                console.error('Failed to fetch news:', error);
                 setNews([
                     { title: 'System Status: Active Monitoring', link: '#' },
                     { title: 'Weather Alert: Check local forecasts', link: '#' }
@@ -50,8 +52,8 @@ const NewsTicker: React.FC = () => {
     if (loading) return null;
 
     return (
-        <div className="w-full bg-black/40 border-t border-b border-cyan-500/20 backdrop-blur-sm overflow-hidden flex items-center h-8">
-            <div className="bg-rose-600/20 border-r border-rose-500/30 px-3 h-full flex items-center gap-2 z-10">
+        <div className="w-full bg-transparent overflow-hidden flex items-center h-full">
+            <div className="bg-rose-600/10 px-3 h-full flex items-center gap-2 z-10 border-r border-cyan-500/10">
                 <AlertTriangle className="h-3 w-3 text-rose-500 animate-pulse" />
                 <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider whitespace-nowrap">DISASTER NEWS</span>
             </div>
