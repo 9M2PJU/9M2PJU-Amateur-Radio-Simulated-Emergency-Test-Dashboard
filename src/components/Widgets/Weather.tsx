@@ -94,7 +94,7 @@ const Weather: React.FC<WeatherProps> = ({ data, loading, error }) => {
                     <div className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">HF Propagation</div>
                     <div className="text-[9px] text-cyan-600 font-medium">via N0NBH</div>
                 </div>
-                <div className="relative group">
+                <div className="relative group mb-4">
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
                     <div className="relative bg-black/40 rounded-lg p-1 border border-white/10 overflow-hidden">
                         <img
@@ -103,6 +103,23 @@ const Weather: React.FC<WeatherProps> = ({ data, loading, error }) => {
                             className="w-full h-auto grayscale transition-all duration-500 hover:grayscale-0 contrast-125 brightness-90"
                             onLoad={(e) => (e.currentTarget.style.opacity = '1')}
                             style={{ opacity: 0.1, minHeight: '100px' }}
+                        />
+                    </div>
+                </div>
+
+                <div className="flex justify-between items-center mb-3">
+                    <div className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">MUF Map (Worldwide)</div>
+                    <div className="text-[9px] text-blue-600 font-medium tracking-tight">via prop.kc2g.com</div>
+                </div>
+                <div className="relative group">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                    <div className="relative bg-black/40 rounded-lg p-1 border border-white/10 overflow-hidden">
+                        <img
+                            src="https://prop.kc2g.com/render/muf_3000km_global_v.png"
+                            alt="MUF Worldwide Map"
+                            className="w-full h-auto grayscale transition-all duration-500 hover:grayscale-0 contrast-125 brightness-90 saturate-[1.2]"
+                            onLoad={(e) => (e.currentTarget.style.opacity = '1')}
+                            style={{ opacity: 0.1, minHeight: '120px' }}
                         />
                     </div>
                 </div>
