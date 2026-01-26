@@ -1,5 +1,5 @@
 import React from 'react';
-import { Radio, CloudSun, Settings, Menu } from 'lucide-react';
+import { CloudSun, Settings, Menu } from 'lucide-react';
 import Clock from './Widgets/Clock';
 
 interface HeaderProps {
@@ -20,8 +20,8 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, adminMo
                         <Menu className="h-6 w-6" />
                     </button>
 
-                    <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                        <Radio className="text-white h-6 w-6" />
+                    <div className="h-12 w-12 rounded-xl bg-black/50 border border-cyan-500/30 flex items-center justify-center p-1 overflow-hidden shadow-[0_0_15px_rgba(0,255,255,0.2)]">
+                        <img src="/logo.png" alt="9M2PJU Logo" className="h-full w-full object-contain" />
                     </div>
                     <div>
                         <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70 hidden sm:block">
@@ -56,8 +56,8 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, adminMo
                     <button
                         onClick={onToggleAdmin}
                         className={`p-3 rounded-xl transition-all duration-300 ${adminMode
-                                ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                                : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white'
+                            ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                            : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white'
                             }`}
                     >
                         <Settings className="h-5 w-5" />

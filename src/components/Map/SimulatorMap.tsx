@@ -41,6 +41,8 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({ stations, children }) => {
 
                 <ZoomControl position="bottomright" />
 
+                <div className="cyber-grid" />
+
                 {stations.map(station => (
                     <Marker key={station.id} position={[station.lat, station.lng]}>
                         <Popup className="glass-popup">

@@ -109,6 +109,7 @@ function App() {
 
       {/* Overlay Filters/Texture for Premium Feel */}
       <div className="absolute inset-0 pointer-events-none z-[50] opacity-30 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+      <div className="scanline"></div>
     </div>
   );
 }

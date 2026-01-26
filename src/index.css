@@ -4,35 +4,38 @@
 
 @layer base {
   :root {
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
-    
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
-    
-    --popover: 224 71% 4%;
-    --popover-foreground: 213 31% 91%;
-    
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    
-    --radius: 0.75rem;
+    --background: 260 50% 5%;
+    --foreground: 180 100% 90%;
+
+    --card: 260 50% 10%;
+    --card-foreground: 180 100% 90%;
+
+    --popover: 260 50% 5%;
+    --popover-foreground: 180 100% 90%;
+
+    --primary: 320 100% 60%;
+    /* Neon Pink */
+    --primary-foreground: 180 100% 90%;
+
+    --secondary: 190 100% 50%;
+    /* Neon Cyan */
+    --secondary-foreground: 260 50% 5%;
+
+    --muted: 260 30% 15%;
+    --muted-foreground: 260 20% 60%;
+
+    --accent: 320 100% 60%;
+    --accent-foreground: 180 100% 90%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 260 30% 20%;
+    --input: 260 30% 20%;
+    --ring: 320 100% 60%;
+
+    --radius: 0rem;
+    /* Cyberpunk: sharp corners */
   }
 }
 
@@ -40,12 +43,16 @@
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-mono;
+    /* Mono font for tech feel */
   }
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   width: 100%;
   margin: 0;
@@ -53,23 +60,87 @@ html, body, #root {
   overflow: hidden;
 }
 
-/* Glassmorphism Utilities */
+/* Cyberpunk Glass */
 .glass {
-  @apply bg-background/60 backdrop-blur-md border border-white/10 shadow-lg;
+  @apply bg-black/80 backdrop-blur-md border border-cyan-500/30;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
 }
 
 .glass-card {
-  @apply bg-card/50 backdrop-blur-sm border border-white/5;
+  @apply bg-black/60 backdrop-blur-sm border border-fuchsia-500/30;
 }
 
 /* Map Customization */
 .leaflet-container {
-  background: hsl(var(--background));
+  background: #050510;
   height: 100%;
   width: 100%;
   z-index: 0;
 }
 
+/* CRT Scanline Effect */
+.scanline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0) 50%,
+      rgba(0, 0, 0, 0.2) 50%,
+      rgba(0, 0, 0, 0.2));
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.15;
+}
+
+.cyber-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Leaflet Overrides for Cyberpunk */
+.leaflet-popup-content-wrapper {
+  background: rgba(10, 10, 20, 0.9) !important;
+  border: 1px solid #00e5ff !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0 10px #00e5ff !important;
+  color: #00e5ff !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(10, 10, 20, 0.9) !important;
+  border: 1px solid #00e5ff !important;
+}
+
 .leaflet-control-zoom a {
-  @apply !bg-secondary !text-primary !border-border !rounded-md;
+  @apply !bg-black !text-cyan-500 !border-cyan-500 !rounded-none !border !mb-1;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00e5ff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff00ff;
 }
