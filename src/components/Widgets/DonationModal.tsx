@@ -22,11 +22,11 @@ const DonationModal: React.FC<DonationModalProps> = ({ onClose }) => {
                     </div>
 
                     <div className="space-y-2">
-                        <h2 className="text-3xl font-black tracking-tight text-white italic">
-                            SUPPORT <span className="text-fuchsia-500">9M2PJU SET</span>
+                        <h2 className="text-3xl font-black tracking-tight text-white italic text-center">
+                            SUPPORT <span className="text-fuchsia-500">9M2PJU SET DASHBOARD</span>
                         </h2>
                         <p className="text-slate-300 leading-relaxed max-w-md mx-auto">
-                            Help us cover server maintenance costs and keep this <span className="text-cyan-400 font-bold">SET Dashboard</span> running smoothly for the Malaysian amateur radio community. Every contribution, big or small, makes a difference!
+                            Help us cover server maintenance costs and keep <span className="text-cyan-400 font-bold">9M2PJU SET Dashboard</span> running smoothly for the Malaysian amateur radio community. Every contribution, big or small, makes a difference!
                         </p>
                     </div>
 

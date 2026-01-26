@@ -100,7 +100,7 @@ const Weather: React.FC<WeatherProps> = ({ data, loading, error }) => {
                         <img
                             src="https://www.hamqsl.com/solar101pic.php"
                             alt="HF Propagation Status"
-                            className="w-full h-auto grayscale transition-all duration-500 hover:grayscale-0 contrast-125 brightness-90"
+                            className="w-full h-auto transition-all duration-500 contrast-125 brightness-90"
                             onLoad={(e) => (e.currentTarget.style.opacity = '1')}
                             style={{ opacity: 0.1, minHeight: '100px' }}
                         />
@@ -117,7 +117,7 @@ const Weather: React.FC<WeatherProps> = ({ data, loading, error }) => {
                         <iframe
                             src="https://prop.kc2g.com/renders/current/mufd-normal-now.svg"
                             title="MUF Worldwide Map"
-                            className="w-full h-48 grayscale transition-all duration-500 hover:grayscale-0 contrast-125 brightness-95 saturate-[1.4] border-none"
+                            className="w-full h-48 transition-all duration-500 contrast-125 brightness-95 saturate-[1.4] border-none"
                             loading="lazy"
                         />
                     </div>
