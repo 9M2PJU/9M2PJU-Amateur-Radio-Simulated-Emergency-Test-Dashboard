@@ -68,9 +68,9 @@ const Weather: React.FC<WeatherProps> = ({ data, loading, error }) => {
             </div>
 
             {/* 24-Hour Forecast */}
-            <div className="border-t border-white/10 pt-3">
+            <div className="border-t border-white/10 pt-3 mb-4">
                 <div className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-3">24-Hour Forecast</div>
-                <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar no-scrollbar">
+                <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
                     {data.hourly.map((item, i) => {
                         const date = new Date(item.time);
                         const hour = date.getHours();
@@ -78,13 +78,33 @@ const Weather: React.FC<WeatherProps> = ({ data, loading, error }) => {
                         const condition = weatherCodes[item.code] || 'Clear';
 
                         return (
-                            <div key={i} className="flex flex-col items-center min-w-[45px] py-2 rounded-lg bg-white/5 border border-white/5 transition-colors hover:bg-white/10">
+                            <div key={i} className="flex flex-col items-center min-w-[45px] py-2 rounded-lg bg-white/5 border border-white/10 transition-colors hover:bg-white/10">
                                 <span className="text-[10px] font-bold text-white/40 mb-2">{timeStr}</span>
                                 {getWeatherIcon(condition, 4)}
                                 <span className="text-xs font-bold mt-2">{item.temp}°</span>
                             </div>
                         );
                     })}
+                </div>
+            </div>
+
+            {/* HF Propagation Section */}
+            <div className="border-t border-white/10 pt-3">
+                <div className="flex justify-between items-center mb-3">
+                    <div className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">HF Propagation</div>
+                    <div className="text-[9px] text-cyan-600 font-medium">via N0NBH</div>
+                </div>
+                <div className="relative group">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                    <div className="relative bg-black/40 rounded-lg p-1 border border-white/10 overflow-hidden">
+                        <img
+                            src="https://www.hamqsl.com/solar101pic.php"
+                            alt="HF Propagation Status"
+                            className="w-full h-auto grayscale transition-all duration-500 hover:grayscale-0 contrast-125 brightness-90"
+                            onLoad={(e) => (e.currentTarget.style.opacity = '1')}
+                            style={{ opacity: 0.1, minHeight: '100px' }}
+                        />
+                    </div>
                 </div>
             </div>
         </div>
