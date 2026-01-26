@@ -6,9 +6,10 @@ interface StationFormProps {
     onClose: () => void;
     onSubmit: (data: Omit<Station, 'id' | 'updatedAt'>) => void;
     initialData?: Station;
+    onPickLocation?: (data: Omit<Station, 'id' | 'updatedAt'>) => void;
 }
 
-const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialData }) => {
+const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialData, onPickLocation }) => {
     const [formData, setFormData] = useState({
         callsign: initialData?.callsign || '',
         lat: initialData?.lat || 3.14,
@@ -19,6 +20,23 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
         notes: initialData?.notes || '',
     });
 
+    // Sync formData with initialData changes (e.g. returning from map pick)
+    React.useEffect(() => {
+        if (initialData) {
+            setFormData(prev => ({
+                ...prev,
+                lat: initialData.lat,
+                lng: initialData.lng,
+                // Only update other fields if they are present in initialData (to preserve draft)
+                callsign: initialData.callsign || prev.callsign,
+                operator: initialData.operator || prev.operator,
+                equipment: initialData.equipment || prev.equipment,
+                status: initialData.status || prev.status,
+                notes: initialData.notes || prev.notes,
+            }));
+        }
+    }, [initialData]);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(formData as any);
@@ -28,7 +46,7 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
         <div className="glass-card p-6 rounded-2xl shadow-2xl border border-white/10 bg-slate-900/90 text-white">
             <div className="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
                 <h2 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-                    {initialData ? 'Edit Station' : 'Add New Station'}
+                    {initialData?.callsign ? 'Edit Station' : 'Add New Station'}
                 </h2>
                 <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
                     <X className="h-5 w-5 text-white/70" />
@@ -62,11 +80,20 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                <div className="space-y-2">
+                    <div className="flex justify-between items-center">
                         <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-2">
-                            Latitude <Crosshair className="h-3 w-3" />
+                            Location <Crosshair className="h-3 w-3" />
                         </label>
+                        <button
+                            type="button"
+                            onClick={() => onPickLocation && onPickLocation(formData as any)}
+                            className="text-xs bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 px-2 py-1 rounded transition-colors flex items-center gap-1"
+                        >
+                            <Crosshair className="h-3 w-3" /> Pick on Map
+                        </button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
                         <input
                             required
                             type="number"
@@ -74,12 +101,8 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                             value={formData.lat}
                             onChange={e => setFormData({ ...formData, lat: parseFloat(e.target.value) })}
                             className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm"
+                            placeholder="Lat"
                         />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-2">
-                            Longitude <Crosshair className="h-3 w-3" />
-                        </label>
                         <input
                             required
                             type="number"
@@ -87,6 +110,7 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                             value={formData.lng}
                             onChange={e => setFormData({ ...formData, lng: parseFloat(e.target.value) })}
                             className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm"
+                            placeholder="Lng"
                         />
                     </div>
                 </div>

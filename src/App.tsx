@@ -23,6 +23,8 @@ function App() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isPickingLocation, setIsPickingLocation] = useState(false);
+  const [draftStationData, setDraftStationData] = useState<any>({});
 
   // Responsive Sidebar Check
   useEffect(() => {
@@ -47,7 +49,17 @@ function App() {
       />
 
       <main className="flex-1 relative z-0">
-        <SimulatorMap stations={stations}>
+        <SimulatorMap
+          stations={stations}
+          onMapClick={(lat, lng) => {
+            if (isPickingLocation) {
+              setDraftStationData(prev => ({ ...prev, lat, lng }));
+              setIsPickingLocation(false);
+              setIsFormOpen(true);
+            }
+          }}
+          isPickingLocation={isPickingLocation}
+        >
           {/* Mobile/Desktop Sidebar injected into Map Context */}
           <div className={`absolute top-24 left-4 z-[999] h-[calc(100%-7rem)] transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-[120%]'
             }`}>
@@ -64,17 +76,29 @@ function App() {
           <div className="absolute top-24 right-4 z-[400] hidden lg:block w-64">
             <Weather />
           </div>
+
+          {/* Location Picker Overlay Hint */}
+          {isPickingLocation && (
+            <div className="absolute top-8 left-1/2 -translate-x-1/2 z-[2000] bg-black/80 text-white px-6 py-3 rounded-full border border-cyan-500/50 shadow-[0_0_20px_rgba(0,255,255,0.3)] animate-pulse font-bold tracking-wide">
+              📍 TAP ANYWHERE ON MAP TO SELECT LOCATION
+            </div>
+          )}
         </SimulatorMap>
       </main>
 
       {/* Admin FAB */}
       <div className="absolute bottom-6 right-6 z-[500]">
-        <button
-          onClick={() => setIsFormOpen(true)}
-          className="h-14 w-14 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95"
-        >
-          <Plus className="h-8 w-8" />
-        </button>
+        {!isPickingLocation && (
+          <button
+            onClick={() => {
+              setDraftStationData({});
+              setIsFormOpen(true);
+            }}
+            className="h-14 w-14 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+          >
+            <Plus className="h-8 w-8" />
+          </button>
+        )}
       </div>
 
       {/* Modals */}
@@ -82,10 +106,17 @@ function App() {
         <div className="absolute inset-0 z-[2000] flex items-center justify-center bg-black/50 backdrop-blur-md p-4 animate-in fade-in">
           <div className="w-full max-w-lg">
             <StationForm
+              initialData={draftStationData as any}
               onClose={() => setIsFormOpen(false)}
+              onPickLocation={(data) => {
+                setDraftStationData(data);
+                setIsFormOpen(false);
+                setIsPickingLocation(true);
+              }}
               onSubmit={(data) => {
                 addStation(data);
                 setIsFormOpen(false);
+                setDraftStationData({});
               }}
             />
           </div>

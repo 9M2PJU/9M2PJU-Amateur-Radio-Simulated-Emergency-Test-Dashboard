@@ -1,5 +1,4 @@
-import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import type { Station } from '../../types';
 
@@ -18,21 +17,36 @@ L.Icon.Default.mergeOptions({
 interface SimulatorMapProps {
     stations: Station[];
     children?: React.ReactNode;
+    onMapClick?: (lat: number, lng: number) => void;
+    isPickingLocation?: boolean;
 }
 
-const SimulatorMap: React.FC<SimulatorMapProps> = ({ stations, children }) => {
+const MapEvents: React.FC<{ onMapClick?: (lat: number, lng: number) => void, isPickingLocation?: boolean }> = ({ onMapClick, isPickingLocation }) => {
+    useMapEvents({
+        click(e) {
+            if (isPickingLocation && onMapClick) {
+                onMapClick(e.latlng.lat, e.latlng.lng);
+            }
+        },
+    });
+    return null;
+};
+
+const SimulatorMap: React.FC<SimulatorMapProps> = ({ stations, children, onMapClick, isPickingLocation }) => {
     // Center on Malaysia as default (User appears to be 9M2 - Malaysia)
     const defaultCenter: [number, number] = [4.2105, 101.9758];
     const defaultZoom = 6;
 
     return (
-        <div className="h-full w-full relative outline-none">
+        <div className={`h-full w-full relative outline-none ${isPickingLocation ? 'cursor-crosshair' : ''}`}>
             <MapContainer
                 center={defaultCenter}
                 zoom={defaultZoom}
                 style={{ height: '100%', width: '100%', background: 'transparent' }}
                 zoomControl={false}
             >
+                <MapEvents onMapClick={onMapClick} isPickingLocation={isPickingLocation} />
+
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

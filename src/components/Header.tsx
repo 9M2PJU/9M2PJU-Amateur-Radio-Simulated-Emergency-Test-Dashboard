@@ -1,6 +1,7 @@
 import React from 'react';
 import { CloudSun, Settings, Menu } from 'lucide-react';
 import Clock from './Widgets/Clock';
+import NewsTicker from './Widgets/NewsTicker';
 
 interface HeaderProps {
     onToggleAdmin: () => void;
@@ -31,11 +32,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, adminMo
                             SET Dashboard
                         </h1>
                         <div className="flex items-center gap-2 text-xs text-blue-200/80 font-medium tracking-wide">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                            </span>
-                            LIVE EXERCISE MODE
+                            Made with ❤️ by <a href="https://hamradio.my" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors underline decoration-dotted">9M2PJU</a>
                         </div>
                     </div>
                 </div>
@@ -63,6 +60,12 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, adminMo
                         <Settings className="h-5 w-5" />
                     </button>
                 </div>
+            </div>
+
+
+            {/* News Ticker Section - perfectly integrated */}
+            <div className="mt-3 -mx-2 mb-[-8px] rounded-b-xl overflow-hidden border-t border-cyan-500/20 shadow-inner bg-black/20">
+                <NewsTicker />
             </div>
         </header>
     );
