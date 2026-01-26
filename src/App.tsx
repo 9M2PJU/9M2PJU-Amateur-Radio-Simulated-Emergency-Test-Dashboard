@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import SimulatorMap from './components/Map/SimulatorMap';
 import { useStations } from './hooks/useStations';
+import { useWeather } from './hooks/useWeather';
 // Import Leaflet CSS
 import 'leaflet/dist/leaflet.css';
 import { Plus } from 'lucide-react';
@@ -19,6 +20,7 @@ import Weather from './components/Widgets/Weather';
 
 function App() {
   const { stations, addStation, updateStation, removeStation, exportData, importData, clearStations } = useStations();
+  const weatherState = useWeather();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -59,6 +61,7 @@ function App() {
         adminMode={isSettingsOpen}
         onToggleAdmin={() => setIsSettingsOpen(true)}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        weather={weatherState.data?.current}
       />
 
       <main className="flex-1 relative z-0">
@@ -90,8 +93,12 @@ function App() {
           </div>
 
           {/* Weather Widget */}
-          <div className="absolute top-28 right-4 z-[400] hidden lg:block w-72">
-            <Weather />
+          <div className="absolute top-28 right-4 z-[400] hidden lg:block w-80">
+            <Weather
+              data={weatherState.data}
+              loading={weatherState.loading}
+              error={weatherState.error}
+            />
           </div>
 
           {/* Location Picker Overlay Hint */}
@@ -103,8 +110,8 @@ function App() {
         </SimulatorMap>
       </main>
 
-      {/* Admin FAB */}
-      <div className="absolute bottom-6 right-6 z-[500]">
+      {/* Admin FAB - Moved up to avoid Map Zoom controls overlap */}
+      <div className="absolute bottom-24 right-6 z-[500]">
         {!isPickingLocation && (
           <button
             onClick={() => {
