@@ -1,11 +1,12 @@
 import React from 'react';
-import { Settings, Menu } from 'lucide-react';
+import { Settings, Menu, Heart } from 'lucide-react';
 import Clock from './Widgets/Clock';
 import NewsTicker from './Widgets/NewsTicker';
 
 interface HeaderProps {
     onToggleAdmin: () => void;
     onToggleSidebar: () => void;
+    onOpenDonation: () => void;
     adminMode: boolean;
     weather?: {
         temp: number;
@@ -14,7 +15,7 @@ interface HeaderProps {
     } | null;
 }
 
-const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, adminMode, weather }) => {
+const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, onOpenDonation, adminMode, weather }) => {
     return (
         <header className="absolute top-0 left-0 right-0 z-[1000] p-4 pointer-events-none">
             <div className="glass rounded-2xl p-4 flex items-center justify-between pointer-events-auto">
@@ -69,6 +70,14 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, adminMo
                     <div className="hidden sm:block">
                         <Clock />
                     </div>
+
+                    <button
+                        onClick={onOpenDonation}
+                        className="p-3 rounded-xl bg-fuchsia-500/10 text-fuchsia-400 hover:bg-fuchsia-500/20 border border-fuchsia-500/20 transition-all group"
+                        title="Support 9M2PJU"
+                    >
+                        <Heart className="h-5 w-5 fill-current group-hover:scale-110 transition-transform" />
+                    </button>
 
                     <button
                         onClick={onToggleAdmin}

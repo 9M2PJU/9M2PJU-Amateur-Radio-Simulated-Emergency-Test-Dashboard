@@ -10,6 +10,7 @@ import SettingsModal from './components/Station/SettingsModal';
 import StationList from './components/Lists/StationList';
 import Header from './components/Header';
 import Weather from './components/Widgets/Weather';
+import DonationModal from './components/Widgets/DonationModal';
 
 // Component to bridge Map context available inside SimulatorMap to outside UI
 // Note: StationList needs to be INSIDE MapContainer to use useMap(), but our layout separates them.
@@ -28,6 +29,7 @@ function App() {
   const [isPickingLocation, setIsPickingLocation] = useState(false);
   const [draftStationData, setDraftStationData] = useState<any>({});
   const [editingStationId, setEditingStationId] = useState<string | null>(null);
+  const [isDonationOpen, setIsDonationOpen] = useState(false);
 
   const handleEdit = (station: any) => {
     setDraftStationData(station);
@@ -55,12 +57,25 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Donation Popup Logic: Show once per session
+  useEffect(() => {
+    const hasSeenDonation = sessionStorage.getItem('hasSeenDonation');
+    if (!hasSeenDonation) {
+      const timer = setTimeout(() => {
+        setIsDonationOpen(true);
+        sessionStorage.setItem('hasSeenDonation', 'true');
+      }, 3000); // 3-second delay for a better experience
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
     <div className="relative h-full w-full bg-background overflow-hidden flex flex-col font-sans text-foreground">
       <Header
         adminMode={isSettingsOpen}
         onToggleAdmin={() => setIsSettingsOpen(true)}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        onOpenDonation={() => setIsDonationOpen(true)}
         weather={weatherState.data?.current}
       />
 
@@ -172,9 +187,12 @@ function App() {
         />
       )}
 
+      {isDonationOpen && (
+        <DonationModal onClose={() => setIsDonationOpen(false)} />
+      )}
+
       {/* Overlay Filters/Texture for Premium Feel */}
       <div className="absolute inset-0 pointer-events-none z-[50] opacity-30 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-      <div className="scanline"></div>
     </div>
   );
 }

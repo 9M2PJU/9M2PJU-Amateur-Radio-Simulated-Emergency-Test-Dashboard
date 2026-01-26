@@ -78,25 +78,6 @@ body,
   z-index: 0;
 }
 
-/* CRT Scanline Effect - Refined to avoid 1px artifacts */
-.scanline {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom,
-      rgba(255, 255, 255, 0),
-      rgba(255, 255, 255, 0) 50%,
-      rgba(0, 0, 0, 0.3) 50%,
-      rgba(0, 0, 0, 0.3));
-  background-size: 100% 8px;
-  /* Increased from 4px to be less dense */
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.08;
-  /* Reduced intensity */
-}
 
 .cyber-grid {
   position: absolute;
