@@ -95,7 +95,10 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                             <Popup className="glass-popup">
                                 <div className="p-3 min-w-[240px] bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl">
                                     <div className="flex justify-between items-start mb-3 border-b border-white/10 pb-2">
-                                        <h3 className="font-bold text-xl text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">{station.callsign}</h3>
+                                        <div className="flex flex-col">
+                                            <h3 className="font-bold text-xl text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">{station.callsign}</h3>
+                                            {station.locationName && <span className="text-[10px] text-cyan-400/80 font-bold uppercase tracking-wider">{station.locationName}</span>}
+                                        </div>
                                         <div className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter ${station.status === 'active' ? 'bg-cyan-500/20 text-cyan-400' :
                                             station.status === 'emergency' ? 'bg-red-500/20 text-red-400 animate-pulse' : 'bg-gray-500/20 text-gray-400'
                                             }`}>
@@ -114,51 +117,75 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                                             </div>
                                         )}
 
-                                        {station.frequency && (
-                                            <div className="flex items-start gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 shrink-0" />
-                                                <div className="text-xs">
-                                                    <span className="text-white/40 font-bold uppercase text-[9px] block tracking-widest">Frequency</span>
-                                                    <span className="text-purple-300 font-mono font-bold tracking-tight">{station.frequency}</span>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {station.frequency && (
+                                                <div className="flex items-start gap-2">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 shrink-0" />
+                                                    <div className="text-xs">
+                                                        <span className="text-white/40 font-bold uppercase text-[9px] block tracking-widest">Freq / Mode</span>
+                                                        <span className="text-purple-300 font-mono font-bold tracking-tight">
+                                                            {station.frequency}
+                                                            {station.mode && <span className="ml-1 text-purple-400/70">[{station.mode}]</span>}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )}
+                                            )}
 
-                                        {station.equipment && (
+                                            {station.powerSource && (
+                                                <div className="flex items-start gap-2">
+                                                    <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${station.powerSource === 'battery' ? 'bg-amber-500 shadow-[0_0_5px_rgba(245,158,11,0.5)]' : 'bg-cyan-500'}`} />
+                                                    <div className="text-xs">
+                                                        <span className="text-white/40 font-bold uppercase text-[9px] block tracking-widest">Power</span>
+                                                        <span className={station.powerSource === 'battery' ? 'text-amber-400 font-bold' : 'text-cyan-300 font-bold'}>
+                                                            {station.powerSource === 'battery' ? '🔋 BATT' : '🔌 MAIN'}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {(station.equipment || station.antenna) && (
                                             <div className="flex items-start gap-2">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0" />
                                                 <div className="text-xs">
-                                                    <span className="text-white/40 font-bold uppercase text-[9px] block tracking-widest">Equipment</span>
-                                                    <span className="text-blue-100 font-medium">{station.equipment}</span>
+                                                    <span className="text-white/40 font-bold uppercase text-[9px] block tracking-widest">Rig / Antenna</span>
+                                                    <span className="text-blue-100 font-medium leading-relaxed">
+                                                        {station.equipment || 'No rig listed'}
+                                                        {station.antenna && <span className="block italic text-blue-300/80 text-[10px]">Ant: {station.antenna}</span>}
+                                                    </span>
                                                 </div>
                                             </div>
                                         )}
 
-                                        {station.powerSource && (
+                                        {station.operatingHours && (
                                             <div className="flex items-start gap-2">
-                                                <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${station.powerSource === 'battery' ? 'bg-amber-500 shadow-[0_0_5px_rgba(245,158,11,0.5)]' : 'bg-cyan-500'}`} />
+                                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
                                                 <div className="text-xs">
-                                                    <span className="text-white/40 font-bold uppercase text-[9px] block tracking-widest">Power Source</span>
-                                                    <span className={station.powerSource === 'battery' ? 'text-amber-400 font-bold' : 'text-cyan-300 font-bold'}>
-                                                        {station.powerSource === 'battery' ? '🔋 Battery / Solar' : '🔌 Main Power'}
-                                                    </span>
+                                                    <span className="text-white/40 font-bold uppercase text-[9px] block tracking-widest">Operating Hours</span>
+                                                    <span className="text-emerald-300 font-medium italic">{station.operatingHours}</span>
                                                 </div>
                                             </div>
                                         )}
                                     </div>
 
                                     <div className="mt-4 text-[9px] text-slate-500 border-t border-white/10 pt-3 flex justify-between items-center bg-black/20 -mx-3 -mb-3 px-3 py-2">
-                                        <span className="font-mono">UPDATED: {new Date(station.updatedAt).toLocaleTimeString()}</span>
+                                        <span className="font-mono uppercase">Telemetry Updated: {new Date(station.updatedAt).toLocaleTimeString()}</span>
                                         <div className="flex gap-1.5">
                                             <button
-                                                onClick={() => onEditStation?.(station)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onEditStation?.(station);
+                                                }}
                                                 className="p-1.5 hover:bg-white/10 rounded text-cyan-400 transition-colors"
                                                 title="Edit"
                                             >
                                                 <Edit2 className="h-3.5 w-3.5" />
                                             </button>
                                             <button
-                                                onClick={() => onDeleteStation?.(station.id)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onDeleteStation?.(station.id);
+                                                }}
                                                 className="p-1.5 hover:bg-rose-500/20 rounded text-rose-400 transition-colors"
                                                 title="Delete"
                                             >

@@ -19,6 +19,10 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
         status: initialData?.status || 'active',
         powerSource: initialData?.powerSource || 'main',
         frequency: initialData?.frequency || '',
+        mode: initialData?.mode || '',
+        antenna: initialData?.antenna || '',
+        locationName: initialData?.locationName || '',
+        operatingHours: initialData?.operatingHours || '',
         customColor: initialData?.customColor || '',
         notes: initialData?.notes || '',
     });
@@ -47,6 +51,10 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                 status: initialData.status || prev.status,
                 powerSource: initialData.powerSource || prev.powerSource,
                 frequency: initialData.frequency || prev.frequency,
+                mode: initialData.mode || prev.mode,
+                antenna: initialData.antenna || prev.antenna,
+                locationName: initialData.locationName || prev.locationName,
+                operatingHours: initialData.operatingHours || prev.operatingHours,
                 customColor: initialData.customColor || prev.customColor,
                 notes: initialData.notes || prev.notes,
             }));
@@ -113,9 +121,20 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                 </div>
 
                 <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Location Name</label>
+                    <input
+                        type="text"
+                        value={formData.locationName}
+                        onChange={e => setFormData({ ...formData, locationName: e.target.value })}
+                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                        placeholder="e.g. MCMC Cyberjaya / Puncak Alam"
+                    />
+                </div>
+
+                <div className="space-y-2">
                     <div className="flex justify-between items-center">
                         <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-2">
-                            Location <Crosshair className="h-3 w-3" />
+                            Coordinates <Crosshair className="h-3 w-3" />
                         </label>
                         <button
                             type="button"
@@ -159,7 +178,7 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Operating Freq</label>
+                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Frequency</label>
                         <input
                             type="text"
                             value={formData.frequency}
@@ -170,15 +189,50 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                     </div>
                 </div>
 
-                <div className="space-y-2">
-                    <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Equipment / Rig</label>
-                    <input
-                        type="text"
-                        value={formData.equipment}
-                        onChange={e => setFormData({ ...formData, equipment: e.target.value })}
-                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-                        placeholder="Radio, Antenna type..."
-                    />
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Mode</label>
+                        <input
+                            type="text"
+                            value={formData.mode}
+                            onChange={e => setFormData({ ...formData, mode: e.target.value })}
+                            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="e.g. FM, SSB, FT8"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Operating Hours</label>
+                        <input
+                            type="text"
+                            value={formData.operatingHours}
+                            onChange={e => setFormData({ ...formData, operatingHours: e.target.value })}
+                            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="e.g. 08:00 - 18:00"
+                        />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Radio / Rig</label>
+                        <input
+                            type="text"
+                            value={formData.equipment}
+                            onChange={e => setFormData({ ...formData, equipment: e.target.value })}
+                            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="e.g. IC-7300, FT-891"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Antenna</label>
+                        <input
+                            type="text"
+                            value={formData.antenna}
+                            onChange={e => setFormData({ ...formData, antenna: e.target.value })}
+                            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="e.g. Dipole, V2000"
+                        />
+                    </div>
                 </div>
 
                 <div className="space-y-2">
