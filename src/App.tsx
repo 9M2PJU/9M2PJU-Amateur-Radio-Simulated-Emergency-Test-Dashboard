@@ -53,7 +53,7 @@ function App() {
           stations={stations}
           onMapClick={(lat, lng) => {
             if (isPickingLocation) {
-              setDraftStationData(prev => ({ ...prev, lat, lng }));
+              setDraftStationData((prev: any) => ({ ...prev, lat, lng }));
               setIsPickingLocation(false);
               setIsFormOpen(true);
             }
