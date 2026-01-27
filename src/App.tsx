@@ -249,7 +249,12 @@ function App() {
       )}
 
       {isDonationOpen && (
-        <DonationModal onClose={() => setIsDonationOpen(false)} />
+        <DonationModal onClose={() => {
+          setIsDonationOpen(false);
+          if (!session) {
+            setTimeout(() => setIsAuthOpen(true), 300);
+          }
+        }} />
       )}
 
       {isAuthOpen && (
