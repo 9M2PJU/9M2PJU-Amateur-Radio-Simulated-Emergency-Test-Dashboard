@@ -88,19 +88,19 @@ const Weather: React.FC<WeatherProps> = ({ data, loading, error }) => {
                 </div>
             </div>
 
-            {/* Disaster Map Section */}
+            {/* Radar Map Section */}
             <div className="border-t border-white/10 pt-3">
                 <div className="flex justify-between items-center mb-3">
-                    <div className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Disaster Map (NADMA)</div>
-                    <div className="text-[9px] text-cyan-600 font-medium">portalbencana.nadma.gov.my</div>
+                    <div className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Radar Malaysia (MET)</div>
+                    <div className="text-[9px] text-cyan-600 font-medium">met.gov.my</div>
                 </div>
                 <div className="relative group mb-4">
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-                    <div className="relative bg-black/40 rounded-lg border border-white/10 overflow-hidden h-64">
-                        <iframe
-                            src="https://portalbencana.nadma.gov.my/map/map_main.php?z=6"
-                            title="NADMA Disaster Map"
-                            className="w-full h-full border-none"
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                    <div className="relative bg-black/40 rounded-lg border border-white/10 overflow-hidden">
+                        <img
+                            src={`https://www.met.gov.my/data/radar_malaysia.gif?nocache=${new Date().getTime()}`}
+                            alt="Radar Malaysia"
+                            className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity"
                             loading="lazy"
                         />
                     </div>
