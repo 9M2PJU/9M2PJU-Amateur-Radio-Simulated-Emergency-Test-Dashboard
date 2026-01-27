@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { Station } from '../../types';
 import { Search, Radio, AlertTriangle, Edit2, Trash2 } from 'lucide-react';
 import { useMap } from 'react-leaflet';
+import L from 'leaflet';
 
 interface StationListProps {
     stations: Station[];
@@ -24,6 +25,14 @@ const StationList: React.FC<StationListProps> = ({
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const map = useMap();
+    const containerRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        if (containerRef.current) {
+            L.DomEvent.disableClickPropagation(containerRef.current);
+            L.DomEvent.disableScrollPropagation(containerRef.current);
+        }
+    }, []);
 
 
     const filteredStations = stations.filter(s =>
@@ -42,9 +51,8 @@ const StationList: React.FC<StationListProps> = ({
 
     return (
         <div
+            ref={containerRef}
             className={`flex flex-col glass border-r border-white/10 w-80 bg-[#0a0a14] backdrop-blur-xl h-full ${className}`}
-            onWheel={(e) => e.stopPropagation()}
-            onScroll={(e) => e.stopPropagation()}
         >
             <div className="p-4 border-b border-white/10">
                 <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
