@@ -133,6 +133,8 @@ function App() {
           onEditStation={handleEdit}
           onDeleteStation={handleDelete}
           isPickingLocation={isPickingLocation}
+          currentUserId={session?.user?.id}
+          isAdmin={isAdmin}
         >
           {/* Mobile/Desktop Sidebar injected into Map Context */}
           <div className={`absolute top-28 left-4 z-[999] h-[calc(100%-8rem)] transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-[120%]'
@@ -144,6 +146,8 @@ function App() {
               }}
               onEditStation={handleEdit}
               onDeleteStation={handleDelete}
+              currentUserId={session?.user?.id}
+              isAdmin={isAdmin}
               className="rounded-2xl shadow-xl shadow-black/50 overflow-hidden"
             />
           </div>

@@ -9,6 +9,8 @@ interface StationListProps {
     onEditStation?: (station: Station) => void;
     onDeleteStation?: (id: string) => void;
     className?: string;
+    currentUserId?: string;
+    isAdmin?: boolean;
 }
 
 const StationList: React.FC<StationListProps> = ({
@@ -16,7 +18,9 @@ const StationList: React.FC<StationListProps> = ({
     onSelectStation,
     onEditStation,
     onDeleteStation,
-    className = ''
+    className = '',
+    currentUserId,
+    isAdmin
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const map = useMap();
@@ -82,7 +86,7 @@ const StationList: React.FC<StationListProps> = ({
                             </div>
                             {station.operator && <div className="text-xs text-slate-400 mt-1">{station.operator}</div>}
                             <div className="flex flex-wrap gap-1 mt-2">
-                                {(station.radioInfo || (station.frequency ? [{ frequency: station.frequency, mode: station.mode || '' }] : [])).map((info, idx) => (
+                                {(station.radioInfo || (station.frequency ? [{ frequency: station.frequency as string, mode: station.mode || '' }] : [])).map((info: any, idx: number) => (
                                     <span key={idx} className="text-[10px] bg-cyan-900/20 border border-cyan-500/20 px-1.5 py-0.5 rounded text-cyan-200 font-mono">
                                         {info.frequency}MHz {info.mode}
                                     </span>
@@ -117,28 +121,30 @@ const StationList: React.FC<StationListProps> = ({
                             </div>
                         </div>
 
-                        <div className="flex justify-end gap-2 mt-3 pt-2 border-t border-white/5 transition-opacity group-hover:opacity-100 opacity-100 sm:opacity-0">
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onEditStation?.(station);
-                                }}
-                                className="p-1.5 rounded-md hover:bg-blue-500/20 text-blue-400 transition-colors"
-                                title="Edit"
-                            >
-                                <Edit2 className="h-4 w-4" />
-                            </button>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onDeleteStation?.(station.id);
-                                }}
-                                className="p-1.5 rounded-md hover:bg-rose-500/20 text-rose-400 transition-colors"
-                                title="Delete"
-                            >
-                                <Trash2 className="h-4 w-4" />
-                            </button>
-                        </div>
+                        {(isAdmin || (currentUserId && station.user_id === currentUserId)) && (
+                            <div className="flex justify-end gap-2 mt-3 pt-2 border-t border-white/5 transition-opacity group-hover:opacity-100 opacity-100 sm:opacity-0">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onEditStation?.(station);
+                                    }}
+                                    className="p-1.5 rounded-md hover:bg-blue-500/20 text-blue-400 transition-colors"
+                                    title="Edit"
+                                >
+                                    <Edit2 className="h-4 w-4" />
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDeleteStation?.(station.id);
+                                    }}
+                                    className="p-1.5 rounded-md hover:bg-rose-500/20 text-rose-400 transition-colors"
+                                    title="Delete"
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 ))}
                 {filteredStations.length === 0 && (

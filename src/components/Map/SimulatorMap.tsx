@@ -22,6 +22,8 @@ interface SimulatorMapProps {
     onEditStation?: (station: Station) => void;
     onDeleteStation?: (id: string) => void;
     isPickingLocation?: boolean;
+    currentUserId?: string;
+    isAdmin?: boolean;
 }
 
 const MapEvents: React.FC<{ onMapClick?: (lat: number, lng: number) => void, isPickingLocation?: boolean }> = ({ onMapClick, isPickingLocation }) => {
@@ -43,7 +45,9 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
     onMapClick,
     onEditStation,
     onDeleteStation,
-    isPickingLocation
+    isPickingLocation,
+    currentUserId,
+    isAdmin
 }) => {
     // Center on Malaysia as default (User appears to be 9M2 - Malaysia)
     const defaultCenter: [number, number] = [4.2105, 101.9758];
@@ -127,7 +131,7 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                                                     <div className="text-xs w-full">
                                                         <span className="text-white/40 font-bold uppercase text-[9px] block tracking-widest mb-1">Freq / Mode</span>
                                                         <div className="flex flex-col gap-1">
-                                                            {(station.radioInfo || (station.frequency ? [{ frequency: station.frequency, mode: station.mode || '' }] : [])).map((info, idx) => (
+                                                            {(station.radioInfo || (station.frequency ? [{ frequency: station.frequency as string, mode: station.mode || '' }] : [])).map((info: any, idx: number) => (
                                                                 <div key={idx} className="flex justify-between items-center bg-purple-500/5 rounded px-1.5 py-0.5 border border-purple-500/10">
                                                                     <span className="text-purple-300 font-mono font-bold border-r border-purple-500/20 pr-2 mr-2">{info.frequency} MHz</span>
                                                                     <span className="text-purple-400 font-bold text-[10px] uppercase">{info.mode}</span>
@@ -177,28 +181,30 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
 
                                     <div className="mt-4 text-[9px] text-slate-500 border-t border-white/10 pt-3 flex justify-between items-center bg-black/20 -mx-3 -mb-3 px-3 py-2">
                                         <span className="font-mono uppercase">Telemetry Updated: {new Date(station.updatedAt).toLocaleTimeString()}</span>
-                                        <div className="flex gap-1.5">
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    onEditStation?.(station);
-                                                }}
-                                                className="p-1.5 hover:bg-white/10 rounded text-cyan-400 transition-colors"
-                                                title="Edit"
-                                            >
-                                                <Edit2 className="h-3.5 w-3.5" />
-                                            </button>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    onDeleteStation?.(station.id);
-                                                }}
-                                                className="p-1.5 hover:bg-rose-500/20 rounded text-rose-400 transition-colors"
-                                                title="Delete"
-                                            >
-                                                <Trash2 className="h-3.5 w-3.5" />
-                                            </button>
-                                        </div>
+                                        {(isAdmin || (currentUserId && station.user_id === currentUserId)) && (
+                                            <div className="flex gap-1.5">
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        onEditStation?.(station);
+                                                    }}
+                                                    className="p-1.5 hover:bg-white/10 rounded text-cyan-400 transition-colors"
+                                                    title="Edit"
+                                                >
+                                                    <Edit2 className="h-3.5 w-3.5" />
+                                                </button>
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        onDeleteStation?.(station.id);
+                                                    }}
+                                                    className="p-1.5 hover:bg-rose-500/20 rounded text-rose-400 transition-colors"
+                                                    title="Delete"
+                                                >
+                                                    <Trash2 className="h-3.5 w-3.5" />
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </Popup>
