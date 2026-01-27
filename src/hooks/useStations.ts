@@ -3,20 +3,46 @@ import type { Station } from '../types';
 
 const STORAGE_KEY = 'set-dashboard-stations';
 
+// Fallback UUID generator
+const generateUUID = () => {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        try {
+            return crypto.randomUUID();
+        } catch (e) {
+            console.warn('crypto.randomUUID failed, falling back to math-based UUID', e);
+        }
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+};
+
 export const useStations = () => {
     const [stations, setStations] = useState<Station[]>(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        return saved ? JSON.parse(saved) : [];
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            console.error('Failed to load stations from localStorage:', e);
+            return [];
+        }
     });
 
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(stations));
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(stations));
+        } catch (e) {
+            console.error('Failed to save stations to localStorage:', e);
+            // Optional: Notify user via UI if needed, but for now just log to prevent crash
+        }
     }, [stations]);
 
     const addStation = (station: Omit<Station, 'id' | 'updatedAt'>) => {
         const newStation: Station = {
             ...station,
-            id: crypto.randomUUID(),
+            id: generateUUID(),
             updatedAt: Date.now(),
         };
         setStations(prev => [...prev, newStation]);

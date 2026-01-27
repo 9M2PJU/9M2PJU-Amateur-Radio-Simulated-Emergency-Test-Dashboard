@@ -178,27 +178,38 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Frequency</label>
-                        <input
-                            type="text"
-                            value={formData.frequency}
-                            onChange={e => setFormData({ ...formData, frequency: e.target.value })}
-                            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono"
-                            placeholder="e.g. 145.500MHz"
-                        />
+                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Frequency (MHz)</label>
+                        <div className="relative">
+                            <input
+                                type="number"
+                                step="any"
+                                value={formData.frequency}
+                                onChange={e => setFormData({ ...formData, frequency: e.target.value })}
+                                className="w-full bg-black/40 border border-white/10 rounded-lg pl-4 pr-12 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono"
+                                placeholder="145.500"
+                            />
+                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-mono">MHz</span>
+                        </div>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Mode</label>
-                        <input
-                            type="text"
+                        <select
                             value={formData.mode}
                             onChange={e => setFormData({ ...formData, mode: e.target.value })}
                             className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-                            placeholder="e.g. FM, CW, SSB, Digital"
-                        />
+                        >
+                            <option value="">Select Mode</option>
+                            <option value="FM">FM</option>
+                            <option value="AM">AM</option>
+                            <option value="SSB">SSB</option>
+                            <option value="LSB">LSB</option>
+                            <option value="USB">USB</option>
+                            <option value="CW">CW</option>
+                            <option value="DIGITAL">DIGITAL (DMR/C4FM/D-STAR)</option>
+                        </select>
                     </div>
                     <div className="space-y-2">
                         <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Operating Hours</label>
