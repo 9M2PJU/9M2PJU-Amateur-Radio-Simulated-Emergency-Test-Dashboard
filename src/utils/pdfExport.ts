@@ -11,13 +11,21 @@ export const exportStationsToPDF = (stations: Station[]) => {
     doc.setFillColor(15, 23, 42); // slate-900
     doc.rect(0, 0, 210, 40, 'F');
 
+    // Add Logo
+    try {
+        // We use the logo.png from the public directory
+        doc.addImage('/logo.png', 'PNG', 14, 8, 24, 24);
+    } catch (e) {
+        console.error('Failed to add logo to PDF:', e);
+    }
+
     doc.setTextColor(34, 211, 238); // cyan-400
-    doc.setFontSize(22);
+    doc.setFontSize(20);
     doc.text('EMERGENCY SITUATION REPORT', 105, 18, { align: 'center' });
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(10);
-    doc.text('9M2PJU AMATEUR RADIO EMERGENCY TELEMETRY NETWORK', 105, 26, { align: 'center' });
+    doc.text('9M2PJU SIMULATED EMERGENCY TEST DASHBOARD', 105, 26, { align: 'center' });
     doc.text(`DATE/TIME: ${timestamp}`, 105, 33, { align: 'center' });
 
     // --- Executive Summary ---
@@ -30,9 +38,9 @@ export const exportStationsToPDF = (stations: Station[]) => {
     const emergencyCount = stations.filter(s => s.status === 'emergency').length;
     const totalStations = stations.length;
 
-    const summary = `As of ${timestamp}, a total of ${totalStations} stations are registered in the telemetry network. ` +
+    const summary = `As of ${timestamp}, a total of ${totalStations} stations are registered in the 9M2PJU SET Dashboard. ` +
         `Current system status shows ${emergencyCount} stations in EMERGENCY state and ${activeCount} stations ACTIVE. ` +
-        `Operational readiness is maintained via HF/Satellite backhaul. All telemetry data is current.`;
+        `Operational readiness is maintained via radio network. All telemetry data is current.`;
 
     const splitSummary = doc.splitTextToSize(summary, 182);
     doc.text(splitSummary, 14, 58);
@@ -65,7 +73,7 @@ export const exportStationsToPDF = (stations: Station[]) => {
     // --- Station Directory ---
     const finalY = (doc as any).lastAutoTable.finalY || 130;
     doc.setFontSize(14);
-    doc.text('III. STATION DIRECTORY (TELEMETRY LOG)', 14, finalY + 15);
+    doc.text('III. STATION DIRECTORY', 14, finalY + 15);
 
     const tableData = stations.map(s => [
         s.callsign,

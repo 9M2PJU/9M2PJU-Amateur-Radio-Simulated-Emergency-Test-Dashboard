@@ -45,6 +45,9 @@ function App() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      if (!session) {
+        sessionStorage.removeItem('hasSeenDonation');
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -103,7 +106,7 @@ function App() {
       const timer = setTimeout(() => {
         setIsDonationOpen(true);
         sessionStorage.setItem('hasSeenDonation', 'true');
-      }, 5000); // 5-second delay for a better experience
+      }, 500); // 500ms delay for a snappy experience after login
       return () => clearTimeout(timer);
     }
   }, [session]);
