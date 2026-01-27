@@ -169,13 +169,23 @@ export const useStations = (userIdFilter?: string | null) => {
             const parsed = JSON.parse(jsonData);
             if (Array.isArray(parsed)) {
                 const { data: { user } } = await supabase.auth.getUser();
-                const cleanData = parsed.map(({ id: _id, updatedAt: _ua, user_id: _ui, ...rest }) => ({
+                const cleanData = parsed.map(({
+                    id: _id,
+                    updatedAt: _ua,
+                    user_id: _ui,
+                    powerSource,
+                    locationName,
+                    operatingHours,
+                    customColor,
+                    radioInfo,
+                    ...rest
+                }) => ({
                     ...rest,
-                    power_source: rest.powerSource,
-                    location_name: rest.locationName,
-                    operating_hours: rest.operatingHours,
-                    custom_color: rest.customColor,
-                    radio_info: rest.radioInfo || (rest.frequencies ? rest.frequencies.map((f: string) => ({ frequency: f, mode: rest.mode || '' })) : []),
+                    power_source: powerSource || rest.power_source,
+                    location_name: locationName || rest.location_name,
+                    operating_hours: operatingHours || rest.operating_hours,
+                    custom_color: customColor || rest.custom_color,
+                    radio_info: radioInfo || rest.radio_info || (rest.frequencies ? rest.frequencies.map((f: string) => ({ frequency: f, mode: rest.mode || '' })) : []),
                     updated_at: Date.now(),
                     user_id: userIdFilter || user?.id,
                     user_email: userIdFilter ? undefined : user?.email
