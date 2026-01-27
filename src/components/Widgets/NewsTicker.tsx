@@ -1,95 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import { AlertTriangle } from 'lucide-react';
 
-interface NewsItem {
-    title: string;
-    link: string;
-}
+import React from 'react';
+import { AlertCircle } from 'lucide-react';
 
 const NewsTicker: React.FC = () => {
-    const [news, setNews] = useState<NewsItem[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchNews = async () => {
-            try {
-                // Using rss2json to convert Google News RSS to JSON for client-side consumption
-                // Search query: malaysia disaster news
-                const rssUrl = encodeURIComponent('https://news.google.com/rss/search?q=malaysia+disaster+news&hl=en-MY&gl=MY&ceid=MY:en');
-                const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`);
-                const data = await response.json();
-
-                if (data.status === 'ok') {
-                    setNews(data.items.map((item: any) => ({
-                        title: item.title,
-                        link: item.link
-                    })));
-                } else {
-                    // Fallback mock data if API limit reached or fails
-                    setNews([
-                        { title: 'NADMA issues flood warning for East Coast', link: '#' },
-                        { title: 'METMalaysia forecasts heavy thunderstorms in Klang Valley', link: '#' },
-                        { title: 'Relief centers open as river levels rise in Pahang', link: '#' }
-                    ]);
-                }
-            } catch (error) {
-                console.error('Failed to fetch news:', error);
-                setNews([
-                    { title: 'System Status: Active Monitoring', link: '#' },
-                    { title: 'Weather Alert: Check local forecasts', link: '#' }
-                ]);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchNews();
-        // Refresh every 15 minutes
-        const interval = setInterval(fetchNews, 15 * 60 * 1000);
-        return () => clearInterval(interval);
-    }, []);
-
-    if (loading) return null;
+    const newsItems = [
+        "Ribut burukkan penderitaan pelarian Gaza",
+        "Chile wildfires leave 19 dead amid extreme heat as scores evacuated",
+        "Thailand uji sistem amaran kecemasan bergerak seluruh negara tingkat respons bencana",
+        "Tiga terperangkap di lombong tua Jawa Barat, operasi SAR dilancarkan",
+        "QuickCheck: Is Earth being hit by the largest solar storm in 20 years today?"
+    ];
 
     return (
-        <div className="w-full bg-transparent overflow-hidden flex items-center h-full">
-            <div className="bg-rose-600/10 px-3 h-full flex items-center gap-2 z-10 border-r border-cyan-500/10">
-                <AlertTriangle className="h-3 w-3 text-rose-500 animate-pulse" />
-                <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider whitespace-nowrap">DISASTER NEWS</span>
+        <div className="bg-red-900/40 border-y border-red-500/20 py-2 relative overflow-hidden flex items-center">
+            <div className="bg-red-900/90 absolute left-0 z-10 px-3 py-1 flex items-center gap-2 h-full shadow-[4px_0_12px_rgba(0,0,0,0.5)]">
+                <AlertCircle className="h-4 w-4 text-red-400 animate-pulse" />
+                <span className="text-xs font-bold text-red-100 uppercase tracking-wider whitespace-nowrap">Breaking News</span>
             </div>
-
-            <div className="flex-1 overflow-hidden relative group cursor-pointer">
-                {/* Marquee Animation */}
-                <div className="animate-marquee whitespace-nowrap flex gap-12 items-center hover:pause-animation">
-                    {[...news, ...news].map((item, i) => (
-                        <a
-                            key={i}
-                            href={item.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-cyan-100/80 hover:text-cyan-400 transition-colors flex items-center gap-2"
-                        >
-                            <span className="w-1 h-1 rounded-full bg-cyan-500/50" />
-                            {item.title}
-                        </a>
-                    ))}
-                </div>
+            <div className="flex gap-8 animate-marquee whitespace-nowrap pl-[140px]">
+                {newsItems.map((item, i) => (
+                    <span key={i} className="text-sm text-red-100/90 flex items-center gap-4">
+                        {item}
+                        <span className="w-1.5 h-1.5 bg-red-500/50 rounded-full" />
+                    </span>
+                ))}
+                {/* Duplicate for smooth loop */}
+                {newsItems.map((item, i) => (
+                    <span key={`dup-${i}`} className="text-sm text-red-100/90 flex items-center gap-4">
+                        {item}
+                        <span className="w-1.5 h-1.5 bg-red-500/50 rounded-full" />
+                    </span>
+                ))}
             </div>
-
-            <style>{`
-                @keyframes marquee {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(-50%); }
-                }
-                .animate-marquee {
-                    animation: marquee 40s linear infinite;
-                }
-                .hover\\:pause-animation:hover {
-                    animation-play-state: paused;
-                }
-            `}</style>
         </div>
     );
 };
 
 export default NewsTicker;
+
+// Add this to your index.css or relevant CSS file
+// @keyframes marquee {
+//   0% { transform: translateX(0); }
+//   100% { transform: translateX(-50%); }
+// }
+// .animate-marquee {
+//   animation: marquee 40s linear infinite;
+// }

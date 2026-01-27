@@ -113,7 +113,7 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                                 key={c.name}
                                 type="button"
                                 onClick={() => setFormData({ ...formData, customColor: c.value })}
-                                className={`w - 8 h - 8 rounded - lg border - 2 transition - all ${formData.customColor === c.value ? 'border-white scale-110' : 'border-transparent opacity-60 hover:opacity-100'} `}
+                                className={`w-12 h-12 rounded-lg border-2 transition-all ${formData.customColor === c.value ? 'border-white scale-110' : 'border-transparent opacity-60 hover:opacity-100'} `}
                                 style={{ backgroundColor: c.value || '#06b6d4' }}
                                 title={c.name}
                             />
@@ -285,30 +285,136 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                    <div className="space-y-2 col-span-2">
                         <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-2">
                             Operating Hours <Clock className="h-3 w-3" />
                         </label>
-                        <div className="flex items-center gap-2">
-                            <input
-                                type="time"
-                                value={formData.operatingHours?.split(' - ')[0] || ''}
-                                onChange={e => {
-                                    const currentEnd = formData.operatingHours?.split(' - ')[1] || '';
-                                    setFormData({ ...formData, operatingHours: `${e.target.value} - ${currentEnd} ` })
-                                }}
-                                className="w-full bg-black/40 border border-white/10 rounded-lg px-2 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm text-center"
-                            />
-                            <span className="text-slate-500 font-bold">-</span>
-                            <input
-                                type="time"
-                                value={formData.operatingHours?.split(' - ')[1] || ''}
-                                onChange={e => {
-                                    const currentStart = formData.operatingHours?.split(' - ')[0] || '';
-                                    setFormData({ ...formData, operatingHours: `${currentStart} - ${e.target.value} ` })
-                                }}
-                                className="w-full bg-black/40 border border-white/10 rounded-lg px-2 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm text-center"
-                            />
+                        <div className="flex items-center gap-2 bg-black/40 p-2 rounded-lg border border-white/10">
+                            {/* Start Time */}
+                            <div className="flex items-center gap-1">
+                                <select
+                                    className="bg-transparent text-white text-sm outline-none appearance-none font-mono"
+                                    value={(() => {
+                                        const time = formData.operatingHours?.split(' - ')[0] || '';
+                                        if (!time) return '12';
+                                        let [h] = time.split(':');
+                                        let hour = parseInt(h);
+                                        if (hour === 0) return '12';
+                                        if (hour > 12) return (hour - 12).toString();
+                                        return hour.toString();
+                                    })()}
+                                    onChange={(e) => {
+                                        const currentStart = formData.operatingHours?.split(' - ')[0] || '09:00';
+                                        const currentEnd = formData.operatingHours?.split(' - ')[1] || '17:00';
+                                        let [h, m] = currentStart.split(':');
+                                        let newH = parseInt(e.target.value);
+                                        const isPM = parseInt(h) >= 12; // Check current AM/PM state
+                                        if (isPM && newH < 12) newH += 12; // If was PM and new hour is AM, add 12
+                                        if (!isPM && newH === 12) newH = 0; // If was AM and new hour is 12, make it 00 (12 AM)
+                                        const newStart = `${newH.toString().padStart(2, '0')}:${m}`;
+                                        setFormData({ ...formData, operatingHours: `${newStart} - ${currentEnd}` });
+                                    }}
+                                >
+                                    {Array.from({ length: 12 }, (_, i) => i + 1).map(h => (
+                                        <option key={h} value={h} className="bg-slate-900">{h}</option>
+                                    ))}
+                                </select>
+                                <span className="text-slate-500">:</span>
+                                <select
+                                    className="bg-transparent text-white text-sm outline-none appearance-none font-mono"
+                                    value={formData.operatingHours?.split(' - ')[0]?.split(':')[1] || '00'}
+                                    onChange={(e) => {
+                                        const currentStart = formData.operatingHours?.split(' - ')[0] || '09:00';
+                                        const currentEnd = formData.operatingHours?.split(' - ')[1] || '17:00';
+                                        const [h] = currentStart.split(':');
+                                        setFormData({ ...formData, operatingHours: `${h}:${e.target.value} - ${currentEnd}` });
+                                    }}
+                                >
+                                    {['00', '15', '30', '45'].map(m => (
+                                        <option key={m} value={m} className="bg-slate-900">{m}</option>
+                                    ))}
+                                </select>
+                                <select
+                                    className="bg-transparent text-cyan-400 text-xs font-bold outline-none appearance-none ml-1"
+                                    value={parseInt(formData.operatingHours?.split(' - ')[0]?.split(':')[0] || '9') >= 12 ? 'PM' : 'AM'}
+                                    onChange={(e) => {
+                                        const currentStart = formData.operatingHours?.split(' - ')[0] || '09:00';
+                                        const currentEnd = formData.operatingHours?.split(' - ')[1] || '17:00';
+                                        let [h, m] = currentStart.split(':');
+                                        let hour = parseInt(h);
+                                        if (e.target.value === 'PM' && hour < 12) hour += 12;
+                                        if (e.target.value === 'AM' && hour >= 12) hour -= 12;
+                                        setFormData({ ...formData, operatingHours: `${hour.toString().padStart(2, '0')}:${m} - ${currentEnd}` });
+                                    }}
+                                >
+                                    <option value="AM" className="bg-slate-900">AM</option>
+                                    <option value="PM" className="bg-slate-900">PM</option>
+                                </select>
+                            </div>
+
+                            <span className="text-slate-500 font-bold mx-2">-</span>
+
+                            {/* End Time */}
+                            <div className="flex items-center gap-1">
+                                <select
+                                    className="bg-transparent text-white text-sm outline-none appearance-none font-mono"
+                                    value={(() => {
+                                        const time = formData.operatingHours?.split(' - ')[1] || '';
+                                        if (!time) return '12';
+                                        let [h] = time.split(':');
+                                        let hour = parseInt(h);
+                                        if (hour === 0) return '12';
+                                        if (hour > 12) return (hour - 12).toString();
+                                        return hour.toString();
+                                    })()}
+                                    onChange={(e) => {
+                                        const currentStart = formData.operatingHours?.split(' - ')[0] || '09:00';
+                                        const currentEnd = formData.operatingHours?.split(' - ')[1] || '17:00';
+                                        let [h, m] = currentEnd.split(':');
+                                        let newH = parseInt(e.target.value);
+                                        const isPM = parseInt(h) >= 12; // Check current AM/PM state
+                                        if (isPM && newH < 12) newH += 12; // If was PM and new hour is AM, add 12
+                                        if (!isPM && newH === 12) newH = 0; // If was AM and new hour is 12, make it 00 (12 AM)
+                                        const newEnd = `${newH.toString().padStart(2, '0')}:${m}`;
+                                        setFormData({ ...formData, operatingHours: `${currentStart} - ${newEnd}` });
+                                    }}
+                                >
+                                    {Array.from({ length: 12 }, (_, i) => i + 1).map(h => (
+                                        <option key={h} value={h} className="bg-slate-900">{h}</option>
+                                    ))}
+                                </select>
+                                <span className="text-slate-500">:</span>
+                                <select
+                                    className="bg-transparent text-white text-sm outline-none appearance-none font-mono"
+                                    value={formData.operatingHours?.split(' - ')[1]?.split(':')[1] || '00'}
+                                    onChange={(e) => {
+                                        const currentStart = formData.operatingHours?.split(' - ')[0] || '09:00';
+                                        const currentEnd = formData.operatingHours?.split(' - ')[1] || '17:00';
+                                        const [h] = currentEnd.split(':');
+                                        setFormData({ ...formData, operatingHours: `${currentStart} - ${h}:${e.target.value}` });
+                                    }}
+                                >
+                                    {['00', '15', '30', '45'].map(m => (
+                                        <option key={m} value={m} className="bg-slate-900">{m}</option>
+                                    ))}
+                                </select>
+                                <select
+                                    className="bg-transparent text-cyan-400 text-xs font-bold outline-none appearance-none ml-1"
+                                    value={parseInt(formData.operatingHours?.split(' - ')[1]?.split(':')[0] || '17') >= 12 ? 'PM' : 'AM'}
+                                    onChange={(e) => {
+                                        const currentStart = formData.operatingHours?.split(' - ')[0] || '09:00';
+                                        const currentEnd = formData.operatingHours?.split(' - ')[1] || '17:00';
+                                        let [h, m] = currentEnd.split(':');
+                                        let hour = parseInt(h);
+                                        if (e.target.value === 'PM' && hour < 12) hour += 12;
+                                        if (e.target.value === 'AM' && hour >= 12) hour -= 12;
+                                        setFormData({ ...formData, operatingHours: `${currentStart} - ${hour.toString().padStart(2, '0')}:${m}` });
+                                    }}
+                                >
+                                    <option value="AM" className="bg-slate-900">AM</option>
+                                    <option value="PM" className="bg-slate-900">PM</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>

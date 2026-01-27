@@ -44,6 +44,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, onOpenD
                 </div>
 
                 {/* Center: News Ticker Area (Free Space as requested) */}
+                {/* Center: News Ticker Area */}
                 <div className="hidden md:flex flex-1 mx-4 lg:mx-8 max-w-xl h-10 rounded-xl overflow-hidden border border-white/5 bg-black/20 shadow-inner">
                     <NewsTicker />
                 </div>
