@@ -14,6 +14,7 @@ import Weather from './components/Widgets/Weather';
 import DonationModal from './components/Widgets/DonationModal';
 import AuthModal from './components/Auth/AuthModal';
 import { getMaidenheadLocator } from './utils/maidenhead';
+import { exportStationsToPDF } from './utils/pdfExport';
 import type { Session } from '@supabase/supabase-js';
 
 // Cache busting version
@@ -106,6 +107,66 @@ function App() {
   }, []);
 
   const isAdmin = session?.user?.email === '9m2pju@hamradio.my';
+
+  if (!session) {
+    return (
+      <div className="relative h-screen w-screen bg-black flex items-center justify-center overflow-hidden">
+        {/* Disaster Background Effects */}
+        <div className="absolute inset-0 z-0">
+          {/* Base pulse */}
+          <div className="absolute inset-0 bg-red-950/20 animate-emergency-pulse" />
+
+          {/* Static noise - fixed positioning, no pointer events */}
+          <div className="absolute inset-[-100%] z-10 opacity-[0.03] pointer-events-none static-noise-overlay animate-noise-static" />
+
+          {/* Flicker overlay */}
+          <div className="absolute inset-0 z-20 bg-black/40 animate-emergency-flicker pointer-events-none" />
+
+          {/* Vignette */}
+          <div className="absolute inset-0 z-30 pointer-events-none shadow-[inset_0_0_150px_rgba(0,0,0,0.8)]" />
+        </div>
+
+        {/* Crisis Messaging */}
+        <div className="absolute top-12 left-1/2 -translate-x-1/2 z-40 text-center space-y-2 pointer-events-none">
+          <div className="flex items-center justify-center gap-3">
+            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            <h2 className="text-red-500 font-black tracking-[0.2em] text-sm uppercase">Priority 1 • Emergency Broadcast</h2>
+          </div>
+          <p className="text-white/40 text-[10px] uppercase tracking-widest font-mono">Main Grid Offline • Backhaul via HF/Satellite</p>
+        </div>
+
+        {/* Login Modal Container */}
+        <div className="relative z-50 w-full max-w-md px-6">
+          <div className="bg-black/60 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-4 shadow-2xl relative overflow-hidden group">
+            {/* Sub-glow */}
+            <div className="absolute -inset-2 bg-red-500/5 blur-2xl group-hover:bg-red-500/10 transition-colors pointer-events-none" />
+
+            <div className="relative z-10">
+              <div className="flex flex-col items-center mb-6">
+                <div className="h-24 w-auto px-6 py-4 rounded-3xl bg-black/40 border border-white/5 flex items-center justify-center mb-4">
+                  <img
+                    src={`/logo.png?v=${ASSET_VERSION}`}
+                    alt="9M2PJU Logo"
+                    className="h-full w-full object-contain filter drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]"
+                  />
+                </div>
+                <h1 className="text-2xl font-black text-white tracking-tighter text-center">SYSTEM OFFLINE</h1>
+                <p className="text-cyan-400 font-bold text-[10px] tracking-[0.3em] uppercase mt-1">Authorization Required</p>
+              </div>
+
+              <AuthModal onClose={() => { }} />
+            </div>
+          </div>
+        </div>
+
+        {/* Footer info */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-1 pointer-events-none">
+          <span className="text-white/20 text-[9px] font-mono tracking-tighter uppercase">9M2PJU EMERGENCY TELEMETRY BACKBONE</span>
+          <span className="text-white/10 text-[8px] font-mono">v4.2.0-STABLE | KUALA LUMPUR HUB</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative h-full w-full bg-background overflow-hidden flex flex-col font-sans text-foreground">
@@ -253,6 +314,7 @@ function App() {
             clearStations();
             setIsSettingsOpen(false);
           }}
+          onExportPDF={() => exportStationsToPDF(stations)}
           onNuke={() => {
             nukeDatabase();
             setIsSettingsOpen(false);

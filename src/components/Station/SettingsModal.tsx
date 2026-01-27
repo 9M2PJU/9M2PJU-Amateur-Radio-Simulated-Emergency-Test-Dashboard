@@ -5,13 +5,14 @@ import DataControls from './DataControls';
 interface SettingsModalProps {
     onClose: () => void;
     onExport: () => void;
+    onExportPDF?: () => void;
     onImport: (data: string) => void;
     onClear: () => void;
     onNuke?: () => void;
     isAdmin?: boolean;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onExport, onImport, onClear, onNuke, isAdmin }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onExport, onExportPDF, onImport, onClear, onNuke, isAdmin }) => {
     return (
         <div className="absolute inset-0 z-[1000] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
             <div className="glass-card p-6 rounded-2xl w-full max-w-md bg-slate-900/90 text-white relative">
@@ -27,6 +28,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onExport, onImpo
                 <div className="space-y-6">
                     <DataControls
                         onExport={onExport}
+                        onExportPDF={onExportPDF}
                         onImport={onImport}
                         onClear={onClear}
                         onNuke={onNuke}

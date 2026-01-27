@@ -1,15 +1,16 @@
 import React from 'react';
-import { FileJson, FileUp, Trash2, Database } from 'lucide-react';
+import { FileJson, FileUp, Trash2, Database, FileText } from 'lucide-react';
 
 interface DataControlsProps {
     onExport: () => void;
+    onExportPDF?: () => void;
     onImport: (data: string) => void;
     onClear: () => void;
     onNuke?: () => void;
     isAdmin?: boolean;
 }
 
-const DataControls: React.FC<DataControlsProps> = ({ onExport, onImport, onClear, onNuke, isAdmin }) => {
+const DataControls: React.FC<DataControlsProps> = ({ onExport, onExportPDF, onImport, onClear, onNuke, isAdmin }) => {
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +36,13 @@ const DataControls: React.FC<DataControlsProps> = ({ onExport, onImport, onClear
                     onClick={onExport}
                     className="flex items-center justify-center gap-2 bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 border border-blue-500/30 rounded-lg py-2 text-xs font-semibold transition-all"
                 >
-                    <FileJson className="h-3 w-3" /> Export
+                    <FileJson className="h-3 w-3" /> JSON
+                </button>
+                <button
+                    onClick={onExportPDF}
+                    className="flex items-center justify-center gap-2 bg-purple-600/20 hover:bg-purple-600/40 text-purple-400 border border-purple-500/30 rounded-lg py-2 text-xs font-semibold transition-all"
+                >
+                    <FileText className="h-3 w-3" /> PDF
                 </button>
                 <button
                     onClick={() => fileInputRef.current?.click()}
