@@ -94,17 +94,19 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Donation Popup Logic: Show once per session
+  // Donation Popup Logic: Show once per session, ONLY after login
   useEffect(() => {
+    if (!session) return;
+
     const hasSeenDonation = sessionStorage.getItem('hasSeenDonation');
     if (!hasSeenDonation) {
       const timer = setTimeout(() => {
         setIsDonationOpen(true);
         sessionStorage.setItem('hasSeenDonation', 'true');
-      }, 3000); // 3-second delay for a better experience
+      }, 5000); // 5-second delay for a better experience
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [session]);
 
   const isAdmin = session?.user?.email === '9m2pju@hamradio.my';
 
@@ -264,41 +266,41 @@ function App() {
         />
       )}
 
-      {isDonationOpen && (
-        <DonationModal onClose={() => {
-          setIsDonationOpen(false);
-          if (!session) {
-            setTimeout(() => setIsAuthOpen(true), 300);
-          }
-        }} />
+      {isDonationOpen && session && (
+        <DonationModal onClose={() => setIsDonationOpen(false)} />
       )}
 
       {isAuthOpen && (
         <AuthModal onClose={() => setIsAuthOpen(false)} />
       )}
 
-      {/* Auth Gate Overlay */}
+      {/* Auth Gate Overlay: High-z-index, clean background */}
       {!session && (
-        <div className="absolute inset-0 z-[3000] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-500">
-          <div className="w-full max-w-md px-6 animate-in zoom-in-95 duration-300">
-            <div className="bg-slate-900/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
-              {/* Decorative elements */}
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50" />
+        <div className="fixed inset-0 z-[4000] flex items-center justify-center bg-black/80 backdrop-blur-xl animate-in fade-in duration-700">
+          <div className="w-full max-w-md px-6 animate-in zoom-in-95 duration-500">
+            <div className="bg-slate-900/60 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-4 shadow-2xl relative overflow-hidden group">
+              {/* Sub-glow */}
+              <div className="absolute -inset-10 bg-blue-500/10 blur-3xl group-hover:bg-blue-500/15 transition-colors pointer-events-none" />
 
-              <div className="flex flex-col items-center mb-8">
-                <div className="h-20 w-auto p-4 rounded-2xl bg-black/40 border border-white/5 mb-6">
-                  <img
-                    src={`/logo.png?v=${ASSET_VERSION}`}
-                    alt="9M2PJU Logo"
-                    className="h-full w-full object-contain"
-                  />
+              <div className="relative z-10 p-2">
+                <div className="flex flex-col items-center mb-6 pt-4">
+                  <div className="h-20 w-auto p-4 rounded-2xl bg-black/40 border border-white/5 mb-6">
+                    <img
+                      src={`/logo.png?v=${ASSET_VERSION}`}
+                      alt="9M2PJU Logo"
+                      className="h-full w-full object-contain filter drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]"
+                    />
+                  </div>
+                  <h2 className="text-2xl font-black text-white tracking-tight text-center">AUTHENTICATION REQUIRED</h2>
+                  <p className="text-slate-400 text-[10px] font-bold tracking-[0.2em] uppercase mt-2 text-center">Emergency Telemetry Control</p>
                 </div>
-                <h2 className="text-2xl font-black text-white tracking-tight text-center">AUTHENTICATION REQUIRED</h2>
-                <p className="text-slate-400 text-xs mt-2 text-center max-w-[200px]">Please sign in to access the emergency telemetry network.</p>
-              </div>
 
-              <AuthModal onClose={() => { }} />
+                {/* Embed AuthModal directly but override its fixed background if needed? 
+                     Actually AuthModal.tsx has a fixed inset-0. We should probably adjust AuthModal.tsx to be more flexible. */}
+                <AuthModal onClose={() => { }} isEmbedded={true} />
+              </div>
             </div>
+            <p className="text-white/20 text-[9px] font-mono tracking-widest uppercase text-center mt-6">9M2PJU AMATEUR RADIO EMERGENCY NETWORK v4.2</p>
           </div>
         </div>
       )}
