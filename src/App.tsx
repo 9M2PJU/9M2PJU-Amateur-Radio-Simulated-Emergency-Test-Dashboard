@@ -22,6 +22,7 @@ const ASSET_VERSION = new Date().getTime();
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [impersonatedUserId, setImpersonatedUserId] = useState<string | null>(null);
   const { stations, loading: stationsLoading, addStation, updateStation, removeStation, exportData, importData, clearStations, nukeDatabase } = useStations(session, impersonatedUserId);
   const weatherState = useWeather();
@@ -39,12 +40,14 @@ function App() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setAuthLoading(false);
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      setAuthLoading(false);
       if (!session) {
         sessionStorage.removeItem('hasSeenDonation');
       }
@@ -278,7 +281,7 @@ function App() {
       )}
 
       {/* Auth Gate Overlay: High-z-index, clean background */}
-      {!session && (
+      {!session && !authLoading && (
         <div className="fixed inset-0 z-[4000] flex items-center justify-center bg-black/80 backdrop-blur-xl animate-in fade-in duration-700">
           <div className="w-full max-w-md px-6 animate-in zoom-in-95 duration-500">
             <div className="bg-slate-900/60 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-4 shadow-2xl relative overflow-hidden group">
