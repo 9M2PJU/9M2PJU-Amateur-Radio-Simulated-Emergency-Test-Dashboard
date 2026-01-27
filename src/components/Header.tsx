@@ -43,14 +43,17 @@ const Header: React.FC<HeaderProps> = ({
             const fetchUsers = async () => {
                 const { data } = await supabase
                     .from('stations')
-                    .select('user_id')
+                    .select('user_id, user_email')
                     .not('user_id', 'is', null);
 
                 if (data) {
-                    const uniqueIds = [...new Set(data.map(d => d.user_id))];
-                    // Since we can't get emails easily without admin API, we'll use IDs
-                    // or just the current user's email if it matches.
-                    setUsers(uniqueIds.map(id => ({ id, email: id.slice(0, 8) + '...' })));
+                    const userMap = new Map<string, string>();
+                    data.forEach(d => {
+                        if (d.user_id && !userMap.has(d.user_id)) {
+                            userMap.set(d.user_id, d.user_email || `User ${d.user_id.slice(0, 8)}`);
+                        }
+                    });
+                    setUsers(Array.from(userMap.entries()).map(([id, email]) => ({ id, email })));
                 }
             };
             fetchUsers();

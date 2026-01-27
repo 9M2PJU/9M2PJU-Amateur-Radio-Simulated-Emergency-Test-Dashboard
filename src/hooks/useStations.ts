@@ -69,7 +69,8 @@ export const useStations = (userIdFilter?: string | null) => {
                 radio_info: station.radioInfo,
                 icon: station.icon,
                 updated_at: Date.now(),
-                user_id: user?.id
+                user_id: userIdFilter || user?.id,
+                user_email: userIdFilter ? undefined : user?.email // Admin doesn't need to specify email if impersonating, or we could fetch it
             };
 
             const { data, error } = await supabase
@@ -176,7 +177,8 @@ export const useStations = (userIdFilter?: string | null) => {
                     custom_color: rest.customColor,
                     radio_info: rest.radioInfo || (rest.frequencies ? rest.frequencies.map((f: string) => ({ frequency: f, mode: rest.mode || '' })) : []),
                     updated_at: Date.now(),
-                    user_id: user?.id
+                    user_id: userIdFilter || user?.id,
+                    user_email: userIdFilter ? undefined : user?.email
                 }));
 
                 const { data: _data, error } = await supabase
