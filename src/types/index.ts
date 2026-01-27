@@ -1,3 +1,8 @@
+export interface RadioInfo {
+    frequency: string;
+    mode: string;
+}
+
 export interface Station {
     id: string;
     callsign: string;
@@ -7,8 +12,11 @@ export interface Station {
     equipment?: string;
     status: 'active' | 'inactive' | 'emergency';
     powerSource?: 'battery' | 'main';
-    frequency?: string;
-    mode?: string;
+    frequency?: string; // @deprecated
+    frequencies?: string[]; // @deprecated
+    mode?: string; // @deprecated
+    radioInfo?: RadioInfo[];
+    icon?: string;
     antenna?: string;
     locationName?: string;
     operatingHours?: string;

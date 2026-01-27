@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Station } from '../../types';
-import { Search, Radio, AlertTriangle, Edit2, Trash2 } from 'lucide-react';
+import { Search, Radio, AlertTriangle, Edit2, Trash2, Car, Home, Tent, Stethoscope, Shield, Flame, User } from 'lucide-react';
 import { useMap } from 'react-leaflet';
 
 interface StationListProps {
@@ -20,6 +20,19 @@ const StationList: React.FC<StationListProps> = ({
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const map = useMap();
+
+    const getIcon = (id: string) => {
+        switch (id) {
+            case 'car': return Car;
+            case 'home': return Home;
+            case 'tent': return Tent;
+            case 'hospital': return Stethoscope;
+            case 'police': return Shield;
+            case 'fire': return Flame;
+            default: return User;
+        }
+    };
+
 
     const filteredStations = stations.filter(s =>
         s.callsign.includes(searchTerm.toUpperCase()) ||
@@ -65,7 +78,11 @@ const StationList: React.FC<StationListProps> = ({
                             onClick={() => handleSelect(station)}
                         >
                             <div className="flex justify-between items-start">
-                                <div className="font-bold text-white group-hover:text-blue-400 transition-colors">
+                                <div className="font-bold text-white group-hover:text-blue-400 transition-colors flex items-center gap-2">
+                                    {(() => {
+                                        const Icon = getIcon(station.icon || 'user');
+                                        return <Icon className="h-4 w-4 text-slate-400" />;
+                                    })()}
                                     {station.callsign}
                                 </div>
                                 <div className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${station.status === 'active' ? 'bg-green-500/20 text-green-400' :
@@ -75,6 +92,13 @@ const StationList: React.FC<StationListProps> = ({
                                 </div>
                             </div>
                             {station.operator && <div className="text-xs text-slate-400 mt-1">{station.operator}</div>}
+                            <div className="flex flex-wrap gap-1 mt-2">
+                                {(station.radioInfo || (station.frequency ? [{ frequency: station.frequency, mode: station.mode || '' }] : [])).map((info, idx) => (
+                                    <span key={idx} className="text-[10px] bg-cyan-900/20 border border-cyan-500/20 px-1.5 py-0.5 rounded text-cyan-200 font-mono">
+                                        {info.frequency}MHz {info.mode}
+                                    </span>
+                                ))}
+                            </div>
                             {station.status === 'emergency' && (
                                 <div className="flex items-center gap-1 text-red-400 text-xs mt-2 font-semibold">
                                     <AlertTriangle className="h-3 w-3" /> EMERGENCY TRAFFIC

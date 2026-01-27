@@ -23,7 +23,33 @@ export const useStations = () => {
     const [stations, setStations] = useState<Station[]>(() => {
         try {
             const saved = localStorage.getItem(STORAGE_KEY);
-            return saved ? JSON.parse(saved) : [];
+            const loaded = saved ? JSON.parse(saved) : [];
+            // Migration: Convert legacy fields to radioInfo array
+            return loaded.map((s: any) => {
+                let radioInfo = s.radioInfo || [];
+
+                // Migrate legacy 'frequencies' array if it exists (from intermediate step)
+                if (radioInfo.length === 0 && Array.isArray(s.frequencies) && s.frequencies.length > 0) {
+                    radioInfo = s.frequencies.map((f: string) => ({
+                        frequency: f,
+                        mode: s.mode || ''
+                    }));
+                }
+
+                // Migrate legacy single 'frequency' if it exists and we still don't have info
+                if (radioInfo.length === 0 && s.frequency) {
+                    radioInfo = [{
+                        frequency: s.frequency,
+                        mode: s.mode || ''
+                    }];
+                }
+
+                return {
+                    ...s,
+                    radioInfo,
+                    // Cleanup legacy fields might be dangerous if we want to revert, but keeping them as undefined is fine
+                };
+            });
         } catch (e) {
             console.error('Failed to load stations from localStorage:', e);
             return [];

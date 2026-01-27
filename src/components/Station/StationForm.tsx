@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Save, Crosshair } from 'lucide-react';
+import { X, Save, Crosshair, Plus, Car, Home, Tent, Stethoscope, Shield, Flame, User } from 'lucide-react';
 import type { Station } from '../../types';
 
 interface StationFormProps {
@@ -18,8 +18,8 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
         equipment: initialData?.equipment || '',
         status: initialData?.status || 'active',
         powerSource: initialData?.powerSource || 'main',
-        frequency: initialData?.frequency || '',
-        mode: initialData?.mode || '',
+        radioInfo: initialData?.radioInfo || [],
+        icon: initialData?.icon || 'user',
         antenna: initialData?.antenna || '',
         locationName: initialData?.locationName || '',
         operatingHours: initialData?.operatingHours || '',
@@ -50,8 +50,8 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                 equipment: initialData.equipment || prev.equipment,
                 status: initialData.status || prev.status,
                 powerSource: initialData.powerSource || prev.powerSource,
-                frequency: initialData.frequency || prev.frequency,
-                mode: initialData.mode || prev.mode,
+                radioInfo: initialData.radioInfo || prev.radioInfo,
+                icon: initialData.icon || prev.icon,
                 antenna: initialData.antenna || prev.antenna,
                 locationName: initialData.locationName || prev.locationName,
                 operatingHours: initialData.operatingHours || prev.operatingHours,
@@ -121,6 +121,32 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                 </div>
 
                 <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Icon</label>
+                    <div className="flex flex-wrap gap-2">
+                        {[
+                            { id: 'user', icon: User, label: 'Person' },
+                            { id: 'car', icon: Car, label: 'Vehicle' },
+                            { id: 'home', icon: Home, label: 'Base' },
+                            { id: 'tent', icon: Tent, label: 'Portable' },
+                            { id: 'hospital', icon: Stethoscope, label: 'Hospital' },
+                            { id: 'police', icon: Shield, label: 'Police' },
+                            { id: 'fire', icon: Flame, label: 'Fire' }
+                        ].map(item => (
+                            <button
+                                key={item.id}
+                                type="button"
+                                onClick={() => setFormData({ ...formData, icon: item.id })}
+                                className={`p-2 rounded-lg border-2 transition-all flex flex-col items-center gap-1 min-w-[60px] ${formData.icon === item.id ? 'border-white bg-white/10' : 'border-transparent bg-black/20 opacity-60 hover:opacity-100'}`}
+                                title={item.label}
+                            >
+                                <item.icon className="h-5 w-5" />
+                                <span className="text-[9px] uppercase font-bold">{item.label}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="space-y-2">
                     <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Location Name</label>
                     <input
                         type="text"
@@ -177,40 +203,87 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                             placeholder="Name / Handle"
                         />
                     </div>
-                    <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Frequency (MHz)</label>
-                        <div className="relative">
-                            <input
-                                type="number"
-                                step="any"
-                                value={formData.frequency}
-                                onChange={e => setFormData({ ...formData, frequency: e.target.value })}
-                                className="w-full bg-black/40 border border-white/10 rounded-lg pl-4 pr-12 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono"
-                                placeholder="145.500"
-                            />
-                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-mono">MHz</span>
-                        </div>
+                </div>
+                <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Radio Information</label>
+                        <button
+                            type="button"
+                            onClick={() => setFormData({
+                                ...formData,
+                                radioInfo: [...(formData.radioInfo || []), { frequency: '', mode: '' }]
+                            })}
+                            className="text-xs bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 px-2 py-1 rounded transition-colors flex items-center gap-1"
+                        >
+                            <Plus className="h-3 w-3" /> Add Freq
+                        </button>
                     </div>
+
+                    {(formData.radioInfo || []).map((info: any, index: number) => (
+                        <div key={index} className="grid grid-cols-12 gap-2 items-start bg-black/20 p-2 rounded-lg border border-white/5">
+                            <div className="col-span-6 relative">
+                                <input
+                                    type="number"
+                                    step="any"
+                                    value={info.frequency}
+                                    onChange={e => {
+                                        const newRadioInfo = [...(formData.radioInfo || [])];
+                                        newRadioInfo[index] = { ...info, frequency: e.target.value };
+                                        setFormData({ ...formData, radioInfo: newRadioInfo });
+                                    }}
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg pl-3 pr-10 py-1.5 focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm"
+                                    placeholder="Freq"
+                                />
+                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 text-xs font-mono">MHz</span>
+                            </div>
+                            <div className="col-span-5 relative">
+                                <select
+                                    value={info.mode}
+                                    onChange={e => {
+                                        const newRadioInfo = [...(formData.radioInfo || [])];
+                                        newRadioInfo[index] = { ...info, mode: e.target.value };
+                                        setFormData({ ...formData, radioInfo: newRadioInfo });
+                                    }}
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm appearance-none"
+                                >
+                                    <option value="">Mode</option>
+                                    <option value="FM">FM</option>
+                                    <option value="AM">AM</option>
+                                    <option value="SSB">SSB</option>
+                                    <option value="LSB">LSB</option>
+                                    <option value="USB">USB</option>
+                                    <option value="CW">CW</option>
+                                    <option value="DIGITAL">DIGITAL</option>
+                                    <option value="APRS">APRS</option>
+                                    <option value="JS8CALL">JS8CALL</option>
+                                    <option value="FT8">FT8</option>
+                                    <option value="DMR">DMR</option>
+                                    <option value="C4FM">C4FM</option>
+                                    <option value="D-STAR">D-STAR</option>
+                                </select>
+                            </div>
+                            <div className="col-span-1 flex justify-center pt-1">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const newRadioInfo = [...(formData.radioInfo || [])].filter((_, i) => i !== index);
+                                        setFormData({ ...formData, radioInfo: newRadioInfo });
+                                    }}
+                                    className="text-red-400 hover:text-red-300 transition-colors"
+                                >
+                                    <X className="h-4 w-4" />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                    {(formData.radioInfo || []).length === 0 && (
+                        <div className="text-center py-4 border-2 border-dashed border-white/10 rounded-lg text-slate-500 text-sm">
+                            No frequency info added
+                        </div>
+                    )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Mode</label>
-                        <select
-                            value={formData.mode}
-                            onChange={e => setFormData({ ...formData, mode: e.target.value })}
-                            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-                        >
-                            <option value="">Select Mode</option>
-                            <option value="FM">FM</option>
-                            <option value="AM">AM</option>
-                            <option value="SSB">SSB</option>
-                            <option value="LSB">LSB</option>
-                            <option value="USB">USB</option>
-                            <option value="CW">CW</option>
-                            <option value="DIGITAL">DIGITAL (DMR/C4FM/D-STAR)</option>
-                        </select>
-                    </div>
                     <div className="space-y-2">
                         <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Operating Hours</label>
                         <input
