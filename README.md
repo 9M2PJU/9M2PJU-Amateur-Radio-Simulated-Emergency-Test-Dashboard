@@ -16,7 +16,8 @@ The **9M2PJU SET Dashboard** is a premium, real-time command center designed for
 
 ### 🚀 Key Features
 - **🗺️ Interactive Tactical Map**: Dark-mode tactical map powered by Leaflet.
-- **💾 LocalStorage Persistence**: Data lives in your browser—no backend required.
+- **☁️ Supabase Cloud Persistence**: Real-time data synchronization across all devices.
+- **🔐 Secure Authentication**: Integrated login/signup system for data ownership.
 - **📱 Native Mobile Experience**: PWA-ready with touch-optimized controls.
 - **🔄 Import/Export Scenarios**: Share exercise setups via JSON configuration files.
 - **⚡ Real-time Widgets**: Live UTC/Local clock and simulated weather telemetry.
@@ -30,30 +31,27 @@ The **9M2PJU SET Dashboard** is a premium, real-time command center designed for
 
 ```mermaid
 graph TD
-    A[User] -->|Opens App| B(Single Page Application)
-    B --> C{Data Source}
-    C -->|No Data| D[Initialize Empty Store]
-    C -->|Found Data| E[Load from LocalStorage]
+    A[User] -->|Sign In| B(Supabase Auth)
+    B -->|Authenticated| C[SPA Dashboard]
+    C -->|Fetch/Sync| D[(Supabase Database)]
     
     subgraph UI Components
         F[Glass Header]
         G[Tactical Map]
         H[Station List Sidebar]
         I[Admin Modals]
-        K[Donation Popup]
     end
     
-    B --> F
-    B --> G
-    B --> H
-    B --> K
+    C --> F
+    C --> G
+    C --> H
     
-    I -->|Add/Edit| E
+    I -->|CRUD Operations| D
     I -->|Import/Export| J[JSON File]
     
-    style B fill:#1e293b,stroke:#3b82f6,color:#fff
+    style C fill:#1e293b,stroke:#3b82f6,color:#fff
     style G fill:#0f172a,stroke:#3b82f6,color:#fff
-    style E fill:#10b981,stroke:#059669,color:#fff
+    style D fill:#10b981,stroke:#059669,color:#fff
 ```
 
 ## 🖥️ Usage Guide
@@ -80,11 +78,12 @@ graph TD
 
 | Component | Technology | Description |
 |-----------|------------|-------------|
-| **Core** | React 19 + TypeScript | Lightning fast UI rendering |
-| **Build** | Vite | Next-gen frontend tooling |
-| **Style** | TailwindCSS | Utility-first CSS framework |
+| **Frontend** | React 19 + TypeScript | Lightning fast UI rendering |
+| **Styling** | TailwindCSS | Utility-first CSS framework |
+| **Database** | Supabase (PostgreSQL) | Secure cloud-based data persistence |
+| **Auth** | Supabase Auth | User identity and RLS policies |
+| **Hosting** | Vercel | Global edge-network deployment |
 | **Map** | React Leaflet | Open-source mobile-friendly maps |
-| **Icons** | Lucide React | Beautiful consistent icons |
 
 ---
 
