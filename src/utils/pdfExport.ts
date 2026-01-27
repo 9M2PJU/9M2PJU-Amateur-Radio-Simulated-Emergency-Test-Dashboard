@@ -1,14 +1,9 @@
 import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
-import type { Station } from '../types';
-
-// Extend jsPDF with autoTable for TypeScript
-interface jsPDFWithAutoTable extends jsPDF {
-    autoTable: (options: any) => jsPDF;
-}
+import autoTable from 'jspdf-autotable';
+import type { Station } from '../types/index';
 
 export const exportStationsToPDF = (stations: Station[]) => {
-    const doc = new jsPDF() as jsPDFWithAutoTable;
+    const doc = new jsPDF();
     const timestamp = new Date().toLocaleString();
     const filename = `9M2PJU_SITREP_${new Date().toISOString().split('T')[0]}.pdf`;
 
@@ -49,19 +44,22 @@ export const exportStationsToPDF = (stations: Station[]) => {
     const batteryPower = stations.filter(s => s.powerSource === 'battery').length;
     const mainsPower = stations.filter(s => s.powerSource === 'main').length;
 
+    const batteryReadiness = totalStations > 0 ? Math.round((batteryPower / totalStations) * 100) : 0;
+    const mainsReliance = totalStations > 0 ? Math.round((mainsPower / totalStations) * 100) : 0;
+
     // Table for metrics
-    doc.autoTable({
+    autoTable(doc, {
         startY: 92,
         head: [['Metric', 'Value', 'Status']],
         body: [
             ['Total Deployed Stations', totalStations, 'NOMINAL'],
             ['Emergency Declarations', emergencyCount, emergencyCount > 0 ? 'CRITICAL' : 'CLEAR'],
             ['Active Response Units', activeCount, 'OPERATIONAL'],
-            ['Battery / Off-Grid Power', batteryPower, `${Math.round((batteryPower / totalStations) * 100)}% Readiness`],
-            ['Mains / Grid Power', mainsPower, `${Math.round((mainsPower / totalStations) * 100)}% Reliance`],
+            ['Battery / Off-Grid Power', batteryPower, `${batteryReadiness}% Readiness`],
+            ['Mains / Grid Power', mainsPower, `${mainsReliance}% Reliance`],
         ],
         theme: 'striped',
-        headStyles: { fillStyle: [34, 211, 238], textColor: [255, 255, 255] },
+        headStyles: { fillColor: [34, 211, 238], textColor: [255, 255, 255] },
     });
 
     // --- Station Directory ---
@@ -78,7 +76,7 @@ export const exportStationsToPDF = (stations: Station[]) => {
         s.locationName || `${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}`
     ]);
 
-    doc.autoTable({
+    autoTable(doc, {
         startY: finalY + 22,
         head: [['Callsign', 'Operator', 'Status', 'Power', 'Frequency', 'Location']],
         body: tableData,
