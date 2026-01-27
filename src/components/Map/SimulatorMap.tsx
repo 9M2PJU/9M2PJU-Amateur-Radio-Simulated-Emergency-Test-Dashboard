@@ -34,19 +34,7 @@ const MapEvents: React.FC<{ onMapClick?: (lat: number, lng: number) => void, isP
     });
     return null;
     return null;
-};
-
-const getIconSvg = (name: string) => {
-    const icons: Record<string, string> = {
-        user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
-        car: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H12c-.7 0-1.3.3-1.8.7-.9.9-2.2 2.3-2.2 2.3s-2.7.6-4.5 1.1C2.7 11 2 11.9 2 12.8v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M5 17h2"/><path d="M17 17h2"/>',
-        home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
-        tent: '<path d="M3.5 21 14 3"/><path d="M20.5 21 10 3"/><path d="M15.5 21 12 15l-3.5 6"/><path d="M2 21h20"/>',
-        hospital: '<path d="M12 5v14"/><path d="M5 12h14"/>', // Using Plus/Cross for hospital clarity
-        police: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
-        fire: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.1.2-2.2.5-3.3.3-1.09.9-2.2 1.9-3.19z"/>'
-    };
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${icons[name] || icons['user']}</svg>`;
+    return null;
 };
 
 const SimulatorMap: React.FC<SimulatorMapProps> = ({
@@ -90,7 +78,7 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                             <div class="flex flex-col items-center group">
                                 <div class="px-2 py-1 rounded shadow-lg border border-white/20 text-[11px] font-bold text-white whitespace-nowrap transition-all group-hover:scale-110 group-hover:z-[1000] cursor-pointer flex items-center gap-1.5" 
                                      style="background-color: ${statusColor}cc; box-shadow: 0 0 10px ${statusColor}44, inset 0 0 5px rgba(255,255,255,0.2);">
-                                    ${getIconSvg(station.icon || 'user')}
+                                    <img src="/markers/${station.icon || 'user'}.svg" style="width: 14px; height: 14px;" />
                                     ${station.callsign}
                                 </div>
                                 <div class="w-2 h-2 rounded-full mt-0.5 blur-[1px] ${station.status === 'emergency' ? 'animate-pulse' : ''}" 

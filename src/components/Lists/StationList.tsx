@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Station } from '../../types';
-import { Search, Radio, AlertTriangle, Edit2, Trash2, Car, Home, Tent, Stethoscope, Shield, Flame, User } from 'lucide-react';
+import { Search, Radio, AlertTriangle, Edit2, Trash2 } from 'lucide-react';
 import { useMap } from 'react-leaflet';
 
 interface StationListProps {
@@ -20,18 +20,6 @@ const StationList: React.FC<StationListProps> = ({
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const map = useMap();
-
-    const getIcon = (id: string) => {
-        switch (id) {
-            case 'car': return Car;
-            case 'home': return Home;
-            case 'tent': return Tent;
-            case 'hospital': return Stethoscope;
-            case 'police': return Shield;
-            case 'fire': return Flame;
-            default: return User;
-        }
-    };
 
 
     const filteredStations = stations.filter(s =>
@@ -79,10 +67,11 @@ const StationList: React.FC<StationListProps> = ({
                         >
                             <div className="flex justify-between items-start">
                                 <div className="font-bold text-white group-hover:text-blue-400 transition-colors flex items-center gap-2">
-                                    {(() => {
-                                        const Icon = getIcon(station.icon || 'user');
-                                        return <Icon className="h-4 w-4 text-slate-400" />;
-                                    })()}
+                                    <img
+                                        src={`/markers/${station.icon || 'user'}.svg`}
+                                        className="h-4 w-4 opacity-70"
+                                        alt=""
+                                    />
                                     {station.callsign}
                                 </div>
                                 <div className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${station.status === 'active' ? 'bg-green-500/20 text-green-400' :

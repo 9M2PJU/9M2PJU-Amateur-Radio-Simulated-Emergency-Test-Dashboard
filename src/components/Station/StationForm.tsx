@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { X, Save, Crosshair, Plus, Car, Home, Tent, Stethoscope, Shield, Flame, User } from 'lucide-react';
+import { X, Save, Crosshair, Plus, Clock } from 'lucide-react';
 import type { Station } from '../../types';
 
 interface StationFormProps {
@@ -112,7 +113,7 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                                 key={c.name}
                                 type="button"
                                 onClick={() => setFormData({ ...formData, customColor: c.value })}
-                                className={`w-8 h-8 rounded-lg border-2 transition-all ${formData.customColor === c.value ? 'border-white scale-110' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                                className={`w - 8 h - 8 rounded - lg border - 2 transition - all ${formData.customColor === c.value ? 'border-white scale-110' : 'border-transparent opacity-60 hover:opacity-100'} `}
                                 style={{ backgroundColor: c.value || '#06b6d4' }}
                                 title={c.name}
                             />
@@ -124,13 +125,13 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                     <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Icon</label>
                     <div className="flex flex-wrap gap-2">
                         {[
-                            { id: 'user', icon: User, label: 'Person' },
-                            { id: 'car', icon: Car, label: 'Vehicle' },
-                            { id: 'home', icon: Home, label: 'Base' },
-                            { id: 'tent', icon: Tent, label: 'Portable' },
-                            { id: 'hospital', icon: Stethoscope, label: 'Hospital' },
-                            { id: 'police', icon: Shield, label: 'Police' },
-                            { id: 'fire', icon: Flame, label: 'Fire' }
+                            { id: 'user', label: 'Person' },
+                            { id: 'car', label: 'Vehicle' },
+                            { id: 'home', label: 'Base' },
+                            { id: 'tent', label: 'Portable' },
+                            { id: 'hospital', label: 'Hospital' },
+                            { id: 'police', label: 'Police' },
+                            { id: 'fire', label: 'Fire' }
                         ].map(item => (
                             <button
                                 key={item.id}
@@ -139,7 +140,7 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                                 className={`p-2 rounded-lg border-2 transition-all flex flex-col items-center gap-1 min-w-[60px] ${formData.icon === item.id ? 'border-white bg-white/10' : 'border-transparent bg-black/20 opacity-60 hover:opacity-100'}`}
                                 title={item.label}
                             >
-                                <item.icon className="h-5 w-5" />
+                                <img src={`/markers/${item.id}.svg`} className="h-5 w-5" alt={item.label} />
                                 <span className="text-[9px] uppercase font-bold">{item.label}</span>
                             </button>
                         ))}
@@ -285,14 +286,30 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
 
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Operating Hours</label>
-                        <input
-                            type="text"
-                            value={formData.operatingHours}
-                            onChange={e => setFormData({ ...formData, operatingHours: e.target.value })}
-                            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-                            placeholder="e.g. 08:00 - 18:00"
-                        />
+                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-2">
+                            Operating Hours <Clock className="h-3 w-3" />
+                        </label>
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="time"
+                                value={formData.operatingHours?.split(' - ')[0] || ''}
+                                onChange={e => {
+                                    const currentEnd = formData.operatingHours?.split(' - ')[1] || '';
+                                    setFormData({ ...formData, operatingHours: `${e.target.value} - ${currentEnd} ` })
+                                }}
+                                className="w-full bg-black/40 border border-white/10 rounded-lg px-2 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm text-center"
+                            />
+                            <span className="text-slate-500 font-bold">-</span>
+                            <input
+                                type="time"
+                                value={formData.operatingHours?.split(' - ')[1] || ''}
+                                onChange={e => {
+                                    const currentStart = formData.operatingHours?.split(' - ')[0] || '';
+                                    setFormData({ ...formData, operatingHours: `${currentStart} - ${e.target.value} ` })
+                                }}
+                                className="w-full bg-black/40 border border-white/10 rounded-lg px-2 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm text-center"
+                            />
+                        </div>
                     </div>
                 </div>
 

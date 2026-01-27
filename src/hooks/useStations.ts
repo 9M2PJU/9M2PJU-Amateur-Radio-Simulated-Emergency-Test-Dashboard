@@ -23,7 +23,8 @@ export const useStations = () => {
     const [stations, setStations] = useState<Station[]>(() => {
         try {
             const saved = localStorage.getItem(STORAGE_KEY);
-            const loaded = saved ? JSON.parse(saved) : [];
+            const parsed = saved ? JSON.parse(saved) : [];
+            const loaded = Array.isArray(parsed) ? parsed : [];
             // Migration: Convert legacy fields to radioInfo array
             return loaded.map((s: any) => {
                 let radioInfo = s.radioInfo || [];
