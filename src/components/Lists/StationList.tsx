@@ -68,7 +68,7 @@ const StationList: React.FC<StationListProps> = ({
                             <div className="flex justify-between items-start">
                                 <div className="font-bold text-white group-hover:text-blue-400 transition-colors flex items-center gap-2">
                                     <img
-                                        src={`/markers/${station.icon || 'user'}.svg`}
+                                        src={`/markers/${station.icon || 'user'}.svg?v=${new Date().getDate()}`}
                                         className="h-4 w-4 opacity-70"
                                         alt=""
                                     />

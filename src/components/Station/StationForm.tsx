@@ -140,7 +140,7 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                                 className={`p-2 rounded-lg border-2 transition-all flex flex-col items-center gap-1 min-w-[60px] ${formData.icon === item.id ? 'border-white bg-white/10' : 'border-transparent bg-black/20 opacity-60 hover:opacity-100'}`}
                                 title={item.label}
                             >
-                                <img src={`/markers/${item.id}.svg`} className="h-5 w-5" alt={item.label} />
+                                <img src={`/markers/${item.id}.svg?v=${new Date().getDate()}`} className="h-5 w-5" alt={item.label} />
                                 <span className="text-[9px] uppercase font-bold">{item.label}</span>
                             </button>
                         ))}
