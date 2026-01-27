@@ -49,7 +49,6 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
     currentUserId,
     isAdmin
 }) => {
-    // Center on Malaysia as default (User appears to be 9M2 - Malaysia)
     const defaultCenter: [number, number] = [4.2105, 101.9758];
     const defaultZoom = 6;
 
@@ -64,8 +63,8 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                 <MapEvents onMapClick={onMapClick} isPickingLocation={isPickingLocation} />
 
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
                 <ZoomControl position="bottomright" />

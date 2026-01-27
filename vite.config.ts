@@ -32,21 +32,7 @@ export default defineConfig({
       workbox: {
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/basemaps\.cartocdn\.com\/.*\.png$/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'map-tiles-carto',
-              expiration: {
-                maxEntries: 1000,
-                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          },
-          {
-            urlPattern: /^https:\/\/\{s\}\.tile\.openstreetmap\.org\/.*\.png$/,
+            urlPattern: /^https:\/\/[a-c]\.tile\.openstreetmap\.org\/.*\.png$/,
             handler: 'CacheFirst',
             options: {
               cacheName: 'map-tiles-osm',
