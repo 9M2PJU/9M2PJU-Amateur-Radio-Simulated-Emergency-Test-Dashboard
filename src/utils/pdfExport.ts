@@ -40,7 +40,7 @@ export const exportStationsToPDF = (stations: Station[]) => {
 
     const summary = `As of ${timestamp}, a total of ${totalStations} stations are registered in the 9M2PJU SET Dashboard. ` +
         `Current system status shows ${emergencyCount} stations in EMERGENCY state and ${activeCount} stations ACTIVE. ` +
-        `Operational readiness is maintained via radio network. All telemetry data is current.`;
+        `Operational readiness is maintained via radio network. All data is current.`;
 
     const splitSummary = doc.splitTextToSize(summary, 182);
     doc.text(splitSummary, 14, 58);
