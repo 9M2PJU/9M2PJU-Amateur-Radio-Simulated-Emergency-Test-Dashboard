@@ -4,7 +4,7 @@ All notable changes to the **9M2PJU Amateur Radio Simulated Emergency Test Dashb
 
 ## [4.2.0] - 2026-01-28
 ### Added
-- **PWA Support**: Full Progressive Web App integration with service worker.
+- **PWA Support**: Full PWA integration with service worker and **"Install App"** prompt in-UI.
 - **Offline Map Caching**: OSMap tile caching for offline use and faster loading.
 - **Brand Logo Support**: Integrated project logo in UI and PDF exports.
 - **Supabase Authentication**: Secure login gate for all users.
@@ -18,6 +18,8 @@ All notable changes to the **9M2PJU Amateur Radio Simulated Emergency Test Dashb
 - **Header Design**: Refined responsive layout with better spacing and dynamic icon scaling.
 
 ### Fixed
+- **Super Admin Visibility**: Optimized Super Admin controls for mobile (visible below header title).
+- **Header Clipping**: Resolved off-screen icon clipping on small mobile devices.
 - **Scroll Hijacking**: Prevented map zoom when scrolling the Station List sidebar on hover.
 - **Donation Logic**: Fixed popup reset on logout and improved trigger timing (500ms).
 - **Admin Layout**: Resolved off-screen clipping for settings and donation modals on mobile.
