@@ -7,8 +7,8 @@ interface DonationModalProps {
 
 const DonationModal: React.FC<DonationModalProps> = ({ onClose }) => {
     return (
-        <div className="absolute inset-0 z-[3000] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-in fade-in duration-300">
-            <div className="glass-card p-6 md:p-8 rounded-[2rem] w-full max-w-xl bg-slate-900/90 text-white relative border-2 border-fuchsia-500/50 shadow-[0_0_40px_rgba(217,70,239,0.3)]">
+        <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-in fade-in duration-300 overflow-y-auto">
+            <div className="glass-card p-4 sm:p-6 md:p-8 rounded-3xl sm:rounded-[2rem] w-full max-w-xl bg-slate-900/90 text-white relative border-2 border-fuchsia-500/50 shadow-[0_0_40px_rgba(217,70,239,0.3)] my-auto">
                 <button
                     onClick={onClose}
                     className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-all hover:rotate-90"

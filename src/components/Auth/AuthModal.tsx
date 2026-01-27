@@ -59,7 +59,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, isEmbedded = false }) =>
                 </button>
             )}
 
-            <div className={isEmbedded ? '' : 'p-8'}>
+            <div className={isEmbedded ? '' : 'p-6 sm:p-8'}>
                 <div className="flex flex-col items-center mb-8">
                     <div className="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mb-4 border border-blue-500/30">
                         <Lock className="w-8 h-8 text-blue-400" />
@@ -130,7 +130,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, isEmbedded = false }) =>
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 disabled:opacity-50 text-white font-bold py-3.5 rounded-xl transition-all shadow-[0_10px_20px_-10px_rgba(37,99,235,0.4)] flex items-center justify-center gap-2 mt-6 active:scale-[0.98]"
+                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 disabled:opacity-50 text-white font-bold py-3 sm:py-3.5 rounded-xl transition-all shadow-[0_10px_20px_-10px_rgba(37,99,235,0.4)] flex items-center justify-center gap-2 mt-6 active:scale-[0.98]"
                     >
                         {loading ? (
                             <Loader2 className="w-5 h-5 animate-spin" />
@@ -170,8 +170,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, isEmbedded = false }) =>
     if (isEmbedded) return modalContent;
 
     return (
-        <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-            {modalContent}
+        <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 animate-in fade-in overflow-y-auto">
+            <div className="my-auto w-full flex justify-center">
+                {modalContent}
+            </div>
         </div>
     );
 };

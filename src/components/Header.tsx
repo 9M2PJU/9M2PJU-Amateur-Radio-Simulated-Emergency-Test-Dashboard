@@ -67,8 +67,8 @@ const Header: React.FC<HeaderProps> = ({
     };
 
     return (
-        <header className="absolute top-0 left-0 right-0 z-[1000] p-4 pointer-events-none">
-            <div className="glass rounded-2xl p-4 flex items-center justify-between pointer-events-auto">
+        <header className="absolute top-0 left-0 right-0 z-[1000] p-2 sm:p-4 pointer-events-none">
+            <div className="glass rounded-xl sm:rounded-2xl p-2 sm:p-4 flex items-center justify-between pointer-events-auto">
                 {/* Left: Branding */}
                 <div className="flex items-center gap-4">
                     <button
@@ -81,15 +81,15 @@ const Header: React.FC<HeaderProps> = ({
                     <div className="h-12 w-12 rounded-xl bg-black/50 border border-cyan-500/30 flex items-center justify-center p-1 overflow-hidden shadow-[0_0_15px_rgba(0,255,255,0.2)]">
                         <img src={logoUrl || "/logo.png"} alt="9M2PJU Logo" className="h-full w-full object-contain" />
                     </div>
-                    <div className="flex flex-col justify-center min-w-fit">
-                        <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70 hidden sm:block">
+                    <div className="flex flex-col justify-center min-w-0">
+                        <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70 hidden lg:block">
                             9M2PJU SET Dashboard
                         </h1>
-                        <h1 className="text-sm font-bold text-white sm:hidden whitespace-nowrap">
-                            9M2PJU SET Dashboard
+                        <h1 className="text-sm font-bold text-white lg:hidden whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px] sm:max-w-none">
+                            9M2PJU SET
                         </h1>
-                        <div className="flex items-center gap-2 text-xs text-blue-200/80 font-medium tracking-wide">
-                            Made with ❤️ by <a href="https://hamradio.my" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors underline decoration-dotted">9M2PJU</a>
+                        <div className="flex items-center gap-2 text-[9px] sm:text-xs text-blue-200/80 font-medium tracking-wide">
+                            <span className="hidden xs:inline">Made with ❤️ by</span> <a href="https://hamradio.my" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors underline decoration-dotted">9M2PJU</a>
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
 
                 {/* Right: Widgets & Settings */}
-                <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+                <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
                     {coords && (
                         <div className="hidden lg:flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/5">
                             <div className="text-cyan-400">
@@ -158,48 +158,48 @@ const Header: React.FC<HeaderProps> = ({
 
                     {/* Auth Status / Login Button */}
                     {userEmail ? (
-                        <div className="flex items-center gap-2 bg-blue-600/10 border border-blue-500/20 rounded-xl p-1 pr-3">
+                        <div className="flex items-center gap-1.5 sm:gap-2 bg-blue-600/10 border border-blue-500/20 rounded-lg sm:rounded-xl p-0.5 sm:p-1 pr-2 sm:pr-3">
                             <button
                                 onClick={handleSignOut}
-                                className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all"
+                                className="p-1.5 sm:p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all"
                                 title="Sign Out"
                             >
-                                <LogOut className="h-4 w-4" />
+                                <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                             </button>
-                            <div className="hidden lg:flex flex-col">
+                            <div className="hidden xl:flex flex-col">
                                 <span className="text-[9px] text-white/40 font-bold uppercase">Authenticated</span>
                                 <span className="text-xs text-blue-300 font-medium max-w-[100px] truncate">{userEmail}</span>
                             </div>
-                            <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 border border-blue-500/30">
-                                <User className="h-4 w-4" />
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 border border-blue-500/30">
+                                <User className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                             </div>
                         </div>
                     ) : (
                         <button
                             onClick={onOpenAuth}
-                            className="flex items-center gap-2 px-4 py-3 rounded-xl bg-blue-600/10 text-blue-400 hover:bg-blue-600 hover:text-white border border-blue-500/20 transition-all font-bold text-sm"
+                            className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl bg-blue-600/10 text-blue-400 hover:bg-blue-600 hover:text-white border border-blue-500/20 transition-all font-bold text-xs sm:text-sm"
                         >
-                            <LogIn className="h-4 w-4" />
-                            <span className="hidden sm:inline">Sign In</span>
+                            <LogIn className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                            <span className="hidden xs:inline sm:inline">Sign In</span>
                         </button>
                     )}
 
                     <button
                         onClick={onOpenDonation}
-                        className="p-3 rounded-xl bg-fuchsia-500/10 text-fuchsia-400 hover:bg-fuchsia-500/20 border border-fuchsia-500/20 transition-all group"
+                        className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-fuchsia-500/10 text-fuchsia-400 hover:bg-fuchsia-500/20 border border-fuchsia-500/20 transition-all group"
                         title="Support 9M2PJU"
                     >
-                        <Heart className="h-5 w-5 fill-current group-hover:scale-110 transition-transform" />
+                        <Heart className="h-4 w-4 sm:h-5 sm:w-5 fill-current group-hover:scale-110 transition-transform" />
                     </button>
 
                     <button
                         onClick={onToggleAdmin}
-                        className={`p-3 rounded-xl transition-all duration-300 ${adminMode
+                        className={`p-2 sm:p-3 rounded-lg sm:rounded-xl transition-all duration-300 ${adminMode
                             ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
                             : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white'
                             }`}
                     >
-                        <Settings className="h-5 w-5" />
+                        <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
                     </button>
                 </div>
             </div>
