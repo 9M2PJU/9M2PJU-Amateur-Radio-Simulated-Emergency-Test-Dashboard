@@ -292,7 +292,6 @@ function App() {
                     />
                   </div>
                   <h2 className="text-2xl font-black text-white tracking-tight text-center uppercase">9M2PJU Simulated Emergency Test Dashboard</h2>
-                  <p className="text-slate-400 text-[10px] font-bold tracking-[0.2em] uppercase mt-2 text-center">9M2PJU Simulated Emergency Test Dashboard</p>
                 </div>
 
                 {/* Embed AuthModal directly but override its fixed background if needed? 
