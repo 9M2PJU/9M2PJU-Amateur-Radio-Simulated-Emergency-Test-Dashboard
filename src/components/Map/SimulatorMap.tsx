@@ -82,7 +82,7 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                             <div class="flex flex-col items-center group">
                                 <div class="px-2 py-1 rounded shadow-lg border border-white/20 text-[11px] font-bold text-white whitespace-nowrap transition-all group-hover:scale-110 group-hover:z-[1000] cursor-pointer flex items-center gap-1.5" 
                                      style="background-color: ${statusColor}cc; box-shadow: 0 0 10px ${statusColor}44, inset 0 0 5px rgba(255,255,255,0.2);">
-                                    <img src="/markers/${station.icon || 'user'}.svg?v=${new Date().getDate()}" style="width: 14px; height: 14px;" />
+                                    <img src="/markers/${station.icon || 'user'}.svg?v=${new Date().getTime()}" style="width: 14px; height: 14px;" />
                                     ${station.callsign}
                                 </div>
                                 <div class="w-2 h-2 rounded-full mt-0.5 blur-[1px] ${station.status === 'emergency' ? 'animate-pulse' : ''}" 

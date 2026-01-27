@@ -19,6 +19,7 @@ interface HeaderProps {
         longitude: number;
     };
     gridSquare?: string;
+    logoUrl?: string;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -32,7 +33,8 @@ const Header: React.FC<HeaderProps> = ({
     onImpersonate,
     adminMode,
     coords,
-    gridSquare
+    gridSquare,
+    logoUrl
 }) => {
     const [users, setUsers] = useState<{ id: string, email: string }[]>([]);
 
@@ -77,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({
                     </button>
 
                     <div className="h-12 w-12 rounded-xl bg-black/50 border border-cyan-500/30 flex items-center justify-center p-1 overflow-hidden shadow-[0_0_15px_rgba(0,255,255,0.2)]">
-                        <img src="/logo.png" alt="9M2PJU Logo" className="h-full w-full object-contain" />
+                        <img src={logoUrl || "/logo.png"} alt="9M2PJU Logo" className="h-full w-full object-contain" />
                     </div>
                     <div className="flex flex-col justify-center min-w-fit">
                         <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70 hidden sm:block">

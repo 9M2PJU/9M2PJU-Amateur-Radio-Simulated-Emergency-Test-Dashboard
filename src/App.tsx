@@ -16,6 +16,9 @@ import AuthModal from './components/Auth/AuthModal';
 import { getMaidenheadLocator } from './utils/maidenhead';
 import type { Session } from '@supabase/supabase-js';
 
+// Cache busting version
+const ASSET_VERSION = new Date().getTime();
+
 function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [impersonatedUserId, setImpersonatedUserId] = useState<string | null>(null);
@@ -113,6 +116,7 @@ function App() {
         onOpenDonation={() => setIsDonationOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
         userEmail={session?.user?.email}
+        logoUrl={`/logo.png?v=${ASSET_VERSION}`}
         isAdmin={isAdmin}
         impersonatedUserId={impersonatedUserId}
         onImpersonate={setImpersonatedUserId}
