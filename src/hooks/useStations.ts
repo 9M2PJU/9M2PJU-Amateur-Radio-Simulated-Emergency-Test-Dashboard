@@ -107,7 +107,7 @@ export const useStations = (userIdFilter?: string | null) => {
             if (data.powerSource) supabaseUpdate.power_source = data.powerSource;
             if (data.locationName) supabaseUpdate.location_name = data.locationName;
             if (data.operatingHours) supabaseUpdate.operating_hours = data.operatingHours;
-            if (data.customColor) supabaseUpdate.custom_color = data.custom_color;
+            if (data.customColor) supabaseUpdate.custom_color = data.customColor;
             if (data.radioInfo) supabaseUpdate.radio_info = data.radioInfo;
             if (data.icon) supabaseUpdate.icon = data.icon;
 
@@ -173,13 +173,13 @@ export const useStations = (userIdFilter?: string | null) => {
                     power_source: rest.powerSource,
                     location_name: rest.locationName,
                     operating_hours: rest.operatingHours,
-                    custom_color: rest.custom_color,
+                    custom_color: rest.customColor,
                     radio_info: rest.radioInfo || (rest.frequencies ? rest.frequencies.map((f: string) => ({ frequency: f, mode: rest.mode || '' })) : []),
                     updated_at: Date.now(),
                     user_id: user?.id
                 }));
 
-                const { data, error } = await supabase
+                const { data: _data, error } = await supabase
                     .from('stations')
                     .insert(cleanData)
                     .select();
