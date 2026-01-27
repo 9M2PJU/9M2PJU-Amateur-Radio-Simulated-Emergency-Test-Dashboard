@@ -139,17 +139,37 @@ export const useStations = (userIdFilter?: string | null) => {
     };
 
     const clearStations = async () => {
-        if (confirm('Are you sure you want to clear all stations from the database?')) {
+        if (confirm('Are you sure you want to clear your submitted stations? This cannot be undone.')) {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return;
+
+                const { error } = await supabase
+                    .from('stations')
+                    .delete()
+                    .eq('user_id', user.id);
+
+                if (error) throw error;
+                setStations(prev => prev.filter(s => s.user_id !== user.id));
+            } catch (err: any) {
+                alert('Error clearing stations: ' + err.message);
+            }
+        }
+    };
+
+    const nukeDatabase = async () => {
+        if (confirm('⚠️ WARNING: You are about to DELETE ALL STATIONS from ALL USERS. This is permanent. Are you absolutely sure?')) {
             try {
                 const { error } = await supabase
                     .from('stations')
                     .delete()
-                    .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+                    .neq('id', '00000000-0000-0000-0000-000000000000');
 
                 if (error) throw error;
                 setStations([]);
+                alert('Database wiped successfully.');
             } catch (err: any) {
-                alert('Error clearing stations: ' + err.message);
+                alert('Error nuking database: ' + err.message);
             }
         }
     };
@@ -213,6 +233,7 @@ export const useStations = (userIdFilter?: string | null) => {
         updateStation,
         removeStation,
         clearStations,
+        nukeDatabase,
         exportData,
         importData,
         refresh: fetchStations

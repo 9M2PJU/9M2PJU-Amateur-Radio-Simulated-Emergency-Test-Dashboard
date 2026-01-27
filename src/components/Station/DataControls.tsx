@@ -5,9 +5,11 @@ interface DataControlsProps {
     onExport: () => void;
     onImport: (data: string) => void;
     onClear: () => void;
+    onNuke?: () => void;
+    isAdmin?: boolean;
 }
 
-const DataControls: React.FC<DataControlsProps> = ({ onExport, onImport, onClear }) => {
+const DataControls: React.FC<DataControlsProps> = ({ onExport, onImport, onClear, onNuke, isAdmin }) => {
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,8 +55,20 @@ const DataControls: React.FC<DataControlsProps> = ({ onExport, onImport, onClear
                 onClick={onClear}
                 className="w-full flex items-center justify-center gap-2 bg-red-600/10 hover:bg-red-600/30 text-red-400 border border-red-500/20 rounded-lg py-2 text-xs font-semibold transition-all"
             >
-                <Trash2 className="h-3 w-3" /> Clear All Data
+                <Trash2 className="h-3 w-3" /> Clear My Stations
             </button>
+
+            {isAdmin && onNuke && (
+                <div className="pt-2 border-t border-red-500/20">
+                    <button
+                        onClick={onNuke}
+                        className="w-full flex items-center justify-center gap-2 bg-red-600/30 hover:bg-red-600/50 text-white border border-red-500 rounded-lg py-2 text-xs font-bold transition-all animate-pulse"
+                    >
+                        <Trash2 className="h-3 w-3" /> WIPE DATABASE (ADMIN)
+                    </button>
+                    <p className="text-[10px] text-red-400 text-center mt-1">Permanently deletes all data from all users</p>
+                </div>
+            )}
         </div>
     );
 };

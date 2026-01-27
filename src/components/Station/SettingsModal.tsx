@@ -7,9 +7,11 @@ interface SettingsModalProps {
     onExport: () => void;
     onImport: (data: string) => void;
     onClear: () => void;
+    onNuke?: () => void;
+    isAdmin?: boolean;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onExport, onImport, onClear }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onExport, onImport, onClear, onNuke, isAdmin }) => {
     return (
         <div className="absolute inset-0 z-[1000] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
             <div className="glass-card p-6 rounded-2xl w-full max-w-md bg-slate-900/90 text-white relative">
@@ -23,7 +25,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onExport, onImpo
                 <h2 className="text-xl font-bold mb-6">Settings</h2>
 
                 <div className="space-y-6">
-                    <DataControls onExport={onExport} onImport={onImport} onClear={onClear} />
+                    <DataControls
+                        onExport={onExport}
+                        onImport={onImport}
+                        onClear={onClear}
+                        onNuke={onNuke}
+                        isAdmin={isAdmin}
+                    />
 
                     <div className="text-xs text-white/30 text-center">
                         v1.0.0 • 9M2PJU SET Dashboard

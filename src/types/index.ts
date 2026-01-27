@@ -23,6 +23,7 @@ export interface Station {
     customColor?: string;
     notes?: string;
     updatedAt: number;
+    user_id?: string;
 }
 
 export type MapMode = 'view' | 'add' | 'edit';
