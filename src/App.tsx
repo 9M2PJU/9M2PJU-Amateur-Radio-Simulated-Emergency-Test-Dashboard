@@ -110,12 +110,25 @@ function App() {
           </div>
 
           {/* Weather Widget */}
-          <div className="absolute top-28 right-4 z-[400] hidden lg:block w-80">
+          <div className="absolute top-28 right-4 z-[400] hidden lg:block w-80 space-y-4">
             <Weather
               data={weatherState.data}
               loading={weatherState.loading}
               error={weatherState.error}
             />
+
+            {/* Desktop Add Station Button (Under HF Propagation) */}
+            <button
+              onClick={() => {
+                setDraftStationData({});
+                setEditingStationId(null);
+                setIsFormOpen(true);
+              }}
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-95 border border-white/10"
+            >
+              <Plus className="h-5 w-5" />
+              <span>Add Station</span>
+            </button>
           </div>
 
           {/* Location Picker Overlay Hint */}
@@ -127,8 +140,8 @@ function App() {
         </SimulatorMap>
       </main>
 
-      {/* Admin FAB - Moved up to avoid Map Zoom controls overlap */}
-      <div className="absolute bottom-24 right-6 z-[500]">
+      {/* Admin FAB - Mobile Only */}
+      <div className="absolute bottom-24 right-6 z-[500] lg:hidden">
         {!isPickingLocation && (
           <button
             onClick={() => {

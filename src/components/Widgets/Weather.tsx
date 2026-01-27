@@ -98,7 +98,7 @@ const Weather: React.FC<WeatherProps> = ({ data, loading, error }) => {
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
                     <div className="relative bg-black/40 rounded-lg border border-white/10 overflow-hidden h-64">
                         <iframe
-                            src="https://portalbencana.nadma.gov.my/map/map_main.php"
+                            src="https://portalbencana.nadma.gov.my/map/map_main.php?z=6"
                             title="NADMA Disaster Map"
                             className="w-full h-full border-none"
                             loading="lazy"
