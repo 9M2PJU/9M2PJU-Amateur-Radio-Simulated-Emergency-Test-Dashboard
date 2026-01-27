@@ -19,7 +19,7 @@ import type { Session } from '@supabase/supabase-js';
 function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [impersonatedUserId, setImpersonatedUserId] = useState<string | null>(null);
-  const { stations, loading: stationsLoading, addStation, updateStation, removeStation, exportData, importData, clearStations, nukeDatabase } = useStations(impersonatedUserId);
+  const { stations, loading: stationsLoading, addStation, updateStation, removeStation, exportData, importData, clearStations, nukeDatabase } = useStations(session, impersonatedUserId);
   const weatherState = useWeather();
 
   const [isFormOpen, setIsFormOpen] = useState(false);

@@ -1,13 +1,19 @@
 import { useState, useEffect } from 'react';
+import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../utils/supabase';
 import type { Station } from '../types';
 
-export const useStations = (userIdFilter?: string | null) => {
+export const useStations = (session: Session | null, userIdFilter?: string | null) => {
     const [stations, setStations] = useState<Station[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchStations = async () => {
+        if (!session) {
+            setStations([]);
+            setLoading(false);
+            return;
+        }
         try {
             setLoading(true);
             let query = supabase
@@ -46,7 +52,7 @@ export const useStations = (userIdFilter?: string | null) => {
 
     useEffect(() => {
         fetchStations();
-    }, [userIdFilter]);
+    }, [userIdFilter, session]);
 
     const addStation = async (station: Omit<Station, 'id' | 'updatedAt'>) => {
         try {
