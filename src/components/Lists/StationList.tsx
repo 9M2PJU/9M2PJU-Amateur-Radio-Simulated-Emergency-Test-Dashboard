@@ -93,6 +93,28 @@ const StationList: React.FC<StationListProps> = ({
                                     <AlertTriangle className="h-3 w-3" /> EMERGENCY TRAFFIC
                                 </div>
                             )}
+
+                            <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
+                                {station.equipment && (
+                                    <div className="flex items-center gap-1 text-xs text-blue-200/70">
+                                        <span className="font-bold uppercase text-[9px] text-blue-400/50">Rig:</span> {station.equipment}
+                                    </div>
+                                )}
+                                {station.powerSource && (
+                                    <div className="flex items-center gap-1 text-xs">
+                                        <span className="font-bold uppercase text-[9px] text-slate-500">Pwr:</span>
+                                        <span className={`${station.powerSource === 'battery' ? 'text-amber-400' : 'text-cyan-400'} font-medium`}>
+                                            {station.powerSource === 'battery' ? '🔋 Batt' : '🔌 Main'}
+                                        </span>
+                                    </div>
+                                )}
+                                {station.operatingHours && (
+                                    <div className="flex items-center gap-1 text-xs text-emerald-200/70">
+                                        <div className="w-1 h-1 rounded-full bg-emerald-500/50"></div>
+                                        <span className="font-bold uppercase text-[9px] text-emerald-400/50">Hrs:</span> {station.operatingHours}
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <div className="flex justify-end gap-2 mt-3 pt-2 border-t border-white/5 transition-opacity group-hover:opacity-100 opacity-100 sm:opacity-0">
