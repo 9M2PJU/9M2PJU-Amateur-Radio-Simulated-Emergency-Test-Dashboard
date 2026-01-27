@@ -82,14 +82,12 @@ const Header: React.FC<HeaderProps> = ({
                         <img src={logoUrl || "/logo.png"} alt="9M2PJU Logo" className="h-full w-full object-contain" />
                     </div>
                     <div className="flex flex-col justify-center min-w-0">
-                        <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70 hidden lg:block">
+                        <h1 className="text-sm sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70 whitespace-nowrap">
                             9M2PJU SET Dashboard
                         </h1>
-                        <h1 className="text-sm font-bold text-white lg:hidden whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px] sm:max-w-none">
-                            9M2PJU SET
-                        </h1>
-                        <div className="flex items-center gap-2 text-[9px] sm:text-xs text-blue-200/80 font-medium tracking-wide">
-                            <span className="hidden xs:inline">Made with ❤️ by</span> <a href="https://hamradio.my" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors underline decoration-dotted">9M2PJU</a>
+                        <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs text-blue-200/80 font-medium tracking-wide">
+                            <span>Made with ❤️ by</span>
+                            <a href="https://hamradio.my" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors underline decoration-dotted">9M2PJU</a>
                         </div>
                     </div>
                 </div>
