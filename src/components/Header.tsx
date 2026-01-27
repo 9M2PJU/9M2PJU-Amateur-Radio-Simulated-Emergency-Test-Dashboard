@@ -1,11 +1,18 @@
-import { Settings, Menu, Heart, LocateFixed } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Settings, Menu, Heart, LocateFixed, User, LogOut, LogIn, X } from 'lucide-react';
 import Clock from './Widgets/Clock';
 import NewsTicker from './Widgets/NewsTicker';
+import { supabase } from '../utils/supabase';
 
 interface HeaderProps {
     onToggleAdmin: () => void;
     onToggleSidebar: () => void;
     onOpenDonation: () => void;
+    onOpenAuth: () => void;
+    userEmail?: string;
+    isAdmin?: boolean;
+    impersonatedUserId?: string | null;
+    onImpersonate?: (id: string | null) => void;
     adminMode: boolean;
     coords?: {
         latitude: number;
@@ -14,7 +21,46 @@ interface HeaderProps {
     gridSquare?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, onOpenDonation, adminMode, coords, gridSquare }) => {
+const Header: React.FC<HeaderProps> = ({
+    onToggleAdmin,
+    onToggleSidebar,
+    onOpenDonation,
+    onOpenAuth,
+    userEmail,
+    isAdmin,
+    impersonatedUserId,
+    onImpersonate,
+    adminMode,
+    coords,
+    gridSquare
+}) => {
+    const [users, setUsers] = useState<{ id: string, email: string }[]>([]);
+
+    useEffect(() => {
+        if (isAdmin) {
+            // Note: In a real Supabase setup, you'd need a service role or edge function
+            // to list all users. For this demo/SET, we'll fetch unique user_ids from stations.
+            const fetchUsers = async () => {
+                const { data } = await supabase
+                    .from('stations')
+                    .select('user_id')
+                    .not('user_id', 'is', null);
+
+                if (data) {
+                    const uniqueIds = [...new Set(data.map(d => d.user_id))];
+                    // Since we can't get emails easily without admin API, we'll use IDs
+                    // or just the current user's email if it matches.
+                    setUsers(uniqueIds.map(id => ({ id, email: id.slice(0, 8) + '...' })));
+                }
+            };
+            fetchUsers();
+        }
+    }, [isAdmin]);
+
+    const handleSignOut = async () => {
+        await supabase.auth.signOut();
+    };
+
     return (
         <header className="absolute top-0 left-0 right-0 z-[1000] p-4 pointer-events-none">
             <div className="glass rounded-2xl p-4 flex items-center justify-between pointer-events-auto">
@@ -43,7 +89,34 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, onOpenD
                     </div>
                 </div>
 
-                {/* Center: News Ticker Area (Free Space as requested) */}
+                {/* Center: Admin Impersonation Control */}
+                {isAdmin && (
+                    <div className="hidden xl:flex items-center gap-3 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                        <div className="flex flex-col">
+                            <span className="text-[9px] text-amber-500 font-bold uppercase tracking-widest">Super Admin Mode</span>
+                            <select
+                                value={impersonatedUserId || ''}
+                                onChange={(e) => onImpersonate?.(e.target.value || null)}
+                                className="bg-transparent text-xs text-white border-none focus:ring-0 p-0 cursor-pointer font-medium"
+                            >
+                                <option value="" className="bg-neutral-900">View All Stations</option>
+                                {users.map(u => (
+                                    <option key={u.id} value={u.id} className="bg-neutral-900">User: {u.email}</option>
+                                ))}
+                            </select>
+                        </div>
+                        {impersonatedUserId && (
+                            <button
+                                onClick={() => onImpersonate?.(null)}
+                                className="p-1 rounded-md bg-amber-500/20 text-amber-400 hover:bg-amber-500/40 transition-colors"
+                                title="Clear Impersonation"
+                            >
+                                <X className="w-3 h-3" />
+                            </button>
+                        )}
+                    </div>
+                )}
+
                 {/* Center: News Ticker Area */}
                 <div className="hidden md:flex flex-1 mx-4 lg:mx-8 max-w-xl h-10 rounded-xl overflow-hidden border border-white/5 bg-black/20 shadow-inner">
                     <NewsTicker />
@@ -77,6 +150,34 @@ const Header: React.FC<HeaderProps> = ({ onToggleAdmin, onToggleSidebar, onOpenD
                     <div className="hidden sm:block">
                         <Clock />
                     </div>
+
+                    {/* Auth Status / Login Button */}
+                    {userEmail ? (
+                        <div className="flex items-center gap-2 bg-blue-600/10 border border-blue-500/20 rounded-xl p-1 pr-3">
+                            <button
+                                onClick={handleSignOut}
+                                className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all"
+                                title="Sign Out"
+                            >
+                                <LogOut className="h-4 w-4" />
+                            </button>
+                            <div className="hidden lg:flex flex-col">
+                                <span className="text-[9px] text-white/40 font-bold uppercase">Authenticated</span>
+                                <span className="text-xs text-blue-300 font-medium max-w-[100px] truncate">{userEmail}</span>
+                            </div>
+                            <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 border border-blue-500/30">
+                                <User className="h-4 w-4" />
+                            </div>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={onOpenAuth}
+                            className="flex items-center gap-2 px-4 py-3 rounded-xl bg-blue-600/10 text-blue-400 hover:bg-blue-600 hover:text-white border border-blue-500/20 transition-all font-bold text-sm"
+                        >
+                            <LogIn className="h-4 w-4" />
+                            <span className="hidden sm:inline">Sign In</span>
+                        </button>
+                    )}
 
                     <button
                         onClick={onOpenDonation}

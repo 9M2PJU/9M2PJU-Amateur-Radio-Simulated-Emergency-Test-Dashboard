@@ -2,26 +2,24 @@ import { useState, useEffect } from 'react';
 import SimulatorMap from './components/Map/SimulatorMap';
 import { useStations } from './hooks/useStations';
 import { useWeather } from './hooks/useWeather';
+import { supabase } from './utils/supabase';
 // Import Leaflet CSS
 import 'leaflet/dist/leaflet.css';
-import { Plus } from 'lucide-react';
+import { Plus, LogIn } from 'lucide-react';
 import StationForm from './components/Station/StationForm';
 import SettingsModal from './components/Station/SettingsModal';
 import StationList from './components/Lists/StationList';
 import Header from './components/Header';
 import Weather from './components/Widgets/Weather';
 import DonationModal from './components/Widgets/DonationModal';
+import AuthModal from './components/Auth/AuthModal';
 import { getMaidenheadLocator } from './utils/maidenhead';
-
-// Component to bridge Map context available inside SimulatorMap to outside UI
-// Note: StationList needs to be INSIDE MapContainer to use useMap(), but our layout separates them.
-// We will need to adapt SimulatorMap to accept children or overlays.
-// Strategy Check: SimulatorMap default export renders MapContainer. StationList uses useMap.
-// StationList must be a child of MapContainer.
-// Solution: We will inject StationList as a child of SimulatorMap.
+import type { Session } from '@supabase/supabase-js';
 
 function App() {
-  const { stations, addStation, updateStation, removeStation, exportData, importData, clearStations } = useStations();
+  const [session, setSession] = useState<Session | null>(null);
+  const [impersonatedUserId, setImpersonatedUserId] = useState<string | null>(null);
+  const { stations, loading: stationsLoading, addStation, updateStation, removeStation, exportData, importData, clearStations } = useStations(impersonatedUserId);
   const weatherState = useWeather();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -31,17 +29,51 @@ function App() {
   const [draftStationData, setDraftStationData] = useState<any>({});
   const [editingStationId, setEditingStationId] = useState<string | null>(null);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+
+  // Supabase Session Logic
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleEdit = (station: any) => {
+    if (!session) {
+      setIsAuthOpen(true);
+      return;
+    }
     setDraftStationData(station);
     setEditingStationId(station.id);
     setIsFormOpen(true);
   };
 
   const handleDelete = (id: string) => {
+    if (!session) {
+      setIsAuthOpen(true);
+      return;
+    }
     if (confirm('Are you sure you want to delete this station?')) {
       removeStation(id);
     }
+  };
+
+  const handleAddClick = () => {
+    if (!session) {
+      setIsAuthOpen(true);
+      return;
+    }
+    setDraftStationData({});
+    setEditingStationId(null);
+    setIsFormOpen(true);
   };
 
   // Responsive Sidebar Check
@@ -70,6 +102,8 @@ function App() {
     }
   }, []);
 
+  const isAdmin = session?.user?.email === '9m2pju@hamradio.my';
+
   return (
     <div className="relative h-full w-full bg-background overflow-hidden flex flex-col font-sans text-foreground">
       <Header
@@ -77,6 +111,11 @@ function App() {
         onToggleAdmin={() => setIsSettingsOpen(true)}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         onOpenDonation={() => setIsDonationOpen(true)}
+        onOpenAuth={() => setIsAuthOpen(true)}
+        userEmail={session?.user?.email}
+        isAdmin={isAdmin}
+        impersonatedUserId={impersonatedUserId}
+        onImpersonate={setImpersonatedUserId}
         coords={weatherState.data?.coords}
         gridSquare={weatherState.data?.coords ? getMaidenheadLocator(weatherState.data.coords.latitude, weatherState.data.coords.longitude, 6) : undefined}
       />
@@ -137,6 +176,16 @@ function App() {
               📍 TAP ANYWHERE ON MAP TO SELECT LOCATION
             </div>
           )}
+
+          {/* Database Loading State */}
+          {stationsLoading && (
+            <div className="absolute inset-0 z-[1500] flex items-center justify-center bg-black/20 backdrop-blur-[2px]">
+              <div className="bg-neutral-900/80 border border-white/10 px-6 py-4 rounded-2xl flex items-center gap-3">
+                <div className="w-5 h-5 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+                <span className="text-white font-medium">Synchronizing with Cloud...</span>
+              </div>
+            </div>
+          )}
         </SimulatorMap>
       </main>
 
@@ -144,14 +193,11 @@ function App() {
       <div className="absolute bottom-24 right-6 z-[500] lg:hidden">
         {!isPickingLocation && (
           <button
-            onClick={() => {
-              setDraftStationData({});
-              setEditingStationId(null);
-              setIsFormOpen(true);
-            }}
+            onClick={handleAddClick}
             className="h-14 w-14 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+            title={session ? "Add Station" : "Sign in to add station"}
           >
-            <Plus className="h-8 w-8" />
+            {session ? <Plus className="h-8 w-8" /> : <LogIn className="h-6 w-6" />}
           </button>
         )}
       </div>
@@ -204,6 +250,10 @@ function App() {
 
       {isDonationOpen && (
         <DonationModal onClose={() => setIsDonationOpen(false)} />
+      )}
+
+      {isAuthOpen && (
+        <AuthModal onClose={() => setIsAuthOpen(false)} />
       )}
 
       {/* Overlay Filters/Texture for Premium Feel */}

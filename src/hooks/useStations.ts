@@ -1,91 +1,155 @@
 import { useState, useEffect } from 'react';
+import { supabase } from '../utils/supabase';
 import type { Station } from '../types';
 
-const STORAGE_KEY = 'set-dashboard-stations';
+export const useStations = (userIdFilter?: string | null) => {
+    const [stations, setStations] = useState<Station[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-// Fallback UUID generator
-const generateUUID = () => {
-    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    const fetchStations = async () => {
         try {
-            return crypto.randomUUID();
-        } catch (e) {
-            console.warn('crypto.randomUUID failed, falling back to math-based UUID', e);
+            setLoading(true);
+            let query = supabase
+                .from('stations')
+                .select('*')
+                .order('updated_at', { ascending: false });
+
+            if (userIdFilter) {
+                query = query.eq('user_id', userIdFilter);
+            }
+
+            const { data, error } = await query;
+
+            if (error) throw error;
+
+            // Map snake_case to camelCase
+            const mappedData: Station[] = (data || []).map((s: any) => ({
+                ...s,
+                updatedAt: s.updated_at,
+                powerSource: s.power_source,
+                locationName: s.location_name,
+                operatingHours: s.operating_hours,
+                customColor: s.custom_color,
+                radioInfo: s.radio_info,
+                icon: s.icon
+            }));
+
+            setStations(mappedData);
+        } catch (err: any) {
+            console.error('Error fetching stations:', err.message);
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
-    }
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        const r = Math.random() * 16 | 0;
-        const v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-};
-
-export const useStations = () => {
-    const [stations, setStations] = useState<Station[]>(() => {
-        try {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            const parsed = saved ? JSON.parse(saved) : [];
-            const loaded = Array.isArray(parsed) ? parsed : [];
-            // Migration: Convert legacy fields to radioInfo array
-            return loaded.map((s: any) => {
-                let radioInfo = s.radioInfo || [];
-
-                // Migrate legacy 'frequencies' array if it exists (from intermediate step)
-                if (radioInfo.length === 0 && Array.isArray(s.frequencies) && s.frequencies.length > 0) {
-                    radioInfo = s.frequencies.map((f: string) => ({
-                        frequency: f,
-                        mode: s.mode || ''
-                    }));
-                }
-
-                // Migrate legacy single 'frequency' if it exists and we still don't have info
-                if (radioInfo.length === 0 && s.frequency) {
-                    radioInfo = [{
-                        frequency: s.frequency,
-                        mode: s.mode || ''
-                    }];
-                }
-
-                return {
-                    ...s,
-                    radioInfo,
-                    // Cleanup legacy fields might be dangerous if we want to revert, but keeping them as undefined is fine
-                };
-            });
-        } catch (e) {
-            console.error('Failed to load stations from localStorage:', e);
-            return [];
-        }
-    });
+    };
 
     useEffect(() => {
+        fetchStations();
+    }, [userIdFilter]);
+
+    const addStation = async (station: Omit<Station, 'id' | 'updatedAt'>) => {
         try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(stations));
-        } catch (e) {
-            console.error('Failed to save stations to localStorage:', e);
-            // Optional: Notify user via UI if needed, but for now just log to prevent crash
+            const { data: { user } } = await supabase.auth.getUser();
+            const supabaseData = {
+                callsign: station.callsign,
+                lat: station.lat,
+                lng: station.lng,
+                operator: station.operator,
+                equipment: station.equipment,
+                status: station.status,
+                power_source: station.powerSource,
+                frequency: station.frequency,
+                mode: station.mode,
+                antenna: station.antenna,
+                location_name: station.locationName,
+                operating_hours: station.operatingHours,
+                custom_color: station.customColor,
+                notes: station.notes,
+                radio_info: station.radioInfo,
+                icon: station.icon,
+                updated_at: Date.now(),
+                user_id: user?.id
+            };
+
+            const { data, error } = await supabase
+                .from('stations')
+                .insert([supabaseData])
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            // Map back to camelCase
+            const newStation: Station = {
+                ...data,
+                updatedAt: data.updated_at,
+                powerSource: data.power_source,
+                locationName: data.location_name,
+                operating_hours: data.operating_hours,
+                customColor: data.custom_color,
+                radioInfo: data.radio_info,
+                icon: data.icon
+            };
+
+            setStations(prev => [newStation, ...prev]);
+        } catch (err: any) {
+            alert('Error adding station: ' + err.message);
         }
-    }, [stations]);
-
-    const addStation = (station: Omit<Station, 'id' | 'updatedAt'>) => {
-        const newStation: Station = {
-            ...station,
-            id: generateUUID(),
-            updatedAt: Date.now(),
-        };
-        setStations(prev => [...prev, newStation]);
     };
 
-    const updateStation = (id: string, data: Partial<Station>) => {
-        setStations(prev => prev.map(s => s.id === id ? { ...s, ...data, updatedAt: Date.now() } : s));
+    const updateStation = async (id: string, data: Partial<Station>) => {
+        try {
+            const supabaseUpdate: any = { ...data, updated_at: Date.now() };
+
+            // Map camelCase to snake_case if they exist in the update
+            if (data.updatedAt) supabaseUpdate.updated_at = data.updatedAt;
+            if (data.powerSource) supabaseUpdate.power_source = data.powerSource;
+            if (data.locationName) supabaseUpdate.location_name = data.locationName;
+            if (data.operatingHours) supabaseUpdate.operating_hours = data.operatingHours;
+            if (data.customColor) supabaseUpdate.custom_color = data.custom_color;
+            if (data.radioInfo) supabaseUpdate.radio_info = data.radioInfo;
+            if (data.icon) supabaseUpdate.icon = data.icon;
+
+            const { error } = await supabase
+                .from('stations')
+                .update(supabaseUpdate)
+                .eq('id', id);
+
+            if (error) throw error;
+            setStations(prev => prev.map(s => s.id === id ? { ...s, ...data, updatedAt: Date.now() } : s));
+        } catch (err: any) {
+            alert('Error updating station: ' + err.message);
+        }
     };
 
-    const removeStation = (id: string) => {
-        setStations(prev => prev.filter(s => s.id !== id));
+    const removeStation = async (id: string) => {
+        try {
+            const { error } = await supabase
+                .from('stations')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+            setStations(prev => prev.filter(s => s.id !== id));
+        } catch (err: any) {
+            alert('Error deleting station: ' + err.message);
+        }
     };
 
-    const clearStations = () => {
-        if (confirm('Are you sure you want to clear all local station data?')) {
-            setStations([]);
+    const clearStations = async () => {
+        if (confirm('Are you sure you want to clear all stations from the database?')) {
+            try {
+                const { error } = await supabase
+                    .from('stations')
+                    .delete()
+                    .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+
+                if (error) throw error;
+                setStations([]);
+            } catch (err: any) {
+                alert('Error clearing stations: ' + err.message);
+            }
         }
     };
 
@@ -94,31 +158,51 @@ export const useStations = () => {
         const downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href", dataStr);
         downloadAnchorNode.setAttribute("download", "9m2pju_set_stations.json");
-        document.body.appendChild(downloadAnchorNode); // required for firefox
+        document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
     };
 
-    const importData = (jsonData: string) => {
+    const importData = async (jsonData: string) => {
         try {
             const parsed = JSON.parse(jsonData);
             if (Array.isArray(parsed)) {
-                // Basic validation could go here
-                setStations(parsed);
+                const { data: { user } } = await supabase.auth.getUser();
+                const cleanData = parsed.map(({ id: _id, updatedAt: _ua, user_id: _ui, ...rest }) => ({
+                    ...rest,
+                    power_source: rest.powerSource,
+                    location_name: rest.locationName,
+                    operating_hours: rest.operatingHours,
+                    custom_color: rest.custom_color,
+                    radio_info: rest.radioInfo || (rest.frequencies ? rest.frequencies.map((f: string) => ({ frequency: f, mode: rest.mode || '' })) : []),
+                    updated_at: Date.now(),
+                    user_id: user?.id
+                }));
+
+                const { data, error } = await supabase
+                    .from('stations')
+                    .insert(cleanData)
+                    .select();
+
+                if (error) throw error;
+                fetchStations(); // Refresh to get the mapped data
                 alert('Station data imported successfully!');
             }
-        } catch (e) {
-            alert('Failed to parse JSON data');
+        } catch (e: any) {
+            alert('Failed to import data: ' + e.message);
         }
     };
 
     return {
         stations,
+        loading,
+        error,
         addStation,
         updateStation,
         removeStation,
         clearStations,
         exportData,
-        importData
+        importData,
+        refresh: fetchStations
     };
 };
