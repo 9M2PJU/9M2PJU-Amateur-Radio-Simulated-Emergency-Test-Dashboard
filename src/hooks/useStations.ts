@@ -169,23 +169,23 @@ export const useStations = (userIdFilter?: string | null) => {
             const parsed = JSON.parse(jsonData);
             if (Array.isArray(parsed)) {
                 const { data: { user } } = await supabase.auth.getUser();
-                const cleanData = parsed.map(({
-                    id: _id,
-                    updatedAt: _ua,
-                    user_id: _ui,
-                    powerSource,
-                    locationName,
-                    operatingHours,
-                    customColor,
-                    radioInfo,
-                    ...rest
-                }) => ({
-                    ...rest,
-                    power_source: powerSource || rest.power_source,
-                    location_name: locationName || rest.location_name,
-                    operating_hours: operatingHours || rest.operating_hours,
-                    custom_color: customColor || rest.custom_color,
-                    radio_info: radioInfo || rest.radio_info || (rest.frequencies ? rest.frequencies.map((f: string) => ({ frequency: f, mode: rest.mode || '' })) : []),
+                const cleanData = parsed.map((s: any) => ({
+                    callsign: s.callsign,
+                    lat: s.lat,
+                    lng: s.lng,
+                    operator: s.operator,
+                    equipment: s.equipment,
+                    status: s.status,
+                    power_source: s.powerSource || s.power_source,
+                    frequency: s.frequency,
+                    mode: s.mode,
+                    antenna: s.antenna,
+                    location_name: s.locationName || s.location_name,
+                    operating_hours: s.operatingHours || s.operating_hours,
+                    custom_color: s.customColor || s.custom_color,
+                    notes: s.notes,
+                    radio_info: s.radioInfo || s.radio_info || (s.frequencies ? s.frequencies.map((f: string) => ({ frequency: f, mode: s.mode || '' })) : []),
+                    icon: s.icon,
                     updated_at: Date.now(),
                     user_id: userIdFilter || user?.id,
                     user_email: userIdFilter ? undefined : user?.email
