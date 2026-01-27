@@ -65,7 +65,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, isEmbedded = false }) =>
                         <Lock className="w-8 h-8 text-blue-400" />
                     </div>
                     <h2 className="text-3xl font-bold text-white tracking-tight text-center">
-                        {isSignUp ? 'Create Account' : 'Welcome Back'}
+                        {isSignUp ? 'Create Account' : 'Login Required'}
                     </h2>
                     <p className="text-white/40 text-sm mt-2 text-center">
                         {isSignUp ? 'Enter your details to start managing stations' : 'Sign in to access your cloud dashboard'}

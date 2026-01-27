@@ -291,8 +291,8 @@ function App() {
                       className="h-full w-full object-contain filter drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]"
                     />
                   </div>
-                  <h2 className="text-2xl font-black text-white tracking-tight text-center">AUTHENTICATION REQUIRED</h2>
-                  <p className="text-slate-400 text-[10px] font-bold tracking-[0.2em] uppercase mt-2 text-center">Emergency Telemetry Control</p>
+                  <h2 className="text-2xl font-black text-white tracking-tight text-center uppercase">9M2PJU Simulated Emergency Test Dashboard</h2>
+                  <p className="text-slate-400 text-[10px] font-bold tracking-[0.2em] uppercase mt-2 text-center">9M2PJU Simulated Emergency Test Dashboard</p>
                 </div>
 
                 {/* Embed AuthModal directly but override its fixed background if needed? 
@@ -300,7 +300,7 @@ function App() {
                 <AuthModal onClose={() => { }} isEmbedded={true} />
               </div>
             </div>
-            <p className="text-white/20 text-[9px] font-mono tracking-widest uppercase text-center mt-6">9M2PJU AMATEUR RADIO EMERGENCY NETWORK v4.2</p>
+            <p className="text-white/20 text-[9px] font-mono tracking-widest uppercase text-center mt-6">9M2PJU SET Dashboard v4.2</p>
           </div>
         </div>
       )}
