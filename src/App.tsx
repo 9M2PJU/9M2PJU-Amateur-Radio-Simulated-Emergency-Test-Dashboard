@@ -297,7 +297,7 @@ function App() {
                       className="h-full w-full object-contain filter drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]"
                     />
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight text-center uppercase">9M2PJU Simulated Emergency Test Dashboard</h2>
+                  <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight text-center uppercase">9M2PJU Amateur Radio Simulated Emergency Test Dashboard</h2>
                 </div>
 
                 {/* Embed AuthModal directly */}
