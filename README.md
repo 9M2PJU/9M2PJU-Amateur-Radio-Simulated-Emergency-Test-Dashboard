@@ -88,16 +88,6 @@ graph TD
 
 ---
 
-## 🚀 Deployment
-
-This project is configured for **GitHub Pages**.
-
-1. **Build**: `npm run build`
-2. **Commit**: Push changes to `main`.
-3. **Verify**: GitHub Actions will deploy to `set.hamradio.my`.
-
----
-
 <div align="center">
   <sub>Built with ❤️ by 9M2PJU Team</sub>
 </div>
