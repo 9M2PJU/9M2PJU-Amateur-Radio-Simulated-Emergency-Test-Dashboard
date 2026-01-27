@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Menu, Heart, LocateFixed, User, LogOut, LogIn, X } from 'lucide-react';
+import { Settings, Menu, Heart, LocateFixed, User, LogOut, LogIn, X, Download } from 'lucide-react';
 import Clock from './Widgets/Clock';
 import NewsTicker from './Widgets/NewsTicker';
 import { supabase } from '../utils/supabase';
+import { usePWAInstall } from '../hooks/usePWAInstall';
 
 interface HeaderProps {
     onToggleAdmin: () => void;
@@ -37,6 +38,7 @@ const Header: React.FC<HeaderProps> = ({
     logoUrl
 }) => {
     const [users, setUsers] = useState<{ id: string, email: string }[]>([]);
+    const { isInstallable, showInstallPrompt } = usePWAInstall();
 
     useEffect(() => {
         if (isAdmin) {
@@ -153,6 +155,18 @@ const Header: React.FC<HeaderProps> = ({
                     <div className="hidden sm:block">
                         <Clock />
                     </div>
+
+                    {/* PWA Install Button */}
+                    {isInstallable && (
+                        <button
+                            onClick={showInstallPrompt}
+                            className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl bg-emerald-600/10 text-emerald-400 hover:bg-emerald-600 hover:text-white border border-emerald-500/20 transition-all font-bold text-xs sm:text-sm animate-pulse"
+                            title="Install App"
+                        >
+                            <Download className="h-4 w-4" />
+                            <span className="hidden sm:inline">Install App</span>
+                        </button>
+                    )}
 
                     {/* Auth Status / Login Button */}
                     {userEmail ? (
