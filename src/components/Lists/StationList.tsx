@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Station } from '../../types';
-import { Search, Radio, AlertTriangle, Edit2, Trash2 } from 'lucide-react';
+import { Search, Radio, AlertTriangle, Edit2, Trash2, Filter as LucideFilter } from 'lucide-react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 
@@ -24,6 +24,11 @@ const StationList: React.FC<StationListProps> = ({
     isAdmin
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [showFilters, setShowFilters] = useState(false);
+    const [filterType, setFilterType] = useState('all');
+    const [filterPower, setFilterPower] = useState('all');
+    const [filterStatus, setFilterStatus] = useState('all');
+    
     const map = useMap();
     const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -35,10 +40,21 @@ const StationList: React.FC<StationListProps> = ({
     }, []);
 
 
-    const filteredStations = stations.filter(s =>
-        s.callsign.includes(searchTerm.toUpperCase()) ||
-        s.operator?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredStations = stations.filter(s => {
+        const matchesSearch = s.callsign.includes(searchTerm.toUpperCase()) ||
+            s.operator?.toLowerCase().includes(searchTerm.toLowerCase());
+        
+        const matchesType = filterType === 'all' || 
+            (filterType === 'repeater' ? s.icon === 'repeater' : 
+             filterType === 'user' ? (s.icon === 'user' || !s.icon) : 
+             s.icon === filterType);
+             
+        const matchesPower = filterPower === 'all' || s.powerSource === filterPower;
+        
+        const matchesStatus = filterStatus === 'all' || s.status === filterStatus;
+
+        return matchesSearch && matchesType && matchesPower && matchesStatus;
+    });
 
     const handleSelect = (station: Station) => {
         map.flyTo([station.lat, station.lng], 14, {
@@ -49,15 +65,33 @@ const StationList: React.FC<StationListProps> = ({
         }
     };
 
+    const clearFilters = () => {
+        setFilterType('all');
+        setFilterPower('all');
+        setFilterStatus('all');
+        setSearchTerm('');
+    };
+
+    const activeFilterCount = (filterType !== 'all' ? 1 : 0) + (filterPower !== 'all' ? 1 : 0) + (filterStatus !== 'all' ? 1 : 0);
+
     return (
         <div
             ref={containerRef}
             className={`flex flex-col glass border-r border-white/10 w-80 bg-[#0a0a14] backdrop-blur-xl h-full ${className}`}
         >
-            <div className="p-4 border-b border-white/10">
-                <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                    <Radio className="text-blue-400" /> Stations ({stations.length})
-                </h2>
+            <div className="p-4 border-b border-white/10 space-y-3">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                        <Radio className="text-blue-400" /> Stations ({stations.length})
+                    </h2>
+                    <button 
+                        onClick={() => setShowFilters(!showFilters)}
+                        className={`p-2 rounded-lg transition-all ${showFilters || activeFilterCount > 0 ? 'bg-blue-500/20 text-blue-400' : 'hover:bg-white/5 text-slate-400'}`}
+                    >
+                        <LucideFilter className="h-4 w-4" />
+                    </button>
+                </div>
+                
                 <div className="relative">
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
                     <input
@@ -68,6 +102,62 @@ const StationList: React.FC<StationListProps> = ({
                         className="w-full bg-black/40 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none"
                     />
                 </div>
+
+                {showFilters && (
+                    <div className="space-y-3 pt-2 animate-in slide-in-from-top-2 duration-200">
+                        <div className="grid grid-cols-2 gap-2">
+                            <div>
+                                <label className="text-[10px] uppercase font-bold text-slate-500 mb-1 block">Type</label>
+                                <select 
+                                    value={filterType}
+                                    onChange={(e) => setFilterType(e.target.value)}
+                                    className="w-full bg-black/40 border border-white/10 rounded-md px-2 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500"
+                                >
+                                    <option value="all">All Types</option>
+                                    <option value="repeater">Repeater</option>
+                                    <option value="user">User/Person</option>
+                                    <option value="hospital">Hospital</option>
+                                    <option value="police">Police</option>
+                                    <option value="fire">Fire</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="text-[10px] uppercase font-bold text-slate-500 mb-1 block">Source</label>
+                                <select 
+                                    value={filterPower}
+                                    onChange={(e) => setFilterPower(e.target.value)}
+                                    className="w-full bg-black/40 border border-white/10 rounded-md px-2 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500"
+                                >
+                                    <option value="all">Any Power</option>
+                                    <option value="main">Main Power</option>
+                                    <option value="battery">Battery</option>
+                                </select>
+                            </div>
+                            <div className="col-span-2">
+                                <label className="text-[10px] uppercase font-bold text-slate-500 mb-1 block">Status</label>
+                                <select 
+                                    value={filterStatus}
+                                    onChange={(e) => setFilterStatus(e.target.value)}
+                                    className="w-full bg-black/40 border border-white/10 rounded-md px-2 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500"
+                                >
+                                    <option value="all">Any Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="emergency">Emergency</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        {(activeFilterCount > 0 || searchTerm) && (
+                            <button 
+                                onClick={clearFilters}
+                                className="w-full text-xs text-slate-400 hover:text-white py-1 transition-colors"
+                            >
+                                Clear Filters
+                            </button>
+                        )}
+                    </div>
+                )}
             </div>
 
             <div className="flex-1 overflow-y-auto p-2 space-y-2 custom-scrollbar">
@@ -161,7 +251,7 @@ const StationList: React.FC<StationListProps> = ({
                 ))}
                 {filteredStations.length === 0 && (
                     <div className="text-center text-slate-500 mt-8 text-sm">
-                        No stations found.
+                        No stations found matching filters.
                     </div>
                 )}
             </div>
