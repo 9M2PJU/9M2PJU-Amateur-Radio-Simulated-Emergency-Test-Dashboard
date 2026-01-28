@@ -35,7 +35,7 @@ const Toast: React.FC<ToastProps> = ({ message, type = 'info', onClose, duration
     };
 
     return (
-        <div className={`fixed bottom-20 sm:bottom-8 left-1/2 -translate-x-1/2 z-[3000] transition-all duration-300 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+        <div className={`fixed bottom-10 left-1/2 -translate-x-1/2 z-[3000] transition-all duration-300 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
             <div className={`flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900/90 backdrop-blur-md border ${getBorderColor()} shadow-lg min-w-[300px] max-w-[90vw]`}>
                 {getIcon()}
                 <p className="flex-1 text-sm text-white font-medium">{message}</p>
