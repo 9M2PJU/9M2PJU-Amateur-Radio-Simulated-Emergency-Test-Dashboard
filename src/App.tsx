@@ -61,13 +61,29 @@ function App() {
 
   // New Station Notification Logic
   useEffect(() => {
-    if (!stationsLoading && session && stations.length > 0) {
+    if (!stationsLoading && stations.length > 0) {
       const lastVisit = localStorage.getItem('last_visit_time');
       const now = Date.now();
 
+      console.log("Checking for new stations...", {
+        totalStations: stations.length,
+        lastVisit,
+        hasSession: !!session
+      });
+
       if (lastVisit) {
         const lastVisitTime = parseInt(lastVisit);
+        // Debug: Log first station's createdAt to verify data
+        if (stations.length > 0) {
+          console.log("Sample Station Data:", {
+            callsign: stations[0].callsign,
+            createdAt: stations[0].createdAt,
+            created_at_raw: (stations[0] as any).created_at
+          });
+        }
+
         const newStations = stations.filter(s => (s.createdAt || 0) > lastVisitTime);
+        console.log("New stations found:", newStations.length);
 
         if (newStations.length > 0) {
           const callsigns = newStations.map(s => s.callsign).slice(0, 3).join(', ');
@@ -88,7 +104,7 @@ function App() {
       // Update last visit time
       localStorage.setItem('last_visit_time', now.toString());
     }
-  }, [stationsLoading, session, stations.length]); // Dependency on length to trigger only when loaded
+  }, [stationsLoading, stations.length, session]); // Keep session in deps to verify logic flow
 
   // Periodic Donation Toast
   useEffect(() => {
