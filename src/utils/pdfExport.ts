@@ -5,7 +5,7 @@ import type { Station } from '../types/index';
 export const exportStationsToPDF = (stations: Station[]) => {
     const doc = new jsPDF();
     const timestamp = new Date().toLocaleString();
-    const filename = `9M2PJU_SITREP_${new Date().toISOString().split('T')[0]}.pdf`;
+    const filename = `9M2PJU_SET_DASHBOARD_SITREP_${new Date().toISOString().split('T')[0]}.pdf`;
 
     // --- Header ---
     doc.setFillColor(15, 23, 42); // slate-900
