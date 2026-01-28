@@ -53,6 +53,67 @@ export const useStations = (session: Session | null, userIdFilter?: string | nul
 
     useEffect(() => {
         fetchStations();
+
+        const channel = supabase
+            .channel('stations_realtime')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'stations' },
+                (payload) => {
+                    console.log("Realtime payload:", payload);
+                    if (payload.eventType === 'INSERT') {
+                        const s = payload.new;
+                        const newStation: Station = {
+                            ...s,
+                            updatedAt: s.updated_at,
+                            createdAt: s.created_at ? new Date(s.created_at).getTime() : undefined,
+                            powerSource: s.power_source,
+                            locationName: s.location_name,
+                            operatingHours: s.operating_hours,
+                            customColor: s.custom_color,
+                            radioInfo: s.radio_info,
+                            icon: s.icon,
+                            // Ensure numeric conversions if needed
+                            lat: Number(s.lat),
+                            lng: Number(s.lng)
+                        };
+                        setStations(prev => {
+                            if (prev.some(st => st.id === newStation.id)) return prev;
+                            const updated = [newStation, ...prev];
+                            // Re-sort if necessary or just prepend
+                            return updated.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+                        });
+                    } else if (payload.eventType === 'UPDATE') {
+                        const s = payload.new;
+                        setStations(prev => prev.map(st => {
+                            if (st.id === s.id) {
+                                return {
+                                    ...st,
+                                    ...s,
+                                    updatedAt: s.updated_at,
+                                    createdAt: s.created_at ? new Date(s.created_at).getTime() : undefined,
+                                    powerSource: s.power_source,
+                                    locationName: s.location_name,
+                                    operatingHours: s.operating_hours,
+                                    customColor: s.custom_color,
+                                    radioInfo: s.radio_info,
+                                    icon: s.icon,
+                                    lat: Number(s.lat),
+                                    lng: Number(s.lng)
+                                };
+                            }
+                            return st;
+                        }).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)));
+                    } else if (payload.eventType === 'DELETE') {
+                        setStations(prev => prev.filter(st => st.id !== payload.old.id));
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, [userIdFilter, session]);
 
     const addStation = async (station: Omit<Station, 'id' | 'updatedAt'>) => {
