@@ -105,7 +105,7 @@ export const exportStationsToPDF = (stations: Station[]) => {
         doc.setPage(i);
         doc.setFontSize(8);
         doc.setTextColor(150);
-        doc.text(`9M2PJU SET DASHBOARD SITREP REPORT | PAGE ${i} OF ${pageCount} | END OF RECORD`, 105, 285, { align: 'center' });
+        doc.text(`9M2PJU SET DASHBOARD SITREP | PAGE ${i} OF ${pageCount} | END OF RECORD`, 105, 285, { align: 'center' });
     }
 
     doc.save(filename);
