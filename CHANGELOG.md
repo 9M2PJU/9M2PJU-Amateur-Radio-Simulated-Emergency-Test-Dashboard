@@ -2,6 +2,18 @@
 
 All notable changes to the **9M2PJU Amateur Radio Simulated Emergency Test Dashboard** will be documented in this file.
 
+## [4.4.0] - 2026-01-28
+### Added
+- **Repeater Support**: Dedicated repeater station icon and type support.
+- **Advanced Filtering**: New filter UI in Station List to filter by **Type** (Repeater, User, etc.), **Power Source** (Main/Battery), and **Status** (Active/Emergency).
+- **Popup Icons**: Station type icons are now visible directly in the map popup header.
+
+### Fixed
+- **Toast Notifications**: Resurrected "New Station" toasts which were failing due to missing timestamp data.
+- **Toast Positioning**: Centered toasts at the bottom of the screen (bottom-10) for better visibility on all devices.
+- **Build System**: Resolved Typescript strictness errors regarding property mapping during production build.
+- **Deployment Paths**: Fixed missing icon images when deployed to subdirectories (e.g., GitHub Pages) by using relative paths.
+
 ## [4.3.1] - 2026-01-28
 ### Fixed
 - **Real-Time Sync**: Enabled live Supabase subscriptions to instantly reflect station additions/updates from other users without refreshing.
