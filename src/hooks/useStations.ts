@@ -64,7 +64,18 @@ export const useStations = (session: Session | null, userIdFilter?: string | nul
                     if (payload.eventType === 'INSERT') {
                         const s = payload.new;
                         const newStation: Station = {
-                            ...s,
+                            id: s.id,
+                            callsign: s.callsign,
+                            status: s.status, // TS might complain if type doesn't match literal 'active' etc.
+                            // but usually Supabase returns string, so we might need casting if strict.
+                            // Assuming s.status is valid string.
+                            operator: s.operator,
+                            equipment: s.equipment,
+                            frequency: s.frequency,
+                            mode: s.mode,
+                            antenna: s.antenna,
+                            notes: s.notes,
+                            user_id: s.user_id,
                             updatedAt: s.updated_at,
                             createdAt: s.created_at ? new Date(s.created_at).getTime() : undefined,
                             powerSource: s.power_source,
@@ -73,7 +84,6 @@ export const useStations = (session: Session | null, userIdFilter?: string | nul
                             customColor: s.custom_color,
                             radioInfo: s.radio_info,
                             icon: s.icon,
-                            // Ensure numeric conversions if needed
                             lat: Number(s.lat),
                             lng: Number(s.lng)
                         };
