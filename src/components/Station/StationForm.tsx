@@ -131,7 +131,10 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                             { id: 'tent', label: 'Portable' },
                             { id: 'hospital', label: 'Hospital' },
                             { id: 'police', label: 'Police' },
-                            { id: 'fire', label: 'Fire' }
+                            { id: 'fire', label: 'Fire' },
+                            { id: 'civil-defense', label: 'Civil Def' },
+                            { id: 'red-cross', label: 'Red Cross' },
+                            { id: 'military', label: 'Military' }
                         ].map(item => (
                             <button
                                 key={item.id}
@@ -160,8 +163,11 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
 
                 <div className="space-y-2">
                     <div className="flex justify-between items-center">
-                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-2">
-                            Coordinates <Crosshair className="h-3 w-3" />
+                        <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold flex flex-col gap-1">
+                            <span className="flex items-center gap-2">Coordinates <Crosshair className="h-3 w-3" /></span>
+                            <span className="text-[10px] text-amber-500 normal-case font-bold bg-amber-950/30 p-1.5 rounded border border-amber-500/20">
+                                ⚠️ MUST key in coordinates manually OR use 'Pick on Map'. Accurate location required.
+                            </span>
                         </label>
                         <button
                             type="button"
@@ -265,6 +271,7 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                                     <option value="C4FM" />
                                     <option value="D-STAR" />
                                 </datalist>
+                                <span className="text-[9px] text-slate-400 ml-1 mt-0.5 block">Type to add custom mode if not listed</span>
                             </div>
                             <div className="col-span-1 flex justify-center pt-1">
                                 <button
