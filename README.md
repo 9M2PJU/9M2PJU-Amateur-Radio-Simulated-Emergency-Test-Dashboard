@@ -3,7 +3,7 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-4.3.0-blue.svg?style=for-the-badge&logo=github)
+![Version](https://img.shields.io/badge/version-4.3.1-blue.svg?style=for-the-badge&logo=github)
 ![Status](https://img.shields.io/badge/status-STABLE_RELEASE-emerald?style=for-the-badge&logo=statuspage)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=github)
 ![PWA](https://img.shields.io/badge/PWA-READY-ff69b4?style=for-the-badge&logo=pwa)
@@ -103,5 +103,5 @@ Created with ❤️ by **9M2PJU** for the Malaysian Amateur Radio community.
 
 ---
 <div align="center">
-  <sub>9M2PJU SET DASHBOARD • STABLE RELEASE 4.3.0 • 2026</sub>
+  <sub>9M2PJU SET DASHBOARD • STABLE RELEASE 4.3.1 • 2026</sub>
 </div>

@@ -2,6 +2,11 @@
 
 All notable changes to the **9M2PJU Amateur Radio Simulated Emergency Test Dashboard** will be documented in this file.
 
+## [4.3.1] - 2026-01-28
+### Fixed
+- **Real-Time Sync**: Enabled live Supabase subscriptions to instantly reflect station additions/updates from other users without refreshing.
+- **PDF Export**: Fixed filename format to include time (YYYY-MM-DD_HH-mm) and removed redundant "SITREP REPORT" phrasing.
+
 ## [4.3.0] - 2026-01-28
 ### Added
 - **Manual Mode Entry**: Support for free-text mode entry alongside standard presets (FM, SSB, etc.).

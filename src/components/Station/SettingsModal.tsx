@@ -36,7 +36,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onExport, onExpo
                     />
 
                     <div className="text-xs text-white/30 text-center">
-                        v4.3.0 • 9M2PJU SET Dashboard
+                        v4.3.1 • 9M2PJU SET Dashboard
                     </div>
                 </div>
             </div>
