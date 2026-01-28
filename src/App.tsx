@@ -38,6 +38,7 @@ function App() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   const [toast, setToast] = useState<{ message: string, type?: 'info' | 'donation' } | null>(null);
+  const [donationCheckComplete, setDonationCheckComplete] = useState(false);
 
   // Supabase Session Logic
   useEffect(() => {
@@ -61,11 +62,10 @@ function App() {
 
   // New Station Notification Logic
   useEffect(() => {
-    if (!stationsLoading && session && stations.length > 0) {
+    // Only proceed if we have finished checking/showing the donation popup
+    if (!stationsLoading && session && stations.length > 0 && donationCheckComplete) {
       const lastVisit = localStorage.getItem('last_visit_time');
       const now = Date.now();
-
-
 
       if (lastVisit) {
         const lastVisitTime = parseInt(lastVisit);
@@ -75,28 +75,25 @@ function App() {
         }
 
         const newStations = stations.filter(s => (s.createdAt || 0) > lastVisitTime);
-        const newStations = stations.filter(s => (s.createdAt || 0) > lastVisitTime);
 
         if (newStations.length > 0) {
-          const callsigns = newStations.map(s => s.callsign).slice(0, 3).join(', ');
-          const remaining = newStations.length - 3;
-          const message = remaining > 0
-            ? `New stations: ${callsigns} and ${remaining} others.`
-            : `New station${newStations.length > 1 ? 's' : ''}: ${callsigns}`;
+          // Join ALL callsigns with commas, no truncation ("and X others")
+          const callsigns = newStations.map(s => s.callsign).join(', ');
+          const message = `New station${newStations.length > 1 ? 's' : ''}: ${callsigns}`;
 
           setTimeout(() => {
             setToast({
               message: message,
               type: 'info'
             });
-          }, 2000);
+          }, 500); // Shorter delay since we already waited for donation popup
         }
       }
 
       // Update last visit time
       localStorage.setItem('last_visit_time', now.toString());
     }
-  }, [stationsLoading, session, stations.length]); // Dependency on length to trigger only when loaded
+  }, [stationsLoading, session, stations.length, donationCheckComplete]); // Dependency on length to trigger only when loaded
 
   // Periodic Donation Toast
   useEffect(() => {
@@ -109,6 +106,25 @@ function App() {
 
     return () => clearInterval(timer);
   }, []);
+
+  // Donation Popup Logic: Show once per session, ONLY after login
+  useEffect(() => {
+    if (!session) return;
+
+    const hasSeenDonation = sessionStorage.getItem('hasSeenDonation');
+    if (!hasSeenDonation) {
+      const timer = setTimeout(() => {
+        setIsDonationOpen(true);
+        sessionStorage.setItem('hasSeenDonation', 'true');
+        // NOTE: We do NOT set donationCheckComplete here. 
+        // We wait for the user to close the modal.
+      }, 500);
+      return () => clearTimeout(timer);
+    } else {
+      // If already seen, we are done checking immediately
+      setDonationCheckComplete(true);
+    }
+  }, [session]);
 
   const handleEdit = (station: any) => {
     if (!session) {
@@ -327,7 +343,10 @@ function App() {
       )}
 
       {isDonationOpen && session && (
-        <DonationModal onClose={() => setIsDonationOpen(false)} />
+        <DonationModal onClose={() => {
+          setIsDonationOpen(false);
+          setDonationCheckComplete(true);
+        }} />
       )}
 
       {isAuthOpen && (
