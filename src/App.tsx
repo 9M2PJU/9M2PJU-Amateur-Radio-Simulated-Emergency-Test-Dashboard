@@ -377,7 +377,7 @@ function App() {
                 <AuthModal onClose={() => { }} isEmbedded={true} />
               </div>
             </div>
-            <p className="text-white/20 text-[9px] font-mono tracking-widest uppercase text-center mt-6">9M2PJU SET Dashboard v4.2</p>
+            <p className="text-white/20 text-[9px] font-mono tracking-widest uppercase text-center mt-6">9M2PJU SET Dashboard v4.3.0</p>
           </div>
         </div>
       )}
