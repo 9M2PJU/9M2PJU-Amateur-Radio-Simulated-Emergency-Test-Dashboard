@@ -13,6 +13,7 @@ import Header from './components/Header';
 import Weather from './components/Widgets/Weather';
 import DonationModal from './components/Widgets/DonationModal';
 import AuthModal from './components/Auth/AuthModal';
+import Toast from './components/Widgets/Toast';
 import { getMaidenheadLocator } from './utils/maidenhead';
 import { exportStationsToPDF } from './utils/pdfExport';
 import type { Session } from '@supabase/supabase-js';
@@ -36,6 +37,8 @@ function App() {
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
+  const [toast, setToast] = useState<{ message: string, type?: 'info' | 'donation' } | null>(null);
+
   // Supabase Session Logic
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -54,6 +57,43 @@ function App() {
     });
 
     return () => subscription.unsubscribe();
+  }, []);
+
+  // New Station Notification Logic
+  useEffect(() => {
+    if (!stationsLoading && session && stations.length > 0) {
+      const lastVisit = localStorage.getItem('last_visit_time');
+      const now = Date.now();
+
+      if (lastVisit) {
+        const lastVisitTime = parseInt(lastVisit);
+        const newStations = stations.filter(s => (s.createdAt || 0) > lastVisitTime);
+
+        if (newStations.length > 0) {
+          setTimeout(() => {
+            setToast({
+              message: `${newStations.length} new station${newStations.length > 1 ? 's' : ''} added since your last visit.`,
+              type: 'info'
+            });
+          }, 2000);
+        }
+      }
+
+      // Update last visit time
+      localStorage.setItem('last_visit_time', now.toString());
+    }
+  }, [stationsLoading, session, stations.length]); // Dependency on length to trigger only when loaded
+
+  // Periodic Donation Toast
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setToast({
+        message: "If you like this app, consider donating by clicking the ❤️ button!",
+        type: 'donation'
+      });
+    }, 600000); // Every 10 minutes
+
+    return () => clearInterval(timer);
   }, []);
 
   const handleEdit = (station: any) => {
@@ -307,6 +347,15 @@ function App() {
             <p className="text-white/20 text-[9px] font-mono tracking-widest uppercase text-center mt-6">9M2PJU SET Dashboard v4.2</p>
           </div>
         </div>
+      )}
+
+      {/* Toast Notifications */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
       )}
 
       {/* Overlay Filters/Texture for Premium Feel */}

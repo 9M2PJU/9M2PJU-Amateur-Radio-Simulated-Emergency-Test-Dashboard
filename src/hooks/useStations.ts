@@ -33,6 +33,7 @@ export const useStations = (session: Session | null, userIdFilter?: string | nul
             const mappedData: Station[] = (data || []).map((s: any) => ({
                 ...s,
                 updatedAt: s.updated_at,
+                createdAt: s.created_at ? new Date(s.created_at).getTime() : undefined,
                 powerSource: s.power_source,
                 locationName: s.location_name,
                 operatingHours: s.operating_hours,

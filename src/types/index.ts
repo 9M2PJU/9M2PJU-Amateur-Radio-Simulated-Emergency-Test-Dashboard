@@ -23,6 +23,7 @@ export interface Station {
     customColor?: string;
     notes?: string;
     updatedAt: number;
+    createdAt?: number;
     user_id?: string;
 }
 
