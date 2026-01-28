@@ -28,7 +28,7 @@ const StationList: React.FC<StationListProps> = ({
     const [filterType, setFilterType] = useState('all');
     const [filterPower, setFilterPower] = useState('all');
     const [filterStatus, setFilterStatus] = useState('all');
-    
+
     const map = useMap();
     const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -43,14 +43,14 @@ const StationList: React.FC<StationListProps> = ({
     const filteredStations = stations.filter(s => {
         const matchesSearch = s.callsign.includes(searchTerm.toUpperCase()) ||
             s.operator?.toLowerCase().includes(searchTerm.toLowerCase());
-        
-        const matchesType = filterType === 'all' || 
-            (filterType === 'repeater' ? s.icon === 'repeater' : 
-             filterType === 'user' ? (s.icon === 'user' || !s.icon) : 
-             s.icon === filterType);
-             
+
+        const matchesType = filterType === 'all' ||
+            (filterType === 'repeater' ? s.icon === 'repeater' :
+                filterType === 'user' ? (s.icon === 'user' || !s.icon) :
+                    s.icon === filterType);
+
         const matchesPower = filterPower === 'all' || s.powerSource === filterPower;
-        
+
         const matchesStatus = filterStatus === 'all' || s.status === filterStatus;
 
         return matchesSearch && matchesType && matchesPower && matchesStatus;
@@ -84,14 +84,14 @@ const StationList: React.FC<StationListProps> = ({
                     <h2 className="text-lg font-bold text-white flex items-center gap-2">
                         <Radio className="text-blue-400" /> Stations ({stations.length})
                     </h2>
-                    <button 
+                    <button
                         onClick={() => setShowFilters(!showFilters)}
                         className={`p-2 rounded-lg transition-all ${showFilters || activeFilterCount > 0 ? 'bg-blue-500/20 text-blue-400' : 'hover:bg-white/5 text-slate-400'}`}
                     >
                         <LucideFilter className="h-4 w-4" />
                     </button>
                 </div>
-                
+
                 <div className="relative">
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
                     <input
@@ -108,7 +108,7 @@ const StationList: React.FC<StationListProps> = ({
                         <div className="grid grid-cols-2 gap-2">
                             <div>
                                 <label className="text-[10px] uppercase font-bold text-slate-500 mb-1 block">Type</label>
-                                <select 
+                                <select
                                     value={filterType}
                                     onChange={(e) => setFilterType(e.target.value)}
                                     className="w-full bg-black/40 border border-white/10 rounded-md px-2 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500"
@@ -123,7 +123,7 @@ const StationList: React.FC<StationListProps> = ({
                             </div>
                             <div>
                                 <label className="text-[10px] uppercase font-bold text-slate-500 mb-1 block">Source</label>
-                                <select 
+                                <select
                                     value={filterPower}
                                     onChange={(e) => setFilterPower(e.target.value)}
                                     className="w-full bg-black/40 border border-white/10 rounded-md px-2 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500"
@@ -135,7 +135,7 @@ const StationList: React.FC<StationListProps> = ({
                             </div>
                             <div className="col-span-2">
                                 <label className="text-[10px] uppercase font-bold text-slate-500 mb-1 block">Status</label>
-                                <select 
+                                <select
                                     value={filterStatus}
                                     onChange={(e) => setFilterStatus(e.target.value)}
                                     className="w-full bg-black/40 border border-white/10 rounded-md px-2 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500"
@@ -147,9 +147,9 @@ const StationList: React.FC<StationListProps> = ({
                                 </select>
                             </div>
                         </div>
-                        
+
                         {(activeFilterCount > 0 || searchTerm) && (
-                            <button 
+                            <button
                                 onClick={clearFilters}
                                 className="w-full text-xs text-slate-400 hover:text-white py-1 transition-colors"
                             >
@@ -174,7 +174,7 @@ const StationList: React.FC<StationListProps> = ({
                             <div className="flex justify-between items-start">
                                 <div className="font-bold text-white group-hover:text-blue-400 transition-colors flex items-center gap-2">
                                     <img
-                                        src={`/markers/${station.icon || 'user'}.svg?v=${new Date().getDate()}`}
+                                        src={`markers/${station.icon || 'user'}.svg?v=${new Date().getDate()}`}
                                         className="h-4 w-4 opacity-70"
                                         alt=""
                                     />

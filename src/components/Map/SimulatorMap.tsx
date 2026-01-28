@@ -81,7 +81,7 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                             <div class="flex flex-col items-center group">
                                 <div class="px-2 py-1 rounded shadow-lg border border-white/20 text-[11px] font-bold text-white whitespace-nowrap transition-all group-hover:scale-110 group-hover:z-[1000] cursor-pointer flex items-center gap-1.5" 
                                      style="background-color: ${statusColor}cc; box-shadow: 0 0 10px ${statusColor}44, inset 0 0 5px rgba(255,255,255,0.2);">
-                                    <img src="/markers/${station.icon || 'user'}.svg?v=${new Date().getTime()}" style="width: 14px; height: 14px;" />
+                                    <img src="markers/${station.icon || 'user'}.svg?v=${new Date().getTime()}" style="width: 14px; height: 14px;" />
                                     ${station.callsign}
                                 </div>
                                 <div class="w-2 h-2 rounded-full mt-0.5 blur-[1px] ${station.status === 'emergency' ? 'animate-pulse' : ''}" 
@@ -102,14 +102,17 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                                 <div className="p-3 min-w-[240px] bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl">
                                     <div className="flex justify-between items-start mb-3 border-b border-white/10 pb-2">
                                         <div className="flex flex-col">
-                                            <h3 className="font-bold text-xl text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] flex items-center gap-2">
+                                            <div className="flex items-center gap-2 mb-1">
                                                 <img
-                                                    src={`/markers/${station.icon || 'user'}.svg?v=${new Date().getDate()}`}
-                                                    className="h-5 w-5 opacity-90"
+                                                    src={`markers/${station.icon || 'user'}.svg?v=${new Date().getDate()}`}
+                                                    className="w-6 h-6 object-contain drop-shadow-md"
                                                     alt=""
+                                                    onError={(e) => {
+                                                        (e.target as HTMLImageElement).src = 'markers/user.svg';
+                                                    }}
                                                 />
-                                                {station.callsign}
-                                            </h3>
+                                                <h3 className="font-bold text-xl text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">{station.callsign}</h3>
+                                            </div>
                                             {station.locationName && <span className="text-[10px] text-cyan-400/80 font-bold uppercase tracking-wider">{station.locationName}</span>}
                                         </div>
                                         <div className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter ${station.status === 'active' ? 'bg-cyan-500/20 text-cyan-400' :
