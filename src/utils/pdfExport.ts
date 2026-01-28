@@ -21,7 +21,7 @@ export const exportStationsToPDF = (stations: Station[]) => {
 
     doc.setTextColor(34, 211, 238); // cyan-400
     doc.setFontSize(20);
-    doc.text('EMERGENCY SITUATION REPORT', 105, 18, { align: 'center' });
+    doc.text('SITUATION REPORT', 105, 18, { align: 'center' });
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(10);
