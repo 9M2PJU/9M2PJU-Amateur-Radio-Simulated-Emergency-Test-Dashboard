@@ -246,7 +246,7 @@ function App() {
             <div className="absolute inset-0 z-[1500] flex items-center justify-center bg-black/20 backdrop-blur-[2px]">
               <div className="bg-neutral-900/80 border border-white/10 px-6 py-4 rounded-2xl flex items-center gap-3">
                 <div className="w-5 h-5 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
-                <span className="text-white font-medium">Synchronizing with 9M2PJU server...</span>
+                <span className="text-white font-medium">Synchronizing with 9M2PJU Private Cloud...</span>
               </div>
             </div>
           )}
