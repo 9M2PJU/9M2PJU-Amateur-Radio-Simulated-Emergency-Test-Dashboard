@@ -118,6 +118,14 @@ export const useStations = (session: Session | null, userIdFilter?: string | nul
             if (data.radioInfo) supabaseUpdate.radio_info = data.radioInfo;
             if (data.icon) supabaseUpdate.icon = data.icon;
 
+            // Remove camelCase keys that don't exist in DB
+            delete supabaseUpdate.locationName;
+            delete supabaseUpdate.powerSource;
+            delete supabaseUpdate.operatingHours;
+            delete supabaseUpdate.customColor;
+            delete supabaseUpdate.radioInfo;
+            delete supabaseUpdate.updatedAt;
+
             const { error } = await supabase
                 .from('stations')
                 .update(supabaseUpdate)

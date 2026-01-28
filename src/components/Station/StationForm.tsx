@@ -238,30 +238,33 @@ const StationForm: React.FC<StationFormProps> = ({ onClose, onSubmit, initialDat
                                 <span className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 text-xs font-mono">MHz</span>
                             </div>
                             <div className="col-span-5 relative">
-                                <select
+                                <input
+                                    list="mode-options"
+                                    type="text"
                                     value={info.mode}
                                     onChange={e => {
                                         const newRadioInfo = [...(formData.radioInfo || [])];
-                                        newRadioInfo[index] = { ...info, mode: e.target.value };
+                                        newRadioInfo[index] = { ...info, mode: e.target.value.toUpperCase() };
                                         setFormData({ ...formData, radioInfo: newRadioInfo });
                                     }}
-                                    className="w-full bg-black/40 border border-white/10 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm appearance-none"
-                                >
-                                    <option value="">Mode</option>
-                                    <option value="FM">FM</option>
-                                    <option value="AM">AM</option>
-                                    <option value="SSB">SSB</option>
-                                    <option value="LSB">LSB</option>
-                                    <option value="USB">USB</option>
-                                    <option value="CW">CW</option>
-                                    <option value="DIGITAL">DIGITAL</option>
-                                    <option value="APRS">APRS</option>
-                                    <option value="JS8CALL">JS8CALL</option>
-                                    <option value="FT8">FT8</option>
-                                    <option value="DMR">DMR</option>
-                                    <option value="C4FM">C4FM</option>
-                                    <option value="D-STAR">D-STAR</option>
-                                </select>
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                                    placeholder="Mode"
+                                />
+                                <datalist id="mode-options">
+                                    <option value="FM" />
+                                    <option value="AM" />
+                                    <option value="SSB" />
+                                    <option value="LSB" />
+                                    <option value="USB" />
+                                    <option value="CW" />
+                                    <option value="DIGITAL" />
+                                    <option value="APRS" />
+                                    <option value="JS8CALL" />
+                                    <option value="FT8" />
+                                    <option value="DMR" />
+                                    <option value="C4FM" />
+                                    <option value="D-STAR" />
+                                </datalist>
                             </div>
                             <div className="col-span-1 flex justify-center pt-1">
                                 <button
