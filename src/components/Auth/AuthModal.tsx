@@ -60,17 +60,19 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, isEmbedded = false }) =>
             )}
 
             <div className={isEmbedded ? '' : 'p-6 sm:p-8'}>
-                <div className="flex flex-col items-center mb-8">
-                    <div className="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mb-4 border border-blue-500/30">
-                        <Lock className="w-8 h-8 text-blue-400" />
+                {!isEmbedded && (
+                    <div className="flex flex-col items-center mb-8">
+                        <div className="w-24 h-24 bg-blue-600/20 rounded-2xl flex items-center justify-center mb-4 border border-blue-500/30 p-4">
+                            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+                        </div>
+                        <h2 className="text-3xl font-bold text-white tracking-tight text-center">
+                            {isSignUp ? 'Create Account' : 'Login Required'}
+                        </h2>
+                        <p className="text-white/40 text-sm mt-2 text-center">
+                            {isSignUp ? 'Enter your details to start managing stations' : 'Sign in to access your cloud dashboard'}
+                        </p>
                     </div>
-                    <h2 className="text-3xl font-bold text-white tracking-tight text-center">
-                        {isSignUp ? 'Create Account' : 'Login Required'}
-                    </h2>
-                    <p className="text-white/40 text-sm mt-2 text-center">
-                        {isSignUp ? 'Enter your details to start managing stations' : 'Sign in to access your cloud dashboard'}
-                    </p>
-                </div>
+                )}
 
                 <form onSubmit={handleAuth} className="space-y-4">
                     <div className="space-y-2">

@@ -336,7 +336,7 @@ function App() {
 
               <div className="relative z-10 p-2">
                 <div className="flex flex-col items-center mb-6 pt-4">
-                  <div className="h-16 sm:h-20 w-auto p-3 sm:p-4 rounded-2xl bg-black/40 border border-white/5 mb-4 sm:mb-6">
+                  <div className="h-24 sm:h-32 w-auto p-4 sm:p-6 rounded-2xl bg-black/40 border border-white/5 mb-4 sm:mb-6">
                     <img
                       src={`/logo.png?v=${ASSET_VERSION}`}
                       alt="9M2PJU Logo"

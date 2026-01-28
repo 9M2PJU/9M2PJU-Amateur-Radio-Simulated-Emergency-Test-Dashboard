@@ -17,8 +17,8 @@ const DonationModal: React.FC<DonationModalProps> = ({ onClose }) => {
                 </button>
 
                 <div className="flex flex-col items-center text-center space-y-6">
-                    <div className="h-16 w-16 rounded-2xl bg-fuchsia-500/20 flex items-center justify-center border border-fuchsia-500/30 animate-pulse">
-                        <Heart className="h-8 w-8 text-fuchsia-500 fill-fuchsia-500" />
+                    <div className="h-12 w-12 md:h-16 md:w-16 rounded-2xl bg-fuchsia-500/20 flex items-center justify-center border border-fuchsia-500/30 animate-pulse">
+                        <Heart className="h-6 w-6 md:h-8 md:w-8 text-fuchsia-500 fill-fuchsia-500" />
                     </div>
 
                     <div className="space-y-2">
@@ -30,17 +30,19 @@ const DonationModal: React.FC<DonationModalProps> = ({ onClose }) => {
                         </p>
                     </div>
 
-                    <div className="w-full grid md:grid-cols-2 gap-6 items-center">
+                    <div className="w-full grid md:grid-cols-2 gap-4 md:gap-6 items-center">
                         <div className="space-y-4">
-                            <div className="p-4 rounded-2xl bg-black/40 border border-white/5 space-y-2">
-                                <h3 className="text-sm font-bold text-fuchsia-400 uppercase tracking-widest">Donation QR Code</h3>
-                                <p className="text-xs text-slate-400">Scan with your banking or e-wallet app to contribute</p>
+                            <div className="p-3 md:p-4 rounded-2xl bg-black/40 border border-white/5 space-y-1">
+                                <h3 className="text-xs md:text-sm font-bold text-fuchsia-400 uppercase tracking-widest">Donation QR Code</h3>
+                                <p className="text-[10px] md:text-xs text-slate-400">Scan with your banking or e-wallet app to contribute</p>
                             </div>
-                            <img
-                                src="/donation-qr.png"
-                                alt="Donation QR Code"
-                                className="w-full aspect-square rounded-2xl border-2 border-white/10 shadow-2xl p-2 bg-white"
-                            />
+                            <div className="w-full max-w-[200px] md:max-w-none mx-auto">
+                                <img
+                                    src="/donation-qr.png"
+                                    alt="Donation QR Code"
+                                    className="w-full aspect-square rounded-2xl border-2 border-white/10 shadow-2xl p-2 bg-white"
+                                />
+                            </div>
                         </div>
 
                         <div className="flex flex-col justify-center space-y-4">
