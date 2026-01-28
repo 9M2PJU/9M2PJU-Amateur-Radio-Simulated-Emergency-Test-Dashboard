@@ -2,6 +2,24 @@
 
 All notable changes to the **9M2PJU Amateur Radio Simulated Emergency Test Dashboard** will be documented in this file.
 
+## [4.3.0] - 2026-01-28
+### Added
+- **Manual Mode Entry**: Support for free-text mode entry alongside standard presets (FM, SSB, etc.).
+- **Smart Notifications**: "New Station" alerts that track user visits and notify only on fresh activity.
+- **Donation Workflow**: Periodic reminders and a synchronized "Support" popup flow.
+- **New Strategic Icons**: Added specialized marker icons for **Civil Defense**, **Red Cross**, and **Military** units.
+- **Brand Identity**: Complete asset refresh with high-definition Logo and Favicon.
+
+### Changed
+- **Notification Logic**: "New Station" alerts now wait for login/donation interactions to prevent UI clutter.
+- **Mobile Experience**: Improved header layout and modal responsiveness (Login & Donation screens) for small screens.
+- **Loading State**: Updated synchronization status text for better clarity ("Private Cloud").
+
+### Fixed
+- **Data Integrity**: Resolved camelCase/snake_case schema mismatch preventing station updates.
+- **Mobile Overflow**: Fixed header text truncation and icon spacing on mobile devices.
+- **Toast Access**: Notification visibility now strictly adheres to authentication scope.
+
 ## [4.2.0] - 2026-01-28
 ### Added
 - **PWA Support**: Full PWA integration with service worker and **"Install App"** prompt in-UI.
