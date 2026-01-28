@@ -70,9 +70,15 @@ function App() {
         const newStations = stations.filter(s => (s.createdAt || 0) > lastVisitTime);
 
         if (newStations.length > 0) {
+          const callsigns = newStations.map(s => s.callsign).slice(0, 3).join(', ');
+          const remaining = newStations.length - 3;
+          const message = remaining > 0
+            ? `New stations: ${callsigns} and ${remaining} others.`
+            : `New station${newStations.length > 1 ? 's' : ''}: ${callsigns}`;
+
           setTimeout(() => {
             setToast({
-              message: `${newStations.length} new station${newStations.length > 1 ? 's' : ''} added since your last visit.`,
+              message: message,
               type: 'info'
             });
           }, 2000);
