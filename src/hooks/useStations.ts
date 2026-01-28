@@ -153,9 +153,10 @@ export const useStations = (session: Session | null, userIdFilter?: string | nul
             const newStation: Station = {
                 ...data,
                 updatedAt: data.updated_at,
+                createdAt: data.created_at ? new Date(data.created_at).getTime() : undefined,
                 powerSource: data.power_source,
                 locationName: data.location_name,
-                operating_hours: data.operating_hours,
+                operatingHours: data.operating_hours,
                 customColor: data.custom_color,
                 radioInfo: data.radio_info,
                 icon: data.icon
