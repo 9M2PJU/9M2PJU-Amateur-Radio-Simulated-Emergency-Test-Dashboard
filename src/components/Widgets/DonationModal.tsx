@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Heart, ExternalLink } from 'lucide-react';
+import { Heart, ExternalLink } from 'lucide-react';
 
 interface DonationModalProps {
     onClose: () => void;
@@ -26,7 +26,7 @@ const DonationModal: React.FC<DonationModalProps> = ({ onClose }) => {
     return (
         <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-in fade-in duration-300 overflow-y-auto">
             <div className="glass-card p-4 sm:p-6 md:p-8 rounded-3xl sm:rounded-[2rem] w-full max-w-xl bg-slate-900/90 text-white relative border-2 border-fuchsia-500/50 shadow-[0_0_40px_rgba(217,70,239,0.3)] my-auto">
-                
+
                 <div className="flex flex-col items-center text-center space-y-6">
                     <div className="h-12 w-12 md:h-16 md:w-16 rounded-2xl bg-fuchsia-500/20 flex items-center justify-center border border-fuchsia-500/30 animate-pulse">
                         <Heart className="h-6 w-6 md:h-8 md:w-8 text-fuchsia-500 fill-fuchsia-500" />
