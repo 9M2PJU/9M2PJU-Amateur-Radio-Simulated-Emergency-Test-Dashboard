@@ -6,16 +6,27 @@ interface DonationModalProps {
 }
 
 const DonationModal: React.FC<DonationModalProps> = ({ onClose }) => {
+    const [secondsRemaining, setSecondsRemaining] = React.useState(10);
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setSecondsRemaining((prev) => {
+                if (prev <= 1) {
+                    clearInterval(timer);
+                    onClose();
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [onClose]);
+
     return (
         <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-in fade-in duration-300 overflow-y-auto">
             <div className="glass-card p-4 sm:p-6 md:p-8 rounded-3xl sm:rounded-[2rem] w-full max-w-xl bg-slate-900/90 text-white relative border-2 border-fuchsia-500/50 shadow-[0_0_40px_rgba(217,70,239,0.3)] my-auto">
-                <button
-                    onClick={onClose}
-                    className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-all hover:rotate-90"
-                >
-                    <X className="h-6 w-6 text-white/70" />
-                </button>
-
+                
                 <div className="flex flex-col items-center text-center space-y-6">
                     <div className="h-12 w-12 md:h-16 md:w-16 rounded-2xl bg-fuchsia-500/20 flex items-center justify-center border border-fuchsia-500/30 animate-pulse">
                         <Heart className="h-6 w-6 md:h-8 md:w-8 text-fuchsia-500 fill-fuchsia-500" />
@@ -62,12 +73,11 @@ const DonationModal: React.FC<DonationModalProps> = ({ onClose }) => {
                                 <ExternalLink className="h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                             </a>
 
-                            <button
-                                onClick={onClose}
-                                className="w-full px-6 py-3 rounded-2xl border border-white/10 hover:bg-white/5 transition-all text-sm font-medium text-slate-400"
+                            <div
+                                className="w-full px-6 py-3 rounded-2xl border border-white/10 bg-white/5 text-sm font-medium text-slate-400 flex items-center justify-center gap-2 cursor-wait"
                             >
-                                Close Dashboard
-                            </button>
+                                <span className="animate-pulse">Closing in {secondsRemaining}s</span>
+                            </div>
                         </div>
                     </div>
 

@@ -107,23 +107,16 @@ function App() {
     return () => clearInterval(timer);
   }, []);
 
-  // Donation Popup Logic: Show once per session, ONLY after login
+  // Donation Popup Logic: Show on every login/session init
   useEffect(() => {
     if (!session) return;
 
-    const hasSeenDonation = sessionStorage.getItem('hasSeenDonation');
-    if (!hasSeenDonation) {
-      const timer = setTimeout(() => {
-        setIsDonationOpen(true);
-        sessionStorage.setItem('hasSeenDonation', 'true');
-        // NOTE: We do NOT set donationCheckComplete here. 
-        // We wait for the user to close the modal.
-      }, 500);
-      return () => clearTimeout(timer);
-    } else {
-      // If already seen, we are done checking immediately
-      setDonationCheckComplete(true);
-    }
+    // Show popup every time session initializes (login/refresh)
+    const timer = setTimeout(() => {
+      setIsDonationOpen(true);
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [session]);
 
   const handleEdit = (station: any) => {
@@ -170,19 +163,7 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Donation Popup Logic: Show once per session, ONLY after login
-  useEffect(() => {
-    if (!session) return;
 
-    const hasSeenDonation = sessionStorage.getItem('hasSeenDonation');
-    if (!hasSeenDonation) {
-      const timer = setTimeout(() => {
-        setIsDonationOpen(true);
-        sessionStorage.setItem('hasSeenDonation', 'true');
-      }, 500); // 500ms delay for a snappy experience after login
-      return () => clearTimeout(timer);
-    }
-  }, [session]);
 
   const isAdmin = session?.user?.email === '9m2pju@hamradio.my';
 
