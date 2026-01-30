@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { supabase } from '../utils/supabase';
 
-// 15 minutes in milliseconds
-const IDLE_TIMEOUT = 15 * 60 * 1000;
+// 10 minutes in milliseconds
+const IDLE_TIMEOUT = 10 * 60 * 1000;
 
 export const useAutoLogout = () => {
     const timerRef = useRef<any>(null);
