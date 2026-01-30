@@ -188,30 +188,37 @@ const SimulatorMap: React.FC<SimulatorMapProps> = ({
                                         )}
                                     </div>
 
-                                    <div className="mt-4 text-[9px] text-slate-500 border-t border-white/10 pt-3 flex justify-between items-center bg-black/20 -mx-3 -mb-3 px-3 py-2">
-                                        <span className="font-mono uppercase">Telemetry Updated: {new Date(station.updatedAt).toLocaleTimeString()}</span>
-                                        {(isAdmin || (currentUserId && station.user_id === currentUserId)) && (
-                                            <div className="flex gap-1.5">
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        onEditStation?.(station);
-                                                    }}
-                                                    className="p-1.5 hover:bg-white/10 rounded text-cyan-400 transition-colors"
-                                                    title="Edit"
-                                                >
-                                                    <Edit2 className="h-3.5 w-3.5" />
-                                                </button>
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        onDeleteStation?.(station.id);
-                                                    }}
-                                                    className="p-1.5 hover:bg-rose-500/20 rounded text-rose-400 transition-colors"
-                                                    title="Delete"
-                                                >
-                                                    <Trash2 className="h-3.5 w-3.5" />
-                                                </button>
+                                    <div className="mt-4 text-[9px] text-slate-500 border-t border-white/10 pt-3 flex flex-col gap-1 bg-black/20 -mx-3 -mb-3 px-3 py-2">
+                                        <div className="flex justify-between items-center w-full">
+                                            <span className="font-mono uppercase text-white/40">Updated: {new Date(station.updatedAt).toLocaleString()}</span>
+                                            {(isAdmin || (currentUserId && station.user_id === currentUserId)) && (
+                                                <div className="flex gap-1.5 ml-2">
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            onEditStation?.(station);
+                                                        }}
+                                                        className="p-1.5 hover:bg-white/10 rounded text-cyan-400 transition-colors"
+                                                        title="Edit"
+                                                    >
+                                                        <Edit2 className="h-3.5 w-3.5" />
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            onDeleteStation?.(station.id);
+                                                        }}
+                                                        className="p-1.5 hover:bg-rose-500/20 rounded text-rose-400 transition-colors"
+                                                        title="Delete"
+                                                    >
+                                                        <Trash2 className="h-3.5 w-3.5" />
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                        {station.user_email && (
+                                            <div className="text-[9px] text-slate-600 truncate max-w-full">
+                                                Added by: <span className="text-slate-500">{station.user_email}</span>
                                             </div>
                                         )}
                                     </div>

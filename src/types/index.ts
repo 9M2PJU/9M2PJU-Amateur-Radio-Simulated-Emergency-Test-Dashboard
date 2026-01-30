@@ -25,6 +25,7 @@ export interface Station {
     updatedAt: number;
     createdAt?: number;
     user_id?: string;
+    user_email?: string;
 }
 
 export type MapMode = 'view' | 'add' | 'edit';
