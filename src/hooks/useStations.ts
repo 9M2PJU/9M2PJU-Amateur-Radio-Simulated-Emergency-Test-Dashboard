@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../utils/supabase';
 import type { Station } from '../types';
@@ -312,7 +312,7 @@ export const useStations = (session: Session | null, userIdFilter?: string | nul
         }
     };
 
-    return {
+    return useMemo(() => ({
         stations,
         loading,
         error,
@@ -324,5 +324,5 @@ export const useStations = (session: Session | null, userIdFilter?: string | nul
         exportData,
         importData,
         refresh: fetchStations
-    };
+    }), [stations, loading, error, userIdFilter, session]);
 };

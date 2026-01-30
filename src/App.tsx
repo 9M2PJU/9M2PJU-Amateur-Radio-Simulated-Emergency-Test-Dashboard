@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import SimulatorMap from './components/Map/SimulatorMap';
 import { useStations } from './hooks/useStations';
 import { useWeather } from './hooks/useWeather';
@@ -7,17 +7,19 @@ import { supabase } from './utils/supabase';
 // Import Leaflet CSS
 import 'leaflet/dist/leaflet.css';
 import { Plus, LogIn } from 'lucide-react';
-import StationForm from './components/Station/StationForm';
-import SettingsModal from './components/Station/SettingsModal';
 import StationList from './components/Lists/StationList';
 import Header from './components/Header';
 import Weather from './components/Widgets/Weather';
-import DonationModal from './components/Widgets/DonationModal';
-import AuthModal from './components/Auth/AuthModal';
 import Toast from './components/Widgets/Toast';
 import { getMaidenheadLocator } from './utils/maidenhead';
 import { exportStationsToPDF } from './utils/pdfExport';
 import type { Session } from '@supabase/supabase-js';
+
+// Lazy load modals to optimize initial bundle size
+const StationForm = lazy(() => import('./components/Station/StationForm'));
+const SettingsModal = lazy(() => import('./components/Station/SettingsModal'));
+const DonationModal = lazy(() => import('./components/Widgets/DonationModal'));
+const AuthModal = lazy(() => import('./components/Auth/AuthModal'));
 
 // Cache busting version
 const ASSET_VERSION = new Date().getTime();
@@ -298,97 +300,99 @@ function App() {
         )}
       </div>
 
-      {/* Modals */}
-      {isFormOpen && (
-        <div className="absolute inset-0 z-[2000] flex items-center justify-center bg-black/50 backdrop-blur-md p-4 animate-in fade-in">
-          <div className="w-full max-w-lg">
-            <StationForm
-              initialData={draftStationData as any}
-              onClose={() => {
-                setIsFormOpen(false);
-                setEditingStationId(null);
-                setDraftStationData({});
-              }}
-              onPickLocation={(data) => {
-                setDraftStationData(data);
-                setIsFormOpen(false);
-                setIsPickingLocation(true);
-              }}
-              onSubmit={(data) => {
-                if (editingStationId) {
-                  updateStation(editingStationId, data);
-                } else {
-                  addStation(data);
-                }
-                setIsFormOpen(false);
-                setEditingStationId(null);
-                setDraftStationData({});
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {isSettingsOpen && (
-        <SettingsModal
-          onClose={() => setIsSettingsOpen(false)}
-          onExport={exportData}
-          onImport={(data) => {
-            importData(data);
-            setIsSettingsOpen(false);
-          }}
-          onClear={() => {
-            clearStations();
-            setIsSettingsOpen(false);
-          }}
-          onExportPDF={() => exportStationsToPDF(stations)}
-          onNuke={() => {
-            nukeDatabase();
-            setIsSettingsOpen(false);
-          }}
-          isAdmin={isAdmin}
-        />
-      )}
-
-      {isDonationOpen && session && (
-        <DonationModal onClose={() => {
-          setIsDonationOpen(false);
-          setDonationCheckComplete(true);
-        }} />
-      )}
-
-      {isAuthOpen && (
-        <AuthModal onClose={() => setIsAuthOpen(false)} />
-      )}
-
-      {/* Auth Gate Overlay: High-z-index, clean background */}
-      {!session && !authLoading && (
-        <div className="fixed inset-0 z-[4000] flex items-center justify-center bg-black/80 backdrop-blur-xl animate-in fade-in duration-700 overflow-y-auto p-4 sm:p-6">
-          <div className="w-full max-w-md my-auto animate-in zoom-in-95 duration-500">
-            <div className="bg-slate-900/60 backdrop-blur-3xl border border-white/10 rounded-3xl sm:rounded-[2.5rem] p-4 sm:p-8 shadow-2xl relative overflow-hidden group">
-              {/* Sub-glow */}
-              <div className="absolute -inset-10 bg-blue-500/10 blur-3xl group-hover:bg-blue-500/15 transition-colors pointer-events-none" />
-
-              <div className="relative z-10 p-2">
-                <div className="flex flex-col items-center mb-6 pt-4">
-                  <div className="h-24 sm:h-32 w-auto p-4 sm:p-6 rounded-2xl bg-black/40 border border-white/5 mb-4 sm:mb-6">
-                    <img
-                      src={`/logo.png?v=${ASSET_VERSION}`}
-                      alt="9M2PJU Logo"
-                      className="h-full w-full object-contain filter drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]"
-                    />
-                  </div>
-                  <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight text-center uppercase">9M2PJU Amateur Radio Simulated Emergency Test Dashboard</h2>
-                </div>
-
-                {/* Embed AuthModal directly */}
-                <AuthModal onClose={() => { }} isEmbedded={true} />
-              </div>
+      {/* Modals with Suspense */}
+      <Suspense fallback={<div className="fixed inset-0 z-[5000] pointer-events-none" />}>
+        {isFormOpen && (
+          <div className="absolute inset-0 z-[2000] flex items-center justify-center bg-black/50 backdrop-blur-md p-4 animate-in fade-in">
+            <div className="w-full max-w-lg">
+              <StationForm
+                initialData={draftStationData as any}
+                onClose={() => {
+                  setIsFormOpen(false);
+                  setEditingStationId(null);
+                  setDraftStationData({});
+                }}
+                onPickLocation={(data) => {
+                  setDraftStationData(data);
+                  setIsFormOpen(false);
+                  setIsPickingLocation(true);
+                }}
+                onSubmit={(data) => {
+                  if (editingStationId) {
+                    updateStation(editingStationId, data);
+                  } else {
+                    addStation(data);
+                  }
+                  setIsFormOpen(false);
+                  setEditingStationId(null);
+                  setDraftStationData({});
+                }}
+              />
             </div>
-            <p className="text-white/20 text-[9px] font-mono tracking-widest uppercase text-center mt-6">9M2PJU SET Dashboard v4.4.0</p>
           </div>
-        </div>
-      )}
+        )}
+
+        {isSettingsOpen && (
+          <SettingsModal
+            onClose={() => setIsSettingsOpen(false)}
+            onExport={exportData}
+            onImport={(data) => {
+              importData(data);
+              setIsSettingsOpen(false);
+            }}
+            onClear={() => {
+              clearStations();
+              setIsSettingsOpen(false);
+            }}
+            onExportPDF={() => exportStationsToPDF(stations)}
+            onNuke={() => {
+              nukeDatabase();
+              setIsSettingsOpen(false);
+            }}
+            isAdmin={isAdmin}
+          />
+        )}
+
+        {isDonationOpen && session && (
+          <DonationModal onClose={() => {
+            setIsDonationOpen(false);
+            setDonationCheckComplete(true);
+          }} />
+        )}
+
+        {isAuthOpen && (
+          <AuthModal onClose={() => setIsAuthOpen(false)} />
+        )}
+
+        {/* Auth Gate Overlay: High-z-index, clean background */}
+        {!session && !authLoading && (
+          <div className="fixed inset-0 z-[4000] flex items-center justify-center bg-black/80 backdrop-blur-xl animate-in fade-in duration-700 overflow-y-auto p-4 sm:p-6">
+            <div className="w-full max-w-md my-auto animate-in zoom-in-95 duration-500">
+              <div className="bg-slate-900/60 backdrop-blur-3xl border border-white/10 rounded-3xl sm:rounded-[2.5rem] p-4 sm:p-8 shadow-2xl relative overflow-hidden group">
+                {/* Sub-glow */}
+                <div className="absolute -inset-10 bg-blue-500/10 blur-3xl group-hover:bg-blue-500/15 transition-colors pointer-events-none" />
+
+                <div className="relative z-10 p-2">
+                  <div className="flex flex-col items-center mb-6 pt-4">
+                    <div className="h-24 sm:h-32 w-auto p-4 sm:p-6 rounded-2xl bg-black/40 border border-white/5 mb-4 sm:mb-6">
+                      <img
+                        src={`/logo.png?v=${ASSET_VERSION}`}
+                        alt="9M2PJU Logo"
+                        className="h-full w-full object-contain filter drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]"
+                      />
+                    </div>
+                    <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight text-center uppercase">9M2PJU Amateur Radio Simulated Emergency Test Dashboard</h2>
+                  </div>
+
+                  {/* Embed AuthModal directly */}
+                  <AuthModal onClose={() => { }} isEmbedded={true} />
+                </div>
+              </div>
+              <p className="text-white/20 text-[9px] font-mono tracking-widest uppercase text-center mt-6">9M2PJU SET Dashboard v4.4.0</p>
+            </div>
+          </div>
+        )}
+      </Suspense>
 
       {/* Toast Notifications */}
       {toast && (
