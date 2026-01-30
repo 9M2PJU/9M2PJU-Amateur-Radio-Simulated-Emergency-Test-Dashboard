@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import SimulatorMap from './components/Map/SimulatorMap';
 import { useStations } from './hooks/useStations';
 import { useWeather } from './hooks/useWeather';
+import { useAutoLogout } from './hooks/useAutoLogout';
 import { supabase } from './utils/supabase';
 // Import Leaflet CSS
 import 'leaflet/dist/leaflet.css';
@@ -27,6 +28,9 @@ function App() {
   const [impersonatedUserId, setImpersonatedUserId] = useState<string | null>(null);
   const { stations, loading: stationsLoading, addStation, updateStation, removeStation, exportData, importData, clearStations, nukeDatabase } = useStations(session, impersonatedUserId);
   const weatherState = useWeather();
+
+  // Initialize Auto Logout
+  useAutoLogout();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
