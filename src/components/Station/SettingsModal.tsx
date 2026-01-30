@@ -1,6 +1,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import DataControls from './DataControls';
+import DonationExceptions from '../Admin/DonationExceptions';
 
 interface SettingsModalProps {
     onClose: () => void;
@@ -34,6 +35,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onExport, onExpo
                         onNuke={onNuke}
                         isAdmin={isAdmin}
                     />
+
+                    {isAdmin && (
+                        <div className="pt-4 border-t border-white/10">
+                            <DonationExceptions />
+                        </div>
+                    )}
 
                     <div className="text-xs text-white/30 text-center">
                         v4.3.1 • 9M2PJU SET Dashboard

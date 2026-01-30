@@ -111,12 +111,35 @@ function App() {
   useEffect(() => {
     if (!session) return;
 
-    // Show popup every time session initializes (login/refresh)
-    const timer = setTimeout(() => {
-      setIsDonationOpen(true);
-    }, 500);
+    // Check if user is super admin
+    const isSuperAdmin = session.user.email === '9m2pju@hamradio.my';
+    if (isSuperAdmin) {
+      setDonationCheckComplete(true);
+      return;
+    }
 
-    return () => clearTimeout(timer);
+    const checkException = async () => {
+      // Check if user is in exceptions list
+      const { data } = await supabase
+        .from('donation_exceptions')
+        .select('email')
+        .eq('email', session.user.email)
+        .single();
+
+      if (data) {
+        // User is excepted from donation popup
+        setDonationCheckComplete(true);
+        return;
+      }
+
+      // Show popup
+      const timer = setTimeout(() => {
+        setIsDonationOpen(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    };
+
+    checkException();
   }, [session]);
 
   const handleEdit = (station: any) => {
