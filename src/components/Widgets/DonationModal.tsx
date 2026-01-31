@@ -39,6 +39,9 @@ const DonationModal: React.FC<DonationModalProps> = ({ onClose }) => {
                         <p className="text-slate-300 leading-relaxed max-w-md mx-auto">
                             Help us cover server maintenance costs and keep <span className="text-cyan-400 font-bold">9M2PJU SET Dashboard</span> running smoothly for the Malaysian amateur radio community. Every contribution, big or small, makes a difference!
                         </p>
+                        <p className="text-xs text-slate-400 italic">
+                            (Note: Once you have donated, we will remove this popup from your account)
+                        </p>
                     </div>
 
                     <div className="w-full grid md:grid-cols-2 gap-4 md:gap-6 items-center">
@@ -86,7 +89,7 @@ const DonationModal: React.FC<DonationModalProps> = ({ onClose }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
