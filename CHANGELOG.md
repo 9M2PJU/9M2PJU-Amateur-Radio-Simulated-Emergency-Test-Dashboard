@@ -2,6 +2,11 @@
 
 All notable changes to the **9M2PJU Amateur Radio Simulated Emergency Test Dashboard** will be documented in this file.
 
+## [4.5.0] - 2026-01-31
+### Added
+- **Support & Donation**: Added Buy Me A Coffee link and DuitNow QR code to README.
+- **Documentation**: Enhanced README with project stats badges and improved layout.
+
 ## [4.4.0] - 2026-01-28
 ### Added
 - **Repeater Support**: Dedicated repeater station icon and type support.

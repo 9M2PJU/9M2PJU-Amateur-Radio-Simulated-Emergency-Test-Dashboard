@@ -7,6 +7,8 @@
 ![Status](https://img.shields.io/badge/status-STABLE_RELEASE-emerald?style=for-the-badge&logo=statuspage)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=github)
 ![PWA](https://img.shields.io/badge/PWA-READY-ff69b4?style=for-the-badge&logo=pwa)
+![Repo Size](https://img.shields.io/github/repo-size/9M2PJU/9M2PJU-Amateur-Radio-Simulated-Emergency-Test-Dashboard?style=for-the-badge)
+![Last Commit](https://img.shields.io/github/last-commit/9M2PJU/9M2PJU-Amateur-Radio-Simulated-Emergency-Test-Dashboard?style=for-the-badge)
 
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
@@ -99,7 +101,19 @@ Designed for field operations. The dashboard uses **PWA Service Workers** to cac
 Created with ❤️ by **9M2PJU** for the Malaysian Amateur Radio community.
 
 - **Website**: [hamradio.my](https://hamradio.my)
-- **Support**: Use the **Heart (❤️)** button in the dashboard to contribute via DuitNow QR.
+- **Support**: Use the **Heart (❤️)** button in the dashboard or support via the methods below.
+
+<div align="center">
+
+### ☕ Buy Me A Coffee
+<a href="https://www.buymeacoffee.com/9m2pju">
+  <img src="https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" />
+</a>
+
+### 📲 DuitNow QR
+![DuitNow QR](public/donation-qr.png)
+
+</div>
 
 ---
 <div align="center">
