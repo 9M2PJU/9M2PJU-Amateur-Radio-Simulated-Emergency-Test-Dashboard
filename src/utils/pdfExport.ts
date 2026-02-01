@@ -78,14 +78,26 @@ export const exportStationsToPDF = (stations: Station[]) => {
     doc.setFontSize(14);
     doc.text('III. STATION DIRECTORY', 14, finalY + 15);
 
-    const tableData = stations.map(s => [
-        s.callsign,
-        s.operator || 'N/A',
-        s.status.toUpperCase(),
-        s.powerSource?.toUpperCase() || 'UNKNOWN',
-        s.frequency ? `${s.frequency}MHz` : 'N/A',
-        s.locationName || `${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}`
-    ]);
+    const tableData = stations.map(s => {
+        // Format frequencies from radioInfo or deprecated frequency field
+        let freqStr = 'N/A';
+        if (s.radioInfo && s.radioInfo.length > 0) {
+            freqStr = s.radioInfo
+                .map(info => `${info.frequency}${info.mode ? ` (${info.mode})` : ''}`)
+                .join(', ');
+        } else if (s.frequency) {
+            freqStr = `${s.frequency}${s.mode ? ` (${s.mode})` : ''}`;
+        }
+
+        return [
+            s.callsign || 'N/A',
+            s.operator || 'N/A',
+            s.status.toUpperCase(),
+            s.powerSource?.toUpperCase() || 'UNKNOWN',
+            freqStr,
+            s.locationName || `${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}`
+        ];
+    });
 
     autoTable(doc, {
         startY: finalY + 22,
